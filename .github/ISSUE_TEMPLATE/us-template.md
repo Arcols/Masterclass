@@ -7,17 +7,17 @@ assignees: ''
 
 ---
 
-# Why
+# Pourquoi
 
 ...
 
-# How
+# Comment
 
 ...
 
 ---
 
-Estimated duration: 1 day
+Temps estimé : 1 day
 
-_Start date: 01/01/9999_
-_End date: 01/01/9999_
+_Date de début: 01/01/9999_
+_Date de fin: 01/01/9999_
