@@ -1,67 +1,38 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-<body>
-  <h1>Connexion</h1>
-  <div class="login-form">
-    <form>
-      <div class="email-form">
-        <label for="email">Email</label>
-        <input type="text" placeholder="Ex:name.surname@imt-atlantique.net">
-      </div>
-      <div class="password-form">
-        <label for="password">Password</label>
-        <input type="password" placeholder="••••••••••••••••••••"></input>
-      </div>
-      <button class="login-button" type="submit">Login</button>
-    </form>
+  <div class="flex min-h-screen flex-col items-center justify-center text-center">
+    <h1 class="mb-8 text-5xl font-bold">Connexion</h1>
+
+    <div class="w-full max-w-sm">
+      <form class="space-y-4">
+        <div class="flex flex-col text-left">
+          <label for="email" class="mb-1 font-medium"> Email </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Ex: name.surname@imt-atlantique.net"
+            class="rounded-md border border-gray-300 p-2.5 placeholder-gray-400 focus:border-teal-600 focus:outline-none"
+          />
+        </div>
+
+        <div class="flex flex-col text-left">
+          <label for="password" class="mb-1 font-medium"> Password </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="••••••••••••••••••••"
+            class="rounded-md border border-gray-300 p-2.5 placeholder-gray-400 focus:border-teal-600 focus:outline-none"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full rounded-md bg-teal-700 px-5 py-2.5 text-white transition hover:bg-teal-800"
+        >
+          Login
+        </button>
+      </form>
+    </div>
   </div>
-</body>
 </template>
-
-<style scoped>
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3rem;
-}
-
-form {
-  width:300px;
-}
-
-.email-form, .password-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  text-align: left;
-}
-.login-button {
-  padding: 10px 20px;
-  background-color: #00786F;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-}
-
-input{
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-input::placeholder {
-  color: gray;
-}
-
-</style>
