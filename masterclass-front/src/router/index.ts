@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
+import DetailEvent from '../components/DetailEvent.vue'
 import TestDetailEvent from '@/views/TestDetailEvent.vue'
 
 const router = createRouter({
