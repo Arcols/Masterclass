@@ -1,0 +1,38 @@
+:root {
+  /* Couleurs */
+  --color-primary: #00786f;
+  --color-rouge: #ef4444;
+  --color-noir: #111111;
+
+  --stroke-devoir: #619639;
+  --bg-devoir: #a9e879;
+  --stroke-activite: #4c3cda;
+  --bg-activite: #a39af6;
+  --stroke-sport: #4c3cda;
+  --bg-sport: #e2b0f3;
+  --stroke-groupe: #54e4e4;
+  --bg-groupe: #9effff;
+
+  --txt-urgent: #ef4444;
+  --bg-urgent: #fef2f2;
+  --stroke-urgent: #fecaca;
+  --txt-normal: #c2410c;
+  --bg-normal: #ffedd5;
+  --stroke-normal: #fed7aa;
+  --txt-faible: #047857;
+  --bg-faible: #d1fae5;
+  --stroke-faible: #a7f3d0;
+
+  --bg-app: #ffffff;
+
+  /* Espacements et arrondis */
+  --radius-small: 6px;
+  --radius-medium: 12px;
+  --radius-large: 99px;
+
+  /* font */
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Shadows */
+  --shadow-btn: 0 4px 4px 0 rgba(0, 120, 111, 0.25);
+}
