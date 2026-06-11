@@ -1,0 +1,9 @@
+[
+  { "value": "Mathématiques", "label": "Mathématiques" },
+  { "value": "Mathématiques discrètes", "label": "Mathématiques discrètes"},
+  { "value": "Anglais", "label": "Anglais" },
+  { "value": "Web Dev", "label": "Web Dev" },
+  { "value": "IHM", "label": "IHM" },
+  { "value": "Java", "label": "Java" },
+  { "value": "Autre", "label": "Autre" }
+]
