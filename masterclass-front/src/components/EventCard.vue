@@ -41,7 +41,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
     class="relative flex flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200"
     :class="[
       isList ? 'p-4 pl-5' : 'p-2 pl-3',
-      event.isCompleted ? 'bg-[var(--color-devoir-done-bg)] opacity-65' : 'bg-[var(--color-devoir-not-done-bg)]'
+      event.isCompleted ? 'bg-[var(--color-event-done-bg)] opacity-65' : 'bg-[var(--color-event-not-done-bg)]'
     ]"
   >
     <div
@@ -98,6 +98,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
         class="rounded border-2 border-gray-400 text-primary focus:ring-primary shrink-0 cursor-pointer transition-all"
         :class="isList ? 'w-6 h-6' : 'w-4 h-4'"
         :checked="event.isCompleted"
+        :aria-label="event.isCompleted ? 'Marquer comme non terminé' : 'Marquer comme terminé'"
         @change="emit('toggle-complete', event.id, ($event.target as HTMLInputElement).checked)"
       />
     </div>

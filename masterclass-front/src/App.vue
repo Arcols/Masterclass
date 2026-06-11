@@ -19,7 +19,7 @@ const updateStatus = (id: string, newValue: boolean) => {
 </script>
 
 <template>
-  <div class="w-full var(--color-background) ">
+  <div class="w-full bg-[var(--color-background)] ">
   <Header
     class="sticky top-0 z-10"
     :show-actions="true"
