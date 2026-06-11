@@ -5,12 +5,14 @@
   --color-red: #ef4444;
   --color-black: #111111;
 
+  /* Couleurs pour les évènements s'ils sont faits ou pas */
+  --color-event-not-done-bg: #ffffff;
+  --color-event-done-bg: #C9C9C9;
+
   /* Couleurs pour les évènements de type DEVOIR */
   --color-devoir-txt: #4b8c2a;
   --color-devoir-stroke: #619639;
   --color-devoir-bg: #a9e879;
-  --color-devoir-not-done-bg: #ffffff;
-  --color-devoir-done-bg: #C9C9C9;
 
   /* Couleurs pour les évènements de type ACTIVITE */
   --color-activite-txt: #4c3cda;
@@ -25,7 +27,6 @@
   /* Couleurs pour les groupes (ex: FIL A1) */
   --color-groupe-stroke: #54e4e4;
   --color-groupe-bg: #9effff;
-
 
   /* Couleurs pour les TAGS (Types d'événements - Style Neutre/Bordé) */
   --color-tag-devoir-txt: var(--color-devoir-txt);
