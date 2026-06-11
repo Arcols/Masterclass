@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
+import { RouterLink } from 'vue-router';
 
 const props = withDefaults(
   defineProps<{
@@ -10,14 +10,14 @@ const props = withDefaults(
   {
     showActions: false,
     showProfile: true,
-    subtitle: "",
+    subtitle: '',
   }
 );
 
 const emit = defineEmits<{
-  (e: "add-event"): void;
-  (e: "open-history"): void;
-  (e: "open-profile"): void;
+  (e: 'add-event'): void;
+  (e: 'open-history'): void;
+  (e: 'open-profile'): void;
 }>();
 </script>
 
@@ -44,6 +44,7 @@ const emit = defineEmits<{
 
       <template v-if="showActions">
         <button
+          type="button"
           class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-primary)] text-white text-sm font-semibold cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-[#006059] max-md:w-9 max-md:h-9 max-md:p-0 max-md:rounded-full max-md:justify-center"
           @click="emit('add-event')"
           aria-label="Ajouter un événement"
@@ -55,6 +56,7 @@ const emit = defineEmits<{
         </button>
 
         <button
+          type="button"
           class="inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent cursor-pointer transition-colors duration-150 hover:bg-[#00786f]/10"
           aria-label="Historique"
           @click="emit('open-history')"
@@ -67,13 +69,14 @@ const emit = defineEmits<{
 
       <button
         v-if="showProfile"
+        type="button"
         class="inline-flex items-center justify-center p-0 border-[2.5px] border-[var(--color-primary)] rounded-full bg-transparent cursor-pointer hover:opacity-80 transition-opacity"
         aria-label="Profil"
         @click="emit('open-profile')"
       >
         <img
           src="@/assets/avatar-placeholder.svg"
-          alt="Avatar"
+          alt="" aria-hidden="true"
           class="w-9 h-9 rounded-full object-cover"
         />
       </button>
