@@ -5,7 +5,8 @@ import Header from '@/components/Header.vue'
 
 <template>
   <Header
-    :is-home-page="true"
+    :show-actions="true"
+    :show-profile="true"
     subtitle="FIL A1 2028"
   />
   <RouterView />
