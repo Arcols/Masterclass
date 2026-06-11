@@ -9,6 +9,8 @@
   --color-devoir-txt: #4b8c2a;
   --color-devoir-stroke: #619639;
   --color-devoir-bg: #a9e879;
+  --color-devoir-not-done-bg: #ffffff;
+  --color-devoir-done-bg: #C9C9C9;
 
   /* Couleurs pour les évènements de type ACTIVITE */
   --color-activite-txt: #4c3cda;

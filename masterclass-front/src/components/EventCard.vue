@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline';
 import EventBadge from './EventBadge.vue';
-import PriorityIndicator from './PriorityIndicator.vue'; // <-- Import du nouveau composant
+import PriorityIndicator from './PriorityIndicator.vue';
 
 export interface EventData {
   id: string;
@@ -41,7 +41,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
     class="relative flex flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200"
     :class="[
       isList ? 'p-4 pl-5' : 'p-2 pl-3',
-      event.isCompleted ? 'bg-gray-100 opacity-65' : 'bg-white'
+      event.isCompleted ? 'bg-[var(--color-devoir-done-bg)] opacity-65' : 'bg-[var(--color-devoir-not-done-bg)]'
     ]"
   >
     <div
@@ -51,7 +51,6 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
 
     <div class="flex justify-between items-start gap-2">
       <div class="flex flex-col items-start gap-1 min-w-0">
-
         <PriorityIndicator :priority="event.priority" />
 
         <span
@@ -63,7 +62,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
         </span>
         <span
           v-else
-          class="font-bold text-gray-900 truncate w-full"
+          class="font-bold text-[var(--color-black)] truncate w-full"
           :class="[
             isList ? 'text-lg' : 'text-sm',
             { 'line-through text-gray-400': event.isCompleted }
@@ -79,10 +78,10 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
     <div class="flex justify-between items-center mt-1">
       <span
         v-if="event.subject"
-        class="font-bold text-gray-900 truncate pr-2"
+        class="font-bold text-[var(--color-black)] truncate pr-2"
         :class="[
           isList ? 'text-xl' : 'text-[13px]',
-          { 'line-through text-gray-400': event.isCompleted }
+          { 'line-through text-gray-600': event.isCompleted }
         ]"
       >
         {{ event.title }}
@@ -106,11 +105,16 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
     <div class="flex justify-between items-center mt-auto" :class="isList ? 'pt-4' : 'pt-2'">
       <div class="flex items-center text-gray-500 truncate pr-2" :class="isList ? 'text-sm' : 'text-[11px]'">
         <ClockIcon class="shrink-0 mr-1.5" :class="isList ? 'w-4 h-4' : 'w-3 h-3'" />
-        <span v-if="isList">{{ event.date }}</span>
-        <span v-else>{{ event.startTime }} - {{ event.endTime }}</span>
+
+        <span v-if="isList">
+          {{ event.date }} &bull; {{ event.startTime }} - {{ event.endTime }}
+        </span>
+        <span v-else>
+          {{ event.startTime }} - {{ event.endTime }}
+        </span>
       </div>
 
-      <span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-medium shrink-0" :class="isList ? 'text-xs' : 'text-[9px]'">
+      <span class="bg-gray-100 text-[var(--color-black)] px-2 py-0.5 rounded-full font-medium shrink-0" :class="isList ? 'text-xs' : 'text-[9px]'">
         {{ event.group }}
       </span>
     </div>
