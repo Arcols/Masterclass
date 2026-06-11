@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import Header from '@/components/Header.vue';
+import { ref } from 'vue'
+import { RouterView } from 'vue-router'
+import Header from '@/components/Header.vue'
+import AddEventModal from '@/components/AddEventModal.vue'
 import PlanningBoard from '@/components/PlanningBoard.vue';
 import EventDetailModal from '@/components/EventDetailModal.vue';
 import type { EventData } from '@/components/EventCard.vue';
+
+const addEventRef = ref<any>(null)
+
+function onAddEvent(): void {
+  addEventRef.value?.addEventPopup()
+}
 
 // L'état qui gère l'ouverture de la modale
 const selectedEvent = ref<EventData | null>(null);
@@ -34,6 +42,7 @@ const handleEdit = (event: EventData) => {
       :show-actions="true"
       :show-profile="true"
       subtitle="FIL A1 2028"
+      @add-event="onAddEvent"
     />
 
     <main class="flex-1 flex flex-col p-4 md:p-6 lg:p-8 min-h-0">
@@ -54,4 +63,9 @@ const handleEdit = (event: EventData) => {
       @edit="handleEdit"
     />
   </div>
+
+  <RouterView />
+
+  <!-- Place AddEvent at app root so Header can open it via ref -->
+  <AddEventModal ref="addEventRef" />
 </template>
