@@ -26,7 +26,7 @@ const emit = defineEmits<{
 
     <RouterLink
       to="/"
-      class="flex items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-colors duration-150 hover:bg-[#00786f]/10"
+      class="flex items-center gap-3 py-2 px-3 rounded-md cursor-pointer transition-colors duration-150 hover:bg-[var(--color-primary)]/10"
     >
       <img
         src="@/assets/logo.svg"
