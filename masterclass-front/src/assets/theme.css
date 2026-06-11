@@ -5,29 +5,49 @@
   --color-red: #ef4444;
   --color-black: #111111;
 
-  --stroke-devoir: #619639;
-  --bg-devoir: #a9e879;
+  /* Couleurs pour les évènements de type DEVOIR */
+  --color-devoir-txt: #4b8c2a;
+  --color-devoir-stroke: #619639;
+  --color-devoir-bg: #a9e879;
 
-  --txt-activite: #4c3cda;
-  --bg-activite: #f0effe;
-  --stroke-activite: #a39af6;
+  /* Couleurs pour les évènements de type ACTIVITE */
+  --color-activite-txt: #4c3cda;
+  --color-activite-bg: #f0effe;
+  --color-activite-stroke: #a39af6;
 
-  --txt-sport: #a21caf;
-  --bg-sport: #fdf4ff;
-  --stroke-sport: #e2b0f3;
+  /* Couleurs pour les évènements de type SPORT */
+  --color-sport-txt: #a21caf;
+  --color-sport-bg: #fdf4ff;
+  --color-sport-stroke: #e2b0f3;
 
-  --stroke-groupe: #54e4e4;
-  --bg-groupe: #9effff;
+  /* Couleurs pour les groupes (ex: FIL A1) */
+  --color-groupe-stroke: #54e4e4;
+  --color-groupe-bg: #9effff;
 
-  --txt-urgent: #ef4444;
-  --bg-urgent: #fef2f2;
-  --stroke-urgent: #fecaca;
-  --txt-normal: #c2410c;
-  --bg-normal: #ffedd5;
-  --stroke-normal: #fed7aa;
-  --txt-faible: #047857;
-  --bg-faible: #d1fae5;
-  --stroke-faible: #a7f3d0;
+
+  /* Couleurs pour les TAGS (Types d'événements - Style Neutre/Bordé) */
+  --color-tag-devoir-txt: var(--color-devoir-txt);
+  --color-tag-devoir-bg: transparent;
+  --color-tag-devoir-stroke: var(--color-devoir-txt);
+  --color-tag-activite-txt: var(--color-activite-txt);
+  --color-tag-activite-bg: transparent;
+  --color-tag-activite-stroke: var(--color-activite-txt);
+  --color-tag-sport-txt: var(--color-sport-txt);
+  --color-tag-sport-bg: transparent;
+  --color-tag-sport-stroke: var(--color-sport-txt);
+
+  /* Couleurs pour les PRIORITÉS (Style Statut/Rempli) */
+  --color-priority-urgent-txt: #ef4444;
+  --color-priority-urgent-bg: #fef2f2;
+  --color-priority-urgent-stroke: #fecaca;
+
+  --color-priority-normal-txt: #c2410c;
+  --color-priority-normal-bg: #ffedd5;
+  --color-priority-normal-stroke: #fed7aa;
+
+  --color-priority-faible-txt: #047857;
+  --color-priority-faible-bg: #d1fae5;
+  --color-priority-faible-stroke: #a7f3d0;
 
   /* font */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;

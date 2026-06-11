@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline';
+import EventBadge from './EventBadge.vue';
+import PriorityIndicator from './PriorityIndicator.vue'; // <-- Import du nouveau composant
 
 export interface EventData {
   id: string;
@@ -20,9 +23,7 @@ const props = withDefaults(
     event: EventData;
     layout?: 'list' | 'calendar';
   }>(),
-  {
-    layout: 'list',
-  }
+  { layout: 'list' }
 );
 
 const emit = defineEmits<{
@@ -32,43 +33,7 @@ const emit = defineEmits<{
 const isList = computed(() => props.layout === 'list');
 const isDevoir = computed(() => props.event.type === 'devoir');
 
-// La barre latérale prend toujours la couleur de la bordure (stroke) de la catégorie
-const leftBarColor = computed(() => `var(--stroke-${props.event.type})`);
-
-// Gestion des badges unifiée à 3 variables (txt, bg, stroke)
-const badgeData = computed(() => {
-  if (props.event.type === 'activite') {
-    return {
-      text: 'ACTIVITÉ',
-      style: {
-        backgroundColor: 'var(--bg-activite)',
-        color: 'var(--txt-activite)',
-        borderColor: 'var(--stroke-activite)'
-      }
-    };
-  }
-  if (props.event.type === 'sport') {
-    return {
-      text: 'SPORT',
-      style: {
-        backgroundColor: 'var(--bg-sport)',
-        color: 'var(--txt-sport)',
-        borderColor: 'var(--stroke-sport)'
-      }
-    };
-  }
-  if (props.event.priority) {
-    return {
-      text: props.event.priority.toUpperCase(),
-      style: {
-        backgroundColor: `var(--bg-${props.event.priority})`,
-        color: `var(--txt-${props.event.priority})`,
-        borderColor: `var(--stroke-${props.event.priority})`
-      }
-    };
-  }
-  return null;
-});
+const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
 </script>
 
 <template>
@@ -85,31 +50,30 @@ const badgeData = computed(() => {
     ></div>
 
     <div class="flex justify-between items-start gap-2">
-      <span
-        v-if="event.subject"
-        class="font-semibold text-gray-500 truncate"
-        :class="isList ? 'text-sm' : 'text-[11px]'"
-      >
-        {{ event.subject }}
-      </span>
-      <span
-        v-else
-        class="font-bold text-gray-900 truncate"
-        :class="[
-          isList ? 'text-lg' : 'text-sm',
-          { 'line-through text-gray-400': event.isCompleted }
-        ]"
-      >
-        {{ event.title }}
-      </span>
+      <div class="flex flex-col items-start gap-1 min-w-0">
 
-      <span
-        v-if="badgeData"
-        class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide border shrink-0"
-        :style="badgeData.style"
-      >
-        {{ badgeData.text }}
-      </span>
+        <PriorityIndicator :priority="event.priority" />
+
+        <span
+          v-if="event.subject"
+          class="font-semibold text-gray-500 truncate w-full"
+          :class="isList ? 'text-sm' : 'text-[11px]'"
+        >
+          {{ event.subject }}
+        </span>
+        <span
+          v-else
+          class="font-bold text-gray-900 truncate w-full"
+          :class="[
+            isList ? 'text-lg' : 'text-sm',
+            { 'line-through text-gray-400': event.isCompleted }
+          ]"
+        >
+          {{ event.title }}
+        </span>
+      </div>
+
+      <EventBadge :type="event.type" />
     </div>
 
     <div class="flex justify-between items-center mt-1">
@@ -125,7 +89,7 @@ const badgeData = computed(() => {
       </span>
 
       <div v-else-if="!isList && event.location" class="flex items-center text-gray-500 text-[11px]">
-        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        <MapPinIcon class="w-3 h-3 mr-1" />
         {{ event.location }}
       </div>
 
@@ -141,7 +105,7 @@ const badgeData = computed(() => {
 
     <div class="flex justify-between items-center mt-auto" :class="isList ? 'pt-4' : 'pt-2'">
       <div class="flex items-center text-gray-500 truncate pr-2" :class="isList ? 'text-sm' : 'text-[11px]'">
-        <svg class="shrink-0 mr-1.5" :class="isList ? 'w-4 h-4' : 'w-3 h-3'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <ClockIcon class="shrink-0 mr-1.5" :class="isList ? 'w-4 h-4' : 'w-3 h-3'" />
         <span v-if="isList">{{ event.date }}</span>
         <span v-else>{{ event.startTime }} - {{ event.endTime }}</span>
       </div>
