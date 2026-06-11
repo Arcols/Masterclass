@@ -24,12 +24,16 @@
   --bg-faible: #d1fae5;
   --stroke-faible: #a7f3d0;
 
-  --bg-app: #ffffff;
-
   /* Espacements et arrondis */
   --radius-small: 6px;
   --radius-medium: 12px;
   --radius-large: 99px;
+
+  /* Boutons */
+  --transition-btn: all 0.15s ease;
+  --gap-btn: 0.5rem;
+  --size-text-btn: 0.875rem;
+  --padding-btn: 0.5rem 1rem;
 
   /* font */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
