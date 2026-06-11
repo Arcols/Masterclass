@@ -1,8 +1,9 @@
 :root {
   /* Couleurs */
+  --color-background: #ffffff;
   --color-primary: #00786f;
-  --color-rouge: #ef4444;
-  --color-noir: #111111;
+  --color-red: #ef4444;
+  --color-black: #111111;
 
   --stroke-devoir: #619639;
   --bg-devoir: #a9e879;
@@ -23,16 +24,6 @@
   --bg-faible: #d1fae5;
   --stroke-faible: #a7f3d0;
 
-  --bg-app: #ffffff;
-
-  /* Espacements et arrondis */
-  --radius-small: 6px;
-  --radius-medium: 12px;
-  --radius-large: 99px;
-
   /* font */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-
-  /* Shadows */
-  --shadow-btn: 0 4px 4px 0 rgba(0, 120, 111, 0.25);
 }
