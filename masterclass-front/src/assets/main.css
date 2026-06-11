@@ -4,7 +4,7 @@
 @layer base {
   body {
     font-family: var(--font-main), sans-serif;
-    @apply min-h-screen m-0 bg-[var(--color-background)] text-[var(--color-noir)] antialiased;
+    @apply min-h-screen m-0 bg-[var(--color-background)] text-[var(--color-black)] antialiased;
     transition: color 0.5s, background-color 0.5s;
     line-height: 1.6;
     font-size: 15px;
