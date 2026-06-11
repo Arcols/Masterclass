@@ -1,16 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @import 'tailwindcss';
 @import './theme.css';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
 
 @layer base {
   body {
     font-family: var(--font-main), sans-serif;
     @apply min-h-screen m-0 bg-[var(--color-background)] text-[var(--color-black)] antialiased;
-    transition: color 0.5s, background-color 0.5s;
+    transition:
+      color 0.5s,
+      background-color 0.5s;
     line-height: 1.6;
     font-size: 15px;
   }
 
   #app {
-    @apply min-h-screen flex justify-center items-center;
+    @apply min-h-screen justify-center items-center;
+  }
+}
+
+/* 1. On indique au thème Tailwind qu'une couleur nommée "border" existe */
+@theme {
+  --color-border: hsl(var(--border));
+}
+
+/* 2. On définit la valeur réelle de la couleur pour l'application */
+@layer base {
+  :root {
+    --border: 214.3 31.8% 91.4%; /* Un gris clair standard pour le mode jour */
+  }
+
+  .dark {
+    --border: 217.2 32.6% 17.5%; /* Un gris foncé pour le mode nuit */
   }
 }
