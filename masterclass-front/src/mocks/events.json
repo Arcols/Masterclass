@@ -1,0 +1,54 @@
+[
+  {
+    "id": "1",
+    "type": "devoir",
+    "title": "Devoir Analyse",
+    "subject": "Mathématiques de base",
+    "date": "07 jan",
+    "startTime": "8:00",
+    "endTime": "9:00",
+    "location": "",
+    "priority": "urgent",
+    "group": "FIL A1",
+    "isCompleted": false
+  },
+  {
+    "id": "2",
+    "type": "devoir",
+    "title": "CV en anglais",
+    "subject": "Anglais",
+    "date": "08 jan",
+    "startTime": "19:00",
+    "endTime": "20:00",
+    "location": "",
+    "priority": "normal",
+    "group": "ANG G1",
+    "isCompleted": true
+  },
+  {
+    "id": "3",
+    "type": "activite",
+    "title": "Showcase Yanis",
+    "subject": null,
+    "date": "10 jan",
+    "startTime": "12:00",
+    "endTime": "13:00",
+    "location": "MDE",
+    "priority": null,
+    "group": "FIL A1",
+    "isCompleted": false
+  },
+  {
+    "id": "4",
+    "type": "sport",
+    "title": "Tournoi BDE",
+    "subject": null,
+    "date": "10 jan",
+    "startTime": "17:00",
+    "endTime": "00:00",
+    "location": "Gymnase",
+    "priority": null,
+    "group": "FIL A1",
+    "isCompleted": false
+  }
+]

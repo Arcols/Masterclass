@@ -7,10 +7,15 @@
 
   --stroke-devoir: #619639;
   --bg-devoir: #a9e879;
-  --stroke-activite: #4c3cda;
-  --bg-activite: #a39af6;
-  --stroke-sport: #4c3cda;
-  --bg-sport: #e2b0f3;
+
+  --txt-activite: #4c3cda;
+  --bg-activite: #f0effe;
+  --stroke-activite: #a39af6;
+
+  --txt-sport: #a21caf;
+  --bg-sport: #fdf4ff;
+  --stroke-sport: #e2b0f3;
+
   --stroke-groupe: #54e4e4;
   --bg-groupe: #9effff;
 
