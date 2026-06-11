@@ -26,7 +26,7 @@ const handleDelete = () => {
 
 const handleEdit = () => {
   emit('close');
-  
+
   console.log("TODO: Ouvrir la modale de modification pour l'événement", props.event);
   // emit("edit", props.event); // Pour informer le parent de l'ouverture
 };
