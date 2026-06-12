@@ -47,14 +47,14 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
     @keydown.space.prevent="emit('open-details', event)"
     class="relative flex h-full flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
     :class="[
-      isList ? 'p-4 pl-5' : 'md:p-2 md:pl-3 p-1 pl-2',
+      isList ? 'p-4 pl-5' : 'p-2 pl-3',
       event.isCompleted
         ? 'bg-[var(--color-event-done-bg)] opacity-65'
         : 'bg-[var(--color-event-not-done-bg)]',
     ]"
   >
     <div
-      class="absolute left-0 top-0 bottom-0 w-1 md:w-1.5"
+      class="absolute left-0 top-0 bottom-0 w-1.5"
       :style="{ backgroundColor: leftBarColor }"
     ></div>
 
