@@ -4,10 +4,10 @@ import { getClasses } from '@/services/classesService'
 import { createEvent,updateEvent } from '@/services/eventService'
 import type { Classe } from '@/types/classes'
 import type { EventType, EventPayload } from '@/types/events'
-import EventTypeSelector from './EventTypeSelector.vue'
-import EventBasicFields from './EventBasicFields.vue'
-import EventSubjectField from './EventSubjectField.vue'
-import EventDateTimeFields from './EventDateTimeFields.vue'
+import EventTypeSelector from './AddEventModal/EventTypeSelector.vue'
+import EventBasicFields from './AddEventModal/EventBasicFields.vue'
+import EventSubjectField from './AddEventModal/EventSubjectField.vue'
+import EventDateTimeFields from './AddEventModal/EventDateTimeFields.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -18,15 +18,10 @@ const props = withDefaults(
   }
 )
 
-const dialog = ref<boolean>(false)
+const dialogRef = ref<HTMLDialogElement | null>(null)
+const isDialogVisible = ref<boolean>(false)
 const classes = ref<Classe[]>([])
-var selectedType:EventType;
-
-if(props.eventToEdit){
-  selectedType = ref<EventType>(props.eventToEdit.type)
-} else {
-  selectedType = ref<EventType>('devoir')
-}
+const selectedType = ref<EventType>(props.eventToEdit?.type ?? 'devoir')
 
 const isEditMode = ref<boolean>(false)
 const eventIdToEdit = ref<number | string | undefined>(undefined)
@@ -87,18 +82,19 @@ function resetForm(): void {
 }
 
 function closeEventPopUp(): void {
-  dialog.value = false
-}
+   isDialogVisible.value = false
+   dialogRef.value?.close()
+ }
 
 function closeOnEsc(event: KeyboardEvent): void {
   if (event.key === 'Escape' || event.key === 'Esc') {
-    if (dialog.value) {
+    if (isDialogVisible.value) {
       closeEventPopUp()
     }
   }
 }
 
-function updateEvent(eventToEdit: EventPayload) {
+function populateFormForEdit(eventToEdit: EventPayload) {
   isEditMode.value = true
   eventIdToEdit.value = eventToEdit.id
   selectedType.value = eventToEdit.type
@@ -112,14 +108,28 @@ function updateEvent(eventToEdit: EventPayload) {
 }
 
 function addEventPopup(eventToEdit?: EventPayload): void {
-  resetForm()
+   resetForm()
 
-  if (eventToEdit) {
-    updateEvent(eventToEdit);
-  }
+   if (eventToEdit) {
+     // If payload contains an id, open in edit mode, otherwise prefill for creation
+     if (eventToEdit.id !== undefined && eventToEdit.id !== null) {
+       populateFormForEdit(eventToEdit);
+     } else {
+       // Prefill fields without switching to edit mode
+       selectedType.value = eventToEdit.type ?? selectedType.value
+       title.value = eventToEdit.title ?? ''
+       description.value = eventToEdit.description ?? ''
+       subject.value = eventToEdit.subject ?? subject.value
+       location.value = eventToEdit.location ?? ''
+       date.value = eventToEdit.date ?? date.value
+       startTime.value = eventToEdit.startTime ?? startTime.value
+       endTime.value = eventToEdit.endTime ?? endTime.value
+     }
+   }
 
-  dialog.value = true
-}
+   isDialogVisible.value = true
+   dialogRef.value?.showModal()
+ }
 
 defineExpose({ addEventPopup })
 
@@ -142,14 +152,11 @@ async function submit(): Promise<void> {
 
   try {
     if (isEditMode.value) {
-      await updateEvent(eventIdToEdit.value as number | string, {
-        payload,
-      })
+      await updateEvent(eventIdToEdit.value as number | string, payload)
     } else {
-      await createEvent({
-        payload,
-      })
+      await createEvent(payload)
     }
+    closeEventPopUp()
   } catch (error) {
     console.error('Error saving event:', error)
   }
@@ -163,33 +170,45 @@ function isFieldValid(value: unknown): boolean {
 </script>
 
 <template>
-  <div v-if="dialog" class="fixed inset-0 z-50 flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/40" @click="closeEventPopUp()"></div>
+  <div v-if="isDialogVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4" @click.self="closeEventPopUp()">
+    <transition name="modal-fade">
+      <dialog
+        v-if="isDialogVisible"
+        ref="dialogRef"
+        open
+        :class="['add-event-card', selectedType]"
+        class="relative bg-white rounded-xl w-full max-w-3xl mx-4 p-6 shadow-xl z-10 border-none m-0 animate-fade-in-up"
+        @keydown.esc.prevent="closeEventPopUp()"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-2xl font-bold">{{ dialogTitle }}</h3>
+          <button
+            type="button"
+            class="text-3xl leading-none text-gray-500 cursor-pointer hover:text-gray-700"
+            aria-label="Fermer"
+            @click="closeEventPopUp()"
+          >&times;</button>
+        </div>
 
-    <div :class="['add-event-card', selectedType]" class="relative bg-white rounded-xl w-full max-w-3xl mx-4 p-6 shadow-xl z-10">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-2xl font-bold">{{ dialogTitle }}</h3>
-        <button type="button" class="text-3xl leading-none text-gray-500" @click="closeEventPopUp()">&times;</button>
-      </div>
+        <form @submit.prevent="submit">
+          <EventTypeSelector v-model="selectedType" :locked="isEditMode" />
 
-      <form @submit.prevent="submit">
-        <EventTypeSelector v-model="selectedType" />
+          <EventBasicFields v-model:title="title" v-model:description="description" />
 
-        <EventBasicFields v-model:title="title" v-model:description="description" />
+          <EventSubjectField v-if="isDevoir" v-model:subject="subject" :classes="classes" />
 
-        <EventSubjectField v-if="isDevoir" v-model:subject="subject" :classes="classes" />
+          <EventDateTimeFields v-model:location="location" v-model:date="date" v-model:startTime="startTime" v-model:endTime="endTime" />
 
-        <EventDateTimeFields v-model:location="location" v-model:date="date" v-model:startTime="startTime" v-model:endTime="endTime" />
-
-        <button
-          type="submit"
-          class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90"
-          style="background: var(--color-primary)"
-        >
-          Ajouter au planning
-        </button>
-      </form>
-    </div>
+          <button
+            type="submit"
+            class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90"
+            style="background: var(--color-primary)"
+          >
+            Ajouter au planning
+          </button>
+        </form>
+      </dialog>
+    </transition>
   </div>
 </template>
 
@@ -203,4 +222,19 @@ function isFieldValid(value: unknown): boolean {
 .add-event-card.devoir { }
 .add-event-card.activite { }
 .add-event-card.sport { }
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.2s ease-out forwards;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Transition classes for Vue <transition name="modal-fade"> */
+.modal-fade-enter-from { opacity: 0; transform: translateY(8px) scale(0.99); }
+.modal-fade-enter-active { transition: all 180ms ease-out; }
+.modal-fade-enter-to { opacity: 1; transform: translateY(0) scale(1); }
+.modal-fade-leave-active { transition: all 140ms ease-in; }
+.modal-fade-leave-to { opacity: 0; transform: translateY(8px) scale(0.99); }
 </style>

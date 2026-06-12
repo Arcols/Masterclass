@@ -134,8 +134,10 @@ const updateStatus = (id: string, newValue: boolean) => {
 }
 
 const emit = defineEmits<{
-  (e: 'open-details', event: EventData): void
-}>()
+  (e: 'open-details', event: EventData): void;
+  (e: 'request-add', payload: { date: string; startTime: string }): void;
+}>();
+
 </script>
 
 <template>
@@ -227,6 +229,7 @@ const emit = defineEmits<{
             class="z-10"
             @toggle-complete="updateStatus"
             @open-details="(evt) => emit('open-details', evt)"
+            @request-add="(p) => emit('request-add', p)"
           />
         </div>
       </div>

@@ -26,7 +26,7 @@ const requiredRule = (value: unknown): true | string => {
   <div class="relative">
     <select
       :value="subject"
-      @change="$emit('update:subject', $event.target.value)"
+      @change="$emit('update:subject', ($event.target as HTMLSelectElement).value)"
       class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm appearance-none pr-10"
       required
     >

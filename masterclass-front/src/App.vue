@@ -7,33 +7,20 @@ import PlanningBoard from '@/components/PlanningBoard.vue';
 import EventDetailModal from '@/components/EventDetailModal.vue';
 import type { EventData } from '@/components/EventCard.vue';
 import type { EventPayload } from '@/types/events'
+import { makeOnAddEvent, makeOnRequestAdd, makeHandleUpdateStatus, makeHandleDelete, makeHandleEdit } from '@/utils/appHandlers'
 
 const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
 
+const onAddEvent = makeOnAddEvent(addEventRef)
 
-function onAddEvent(): void {
-  addEventRef.value?.addEventPopup()
-}
+const onRequestAdd = makeOnRequestAdd(addEventRef)
 
 // L'état qui gère l'ouverture de la modale
 const selectedEvent = ref<EventData | null>(null);
 
-const handleUpdateStatus = (id: string, newValue: boolean) => {
-  // si la modale est ouverte, on met à jour en direct
-  if (selectedEvent.value && selectedEvent.value.id === id) {
-    selectedEvent.value.isCompleted = newValue;
-  }
-};
-
-const handleDelete = (id: string) => {
-  console.log("Supprimer l'event", id);
-  selectedEvent.value = null;
-};
-
-const handleEdit = (event: EventData) => {
-  console.log("Éditer l'event", event);
-  selectedEvent.value = null;
-};
+const handleUpdateStatus = makeHandleUpdateStatus(selectedEvent)
+const handleDelete = makeHandleDelete(selectedEvent)
+const handleEdit = makeHandleEdit(addEventRef)
 </script>
 
 <template>
@@ -49,10 +36,11 @@ const handleEdit = (event: EventData) => {
 
     <main class="flex-1 flex flex-col p-4 md:p-6 lg:p-8 min-h-0">
 
-      <PlanningBoard
-        class="flex-1 min-h-0"
-        @open-details="(evt) => selectedEvent = evt"
-      />
+                  <PlanningBoard
+                        class="flex-1 min-h-0"
+                        @open-details="(evt) => selectedEvent = evt"
+                        @request-add="(p) => onRequestAdd(p)"
+                      />
 
     </main>
 
