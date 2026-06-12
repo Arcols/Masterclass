@@ -9,6 +9,7 @@ export interface EventData {
   type: 'devoir' | 'activite' | 'sport';
   title: string;
   subject?: string | null;
+  description?: string | null;
   date: string;
   startTime: string;
   endTime: string;

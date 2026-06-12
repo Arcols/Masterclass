@@ -90,7 +90,12 @@ const modalTitle = computed(() => {
               <EventBadge :type="event.type" />
               <PriorityIndicator v-if="event.priority" :priority="event.priority" />
             </div>
+
             <h3 class="text-xl font-bold text-[var(--color-black)]">{{ event.title }}</h3>
+
+            <span v-if="event.subject" class="text-sm font-semibold text-gray-500">
+              {{ event.subject }}
+            </span>
           </div>
         </div>
 
@@ -114,7 +119,7 @@ const modalTitle = computed(() => {
         </div>
 
         <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-600 border border-gray-100 mb-8">
-          {{ event.subject || "Aucune description pour cet événement." }}
+          {{ event.description || "Aucune description pour cet événement." }}
         </div>
 
         <div class="flex items-center gap-3">
