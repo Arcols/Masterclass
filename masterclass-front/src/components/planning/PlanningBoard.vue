@@ -193,7 +193,6 @@ const emit = defineEmits<{
       <div class="h-4 shrink-0 bg-transparent"></div>
 
       <div class="flex flex-1 relative pb-6">
-
         <div class="w-14 md:w-16 shrink-0 sticky left-0 z-30 bg-white border-r border-gray-100">
           <div
             v-for="hour in hours.slice(0, -1)"
@@ -210,7 +209,7 @@ const emit = defineEmits<{
           </div>
         </div>
 
-        <div class="flex-1 grid grid-cols-7 min-w-[700px] relative bg-gray-50/30">
+        <div class="flex-1 grid grid-cols-7 relative bg-gray-50/30">
           <div class="absolute inset-0 pointer-events-none flex flex-col z-0">
             <div
               v-for="i in blocksCount"
