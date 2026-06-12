@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, TrashIcon, PencilIcon } from "@heroicons/vue/24/outline";
+import EventBadge from './EventBadge.vue';
 
 const props = defineProps({
   event: {
@@ -17,11 +18,15 @@ const isHomework = computed(() => props.event.type === "homework");
 const emit = defineEmits(["close", "delete", "edit"]);
 
 const handleDelete = () => {
+  emit('close');
+
   console.log("TODO: Appel API back pour supprimer l'événement", props.event);
   // emit("delete", props.event); // Pour informer le parent si besoin
 };
 
 const handleEdit = () => {
+  emit('close');
+  
   console.log("TODO: Ouvrir la modale de modification pour l'événement", props.event);
   // emit("edit", props.event); // Pour informer le parent de l'ouverture
 };
@@ -90,14 +95,7 @@ const formattedDate = computed(() => {
         </v-sheet>
 
         <div>
-          <v-chip
-            size="small"
-            color="deep-purple-accent-2"
-            variant="tonal"
-            class="font-weight-bold text-caption"
-          >
-            ACTIVITÉ
-          </v-chip>
+          <EventBadge :type="props.event.type" />
 
           <div class="text-lg font-weight-bold text-black">
             {{ props.event.title }}
@@ -134,7 +132,7 @@ const formattedDate = computed(() => {
           variant="tonal"
           class="text-none font-weight-regular px-4"
           elevation="0"
-          style="color: rgb(220, 38, 38);"
+          style="color: var(--color-red);"
           @click="handleDelete"
         >
           <TrashIcon class="w-5 h-5 mr-3" />
