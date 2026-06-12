@@ -1,30 +1,20 @@
-<style scoped>
-</style>
 <script setup lang="ts">
-import { ref } from 'vue';
-import EventCard from '@/components/EventCard.vue';
-import jsonMock from '@/mocks/events.json';
-import Header from '@/components/Header.vue'
-import { RouterView } from 'vue-router';
-import { RouterView } from 'vue-router';
-
-// On rend le mock réactif pour pouvoir tester les clics sur la checkbox
-const events = ref(jsonMock);
-
-// Met à jour l'état de l'événement lors du clic
-const updateStatus = (id: string, newValue: boolean) => {
-  const targetEvent = events.value.find(e => e.id === id);
-  if (targetEvent) {
-    targetEvent.isCompleted = newValue;
-  }
-};
+import Header from '@/components/Header.vue';
+import PlanningBoard from '@/components/PlanningBoard.vue';
 </script>
 
 <template>
+  <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden">
+
     <Header
+      class="z-20 bg-[var(--color-background)] shadow-sm shrink-0"
       :show-actions="true"
       :show-profile="true"
       subtitle="FIL A1 2028"
     />
-    <RouterView />
+
+    <main class="flex-1 flex flex-col p-4 md:p-6 lg:p-8 min-h-0">
+      <PlanningBoard class="flex-1 min-h-0" />
+    </main>
+  </div>
 </template>
