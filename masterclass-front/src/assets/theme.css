@@ -25,8 +25,9 @@
   --color-sport-stroke: #e2b0f3;
 
   /* Couleurs pour les groupes (ex: FIL A1) */
-  --color-groupe-stroke: #54e4e4;
+  --color-groupe-txt: var(--color-black);
   --color-groupe-bg: #9effff;
+  --color-groupe-border: #54e4e4;
 
   /* Couleurs pour les TAGS (Types d'événements - Style Neutre/Bordé) */
   --color-tag-devoir-txt: var(--color-devoir-txt);

@@ -13,7 +13,7 @@ const emit = defineEmits<{
 
 <template>
   <span
-    class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide border shrink-0 uppercase bg-[var(--color-groupe-bg)] border-[var(--color-groupe-stroke)] text-[var(--color-black)]"
+    class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide border shrink-0 uppercase bg-[var(--color-groupe-bg)] border-[var(--color-groupe-border)] text-[var(--color-groupe-txt)]"
   >
     {{ group }}
     <button
