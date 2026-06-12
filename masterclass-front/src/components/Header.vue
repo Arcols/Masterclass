@@ -1,29 +1,28 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router'
 
 const props = withDefaults(
   defineProps<{
-    showActions?: boolean;
-    showProfile?: boolean;
-    subtitle?: string;
+    showActions?: boolean
+    showProfile?: boolean
+    subtitle?: string
   }>(),
   {
     showActions: false,
     showProfile: true,
     subtitle: '',
-  }
-);
+  },
+)
 
 const emit = defineEmits<{
-  (e: 'add-event'): void;
-  (e: 'open-history'): void;
-  (e: 'open-profile'): void;
-}>();
+  (e: 'add-event'): void
+  (e: 'open-history'): void
+  (e: 'open-profile'): void
+}>()
 </script>
 
 <template>
   <header class="flex w-full items-center justify-between px-3 pt-3 md:pr-6 md:pl-3 md:pt-4">
-
     <RouterLink
       to="/"
       class="flex items-center gap-2 md:gap-3 py-1.5 md:py-2 px-2 md:px-3 rounded-md cursor-pointer transition-colors duration-150 hover:bg-[var(--color-primary)]/10"
@@ -36,13 +35,22 @@ const emit = defineEmits<{
 
       <div class="flex flex-col">
         <span class="text-xl md:text-2xl font-bold leading-tight">Masterclass</span>
-        <span v-if="subtitle" class="text-[11px] md:text-[13px] text-gray-500 leading-none md:mt-0.5">
+        <span
+          v-if="subtitle"
+          class="text-[11px] md:text-[13px] text-gray-500 leading-none md:mt-0.5"
+        >
           {{ subtitle }}
         </span>
       </div>
     </RouterLink>
 
     <div v-if="showActions || showProfile" class="flex items-center gap-2.5 md:gap-5">
+      <RouterLink
+        to="/login"
+        class="inline-flex items-center justify-center px-3 py-2 rounded-md border border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-semibold transition-colors duration-150 hover:bg-[var(--color-primary)]/10 whitespace-nowrap"
+      >
+        Connexion
+      </RouterLink>
 
       <template v-if="showActions">
         <button
@@ -51,8 +59,17 @@ const emit = defineEmits<{
           @click="emit('add-event')"
           aria-label="Ajouter un événement"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-            <path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 256 256"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z"
+            />
           </svg>
           <span class="max-md:hidden">Ajouter un événement</span>
         </button>
@@ -63,25 +80,33 @@ const emit = defineEmits<{
           aria-label="Historique"
           @click="emit('open-history')"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 md:w-[22px] md:h-[22px]" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-            <path d="M232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-24,0a80,80,0,1,0-80,80A80.09,80.09,0,0,0,208,128Zm-72,0V80a12,12,0,0,0-24,0v52a12,12,0,0,0,5.37,10l32,21.34a12,12,0,1,0,13.26-20Z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 md:w-[22px] md:h-[22px]"
+            viewBox="0 0 256 256"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-24,0a80,80,0,1,0-80,80A80.09,80.09,0,0,0,208,128Zm-72,0V80a12,12,0,0,0-24,0v52a12,12,0,0,0,5.37,10l32,21.34a12,12,0,1,0,13.26-20Z"
+            />
           </svg>
         </button>
       </template>
 
-      <button
+      <RouterLink
         v-if="showProfile"
-        type="button"
+        to="/login"
         class="inline-flex items-center justify-center p-0 border-[2.5px] border-[var(--color-primary)] rounded-full bg-transparent cursor-pointer hover:opacity-80 transition-opacity"
         aria-label="Profil"
-        @click="emit('open-profile')"
       >
         <img
           src="@/assets/avatar-placeholder.svg"
-          alt="" aria-hidden="true"
+          alt=""
+          aria-hidden="true"
           class="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover"
         />
-      </button>
+      </RouterLink>
     </div>
   </header>
 </template>

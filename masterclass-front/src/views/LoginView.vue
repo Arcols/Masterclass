@@ -1,3 +1,6 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+</script>
 <script setup lang="ts"></script>
 
 <template>
@@ -26,12 +29,12 @@
           />
         </div>
 
-        <button
-          type="submit"
-          class="w-full rounded-md bg-teal-700 px-5 py-2.5 text-white transition hover:bg-teal-800"
+        <RouterLink
+          to="/"
+          class="block w-full rounded-md bg-teal-700 px-5 py-2.5 text-white transition hover:bg-teal-800"
         >
           Login
-        </button>
+        </RouterLink>
       </form>
     </div>
   </div>
