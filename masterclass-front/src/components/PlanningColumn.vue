@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import EventCard, { type EventData } from './EventCard.vue';
+import { PlanningDay } from '@/types/planningDay.ts';
 
 const props = defineProps<{
-  day: { name: string; date: string; fullDateString: string; isToday: boolean };
+  day: PlanningDay;
   events: EventData[];
   startHour: number;
   rowHeight: number;
@@ -28,13 +29,17 @@ const getEventStyle = (event: EventData) => {
 
 // ── LOGIQUE DE LA LIGNE ROUGE EN TEMPS RÉEL ──
 const now = ref(new Date());
-let timer: ReturnType<typeof setInterval>;
+let timer: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
   // Met à jour l'heure toutes les minutes pour faire bouger la ligne
-  timer = setInterval(() => { now.value = new Date(); }, 60000);
+  timer = setInterval(() => {
+    now.value = new Date();
+  }, 60000);
 });
-onUnmounted(() => clearInterval(timer));
+onUnmounted(() => {
+  if (timer) clearInterval(timer);
+});
 
 const currentTimeTop = computed(() => {
   const currentH = now.value.getHours();
