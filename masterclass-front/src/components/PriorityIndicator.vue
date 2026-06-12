@@ -31,7 +31,7 @@ const config = computed(() => {
 <template>
   <div
     v-if="config"
-    class="inline-flex items-center px-2 py-0.5 rounded-sm border text-[9px] font-bold tracking-wider uppercase leading-none"
+    class="hidden md:inline-flex items-center px-2 py-0.5 rounded-sm border text-[9px] font-bold tracking-wider uppercase leading-none"
     :class="config.containerClass"
   >
     {{ config.label }}

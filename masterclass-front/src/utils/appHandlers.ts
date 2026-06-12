@@ -37,7 +37,7 @@ export function makeOnRequestAdd(addEventRef: Ref<InstanceType<any> | null>) {
 
 export function makeHandleUpdateStatus(selectedEventRef: Ref<EventData | null>) {
   return function handleUpdateStatus(id: string, newValue: boolean): void {
-    if (selectedEventRef.value && selectedEventRef.value.id === id) {
+    if (selectedEventRef.value?.id === id) {
       selectedEventRef.value.isCompleted = newValue
     }
   }
