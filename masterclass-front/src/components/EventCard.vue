@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline';
-import EventBadge from './EventBadge.vue';
-import PriorityIndicator from './PriorityIndicator.vue';
+import { computed } from 'vue'
+import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline'
+import EventBadge from './EventBadge.vue'
+import PriorityIndicator from './PriorityIndicator.vue'
 
 export interface EventData {
   id: string;
@@ -21,21 +21,21 @@ export interface EventData {
 
 const props = withDefaults(
   defineProps<{
-    event: EventData;
-    layout?: 'list' | 'calendar';
+    event: EventData
+    layout?: 'list' | 'calendar'
   }>(),
-  { layout: 'list' }
-);
+  { layout: 'list' },
+)
 
 const emit = defineEmits<{
   (e: 'toggle-complete', id: string, newValue: boolean): void;
   (e: 'open-details', event: EventData): void;
 }>();
 
-const isList = computed(() => props.layout === 'list');
-const isDevoir = computed(() => props.event.type === 'devoir');
+const isList = computed(() => props.layout === 'list')
+const isDevoir = computed(() => props.event.type === 'devoir')
 
-const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
+const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
 </script>
 
 <template>

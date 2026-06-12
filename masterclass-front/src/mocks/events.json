@@ -48,7 +48,6 @@
     "startTime": "17:00",
     "endTime": "23:59",
     "location": "Gymnase",
-    "priority": null,
     "group": "FIL A1",
     "isCompleted": false
   }
