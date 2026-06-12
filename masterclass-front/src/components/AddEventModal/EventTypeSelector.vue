@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import type { EventType } from '@/types/events'
 
-defineProps<{
-  modelValue: EventType
-}>()
+withDefaults(
+  defineProps<{
+    modelValue: EventType
+    locked?: boolean
+  }>(),
+  {
+    locked: false,
+  }
+)
 
 defineEmits<{
   'update:modelValue': [value: EventType]
@@ -21,33 +27,39 @@ const typeLabels: Record<EventType, string> = {
     <div class="w-full mb-6 bg-gray-100 rounded-lg p-1 flex gap-2">
       <button
         type="button"
-        class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow border px-4"
-        :class="modelValue === 'devoir'
-          ? 'bg-white !text-[var(--color-primary)] border-[var(--color-primary)]'
-          : 'text-gray-600 border-gray-300 hover:border-gray-400'"
-        @click="$emit('update:modelValue', 'devoir')"
+        class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow px-4"
+        :class="[
+          modelValue === 'devoir' ? 'bg-white !text-[var(--color-primary)]' : 'text-gray-600',
+          locked && modelValue !== 'devoir' ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
+        ]"
+        :disabled="locked && modelValue !== 'devoir'"
+        @click="!locked && $emit('update:modelValue', 'devoir')"
       >
         {{ typeLabels.devoir }}
       </button>
 
       <button
         type="button"
-        class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow border px-4"
-        :class="modelValue === 'activite'
-          ? 'bg-white !text-[var(--color-primary)] border-[var(--color-primary)]'
-          : 'text-gray-600 border-gray-300 hover:border-gray-400'"
-        @click="$emit('update:modelValue', 'activite')"
+        class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow px-4"
+        :class="[
+          modelValue === 'activite' ? 'bg-white !text-[var(--color-primary)]' : 'text-gray-600',
+          locked && modelValue !== 'activite' ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
+        ]"
+        :disabled="locked && modelValue !== 'activite'"
+        @click="!locked && $emit('update:modelValue', 'activite')"
       >
         {{ typeLabels.activite }}
       </button>
 
       <button
         type="button"
-        class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow border px-4"
-        :class="modelValue === 'sport'
-          ? 'bg-white !text-[var(--color-primary)] border-[var(--color-primary)]'
-          : 'text-gray-600 border-gray-300 hover:border-gray-400'"
-        @click="$emit('update:modelValue', 'sport')"
+        class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow px-4"
+        :class="[
+          modelValue === 'sport' ? 'bg-white !text-[var(--color-primary)]' : 'text-gray-600',
+          locked && modelValue !== 'sport' ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
+        ]"
+        :disabled="locked && modelValue !== 'sport'"
+        @click="!locked && $emit('update:modelValue', 'sport')"
       >
         {{ typeLabels.sport }}
       </button>

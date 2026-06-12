@@ -112,7 +112,7 @@ onBeforeUnmount(() => {
       <input
         type="text"
         :value="location"
-        @input="$emit('update:location', $event.target.value)"
+        @input="$emit('update:location', ($event.target as HTMLInputElement).value)"
         placeholder="Ex: Chez Clovis"
         class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
         required
