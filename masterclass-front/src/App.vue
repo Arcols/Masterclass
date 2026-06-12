@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import EventCard from '@/components/EventCard.vue';
 import jsonMock from '@/mocks/events.json';
 import Header from '@/components/Header.vue'
+import { RouterView } from 'vue-router';
 
 // On rend le mock réactif pour pouvoir tester les clics sur la checkbox
 const events = ref(jsonMock);
@@ -48,6 +49,7 @@ const updateStatus = (id: string, newValue: boolean) => {
         @toggle-complete="updateStatus"
       />
     </div>
+    <RouterView></RouterView>
   </div>
   </div>
 </template>
