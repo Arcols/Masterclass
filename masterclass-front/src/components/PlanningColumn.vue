@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import EventCard, { type EventData } from './EventCard.vue';
-import { PlanningDay } from '@/types/planningDay.ts';
+import type { PlanningDay } from '@/types/planningDay';
 
 const props = defineProps<{
   day: PlanningDay;
@@ -13,11 +13,33 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'toggle-complete', id: string, newValue: boolean): void;
   (e: 'open-details', event: EventData): void;
+  (e: 'request-add', payload: { date: string; startTime: string }): void;
 }>();
 
+function handleDblClick(ev: MouseEvent):void {
+  // compute time from click position
+  const target = ev.currentTarget as HTMLElement
+  const rect = target.getBoundingClientRect()
+  const y = Math.min(Math.max(ev.clientY - rect.top, 0), rect.height)
+  const hoursFloat = y / props.rowHeight + props.startHour
+  let h = Math.floor(hoursFloat)
+  const minutes = (hoursFloat - h) * 60  // snap to 30 minutes
+
+  let m = minutes < 15 ? 0 : minutes < 45 ? 30 : 0
+  if (minutes >= 45) h += 1
+  // clamp to the last selectable slot (23:30)
+  if (h < props.startHour) h = props.startHour
+  if (h > 23) h = 23
+  if (h === 23 && m > 30) m = 30
+
+  const hh = String(h).padStart(2, '0')
+  const mm = String(m).padStart(2, '0')
+  emit('request-add', { date: props.day.fullDateString, startTime: `${hh}:${mm}` })
+}
+
 const getEventStyle = (event: EventData) => {
-  const [startH, startM] = event.startTime.split(':').map(Number);
-  let [endH, endM] = event.endTime.split(':').map(Number);
+  const [startH = 0, startM = 0] = event.startTime.split(':').map(Number);
+  let [endH = 0, endM = 0] = event.endTime.split(':').map(Number);
 
   if (endH === 0 && endM === 0) endH = 24;
 
@@ -53,7 +75,7 @@ const currentTimeTop = computed(() => {
 </script>
 
 <template>
-  <div class="relative w-full h-full border-r border-gray-100 last:border-r-0">
+    <div class="relative w-full h-full border-r border-gray-100 last:border-r-0" @dblclick="handleDblClick">
     <div
       v-if="day.isToday"
       class="absolute left-0 w-full z-20 pointer-events-none"

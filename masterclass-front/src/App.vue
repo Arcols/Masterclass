@@ -1,30 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import Header from '@/components/Header.vue';
+import { ref } from 'vue'
+import Header from '@/components/Header.vue'
+import AddEventModal from '@/components/AddEventModal.vue'
 import PlanningBoard from '@/components/PlanningBoard.vue';
 import EventDetailModal from '@/components/EventDetailModal.vue';
 import type { EventData } from '@/components/EventCard.vue';
+import { makeOnAddEvent, makeOnRequestAdd, makeHandleUpdateStatus, makeHandleDelete, makeHandleEdit } from '@/utils/appHandlers'
+
+const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
+
+const onAddEvent = makeOnAddEvent(addEventRef)
+
+const onRequestAdd = makeOnRequestAdd(addEventRef)
 
 // L'état qui gère l'ouverture de la modale
 const selectedEvent = ref<EventData | null>(null);
 
-const handleUpdateStatus = (id: string, newValue: boolean) => {
-  // si la modale est ouverte, on met à jour en direct
-  if (selectedEvent.value && selectedEvent.value.id === id) {
-    selectedEvent.value.isCompleted = newValue;
-  }
-};
-
-const handleDelete = (id: string) => {
-  console.log("Supprimer l'event", id);
-  selectedEvent.value = null;
-};
-
+const handleUpdateStatus = makeHandleUpdateStatus(selectedEvent)
+const handleDelete = makeHandleDelete(selectedEvent)
+const handleEditBase = makeHandleEdit(addEventRef)
 const handleEdit = (event: EventData) => {
-  console.log("Éditer l'event", event);
-  selectedEvent.value = null;
-};
-</script>
+  selectedEvent.value = null
+  handleEditBase(event)
+}</script>
 
 <template>
   <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden">
@@ -34,14 +32,16 @@ const handleEdit = (event: EventData) => {
       :show-actions="true"
       :show-profile="true"
       subtitle="FIL A1 2028"
+      @add-event="onAddEvent"
     />
 
     <main class="flex-1 flex flex-col p-4 md:p-6 lg:p-8 min-h-0">
 
-      <PlanningBoard
-        class="flex-1 min-h-0"
-        @open-details="(evt) => selectedEvent = evt"
-      />
+                  <PlanningBoard
+                        class="flex-1 min-h-0"
+                        @open-details="(evt) => selectedEvent = evt"
+                        @request-add="(p) => onRequestAdd(p)"
+                      />
 
     </main>
 
@@ -54,4 +54,7 @@ const handleEdit = (event: EventData) => {
       @edit="handleEdit"
     />
   </div>
+
+  <!-- Place AddEvent at app root so Header can open it via ref -->
+  <AddEventModal ref="addEventRef" @event-saved="loadEvents" />
 </template>

@@ -1,0 +1,16 @@
+// This file centralizes the event type definitions.
+
+export type EventType = 'devoir' | 'activite' | 'sport';
+
+export interface EventPayload {
+  id?: number | string; // Optional: will be present for existing events
+  type: EventType;
+  title: string;
+  description: string;
+  subject?: string;
+  location: string;
+  date: string; // Format: YYYY-MM-DD
+  startTime: string; // Format: HH:mm
+  endTime: string; // Format: HH:mm
+}
+
