@@ -10,12 +10,15 @@ export function makeOnAddEvent(addEventRef: Ref<InstanceType<any> | null>) {
 
 export function makeOnRequestAdd(addEventRef: Ref<InstanceType<any> | null>) {
   return function onRequestAdd(payload: { date: string; startTime: string }): void {
-    const [hStr, mStr] = payload.startTime.split(':')
+    const [hStr = '0', mStr = '0'] = payload.startTime.split(':')
     const h = Number(hStr)
     const m = Number(mStr)
-    let endH = h + 1
-    let endM = m
-    if (endH >= 24) { endH = 23; endM = 59 }
+    const startMinutes = Math.min(Math.max(h * 60 + m, 0), 23 * 60 + 30)
+    const startH = Math.floor(startMinutes / 60)
+    const startM = startMinutes % 60
+    const endMinutes = Math.min(startMinutes + 60, 23 * 60 + 30)
+    const endH = Math.floor(endMinutes / 60)
+    const endM = endMinutes % 60
 
     const payloadEvent: EventPayload = {
       type: 'devoir',
@@ -24,7 +27,7 @@ export function makeOnRequestAdd(addEventRef: Ref<InstanceType<any> | null>) {
       subject: undefined,
       location: '',
       date: payload.date,
-      startTime: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`,
+      startTime: `${String(startH).padStart(2, '0')}:${String(startM).padStart(2, '0')}`,
       endTime: `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`,
     }
 

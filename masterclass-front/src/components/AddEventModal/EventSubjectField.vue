@@ -10,15 +10,6 @@ defineEmits<{
   'update:subject': [value: string]
 }>()
 
-function isFieldValid(value: unknown): boolean {
-  if (value === null || value === undefined) return false
-  if (Array.isArray(value) && value.length === 0) return false
-  return String(value).trim().length > 0
-}
-
-const requiredRule = (value: unknown): true | string => {
-  return isFieldValid(value) || 'Champ obligatoire'
-}
 </script>
 
 <template>

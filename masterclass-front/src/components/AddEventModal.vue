@@ -9,6 +9,10 @@ import EventBasicFields from './AddEventModal/EventBasicFields.vue'
 import EventSubjectField from './AddEventModal/EventSubjectField.vue'
 import EventDateTimeFields from './AddEventModal/EventDateTimeFields.vue'
 
+const emit = defineEmits<{
+  'event-saved': []
+}>()
+
 const props = withDefaults(
   defineProps<{
     eventToEdit?: EventPayload
@@ -134,7 +138,17 @@ function addEventPopup(eventToEdit?: EventPayload): void {
 defineExpose({ addEventPopup })
 
 async function submit(): Promise<void> {
-  if (!isFieldValid(title.value) || !isFieldValid(location.value) || !isFieldValid(date.value) || !isFieldValid(startTime.value) || !isFieldValid(endTime.value)) {
+  const start = Number(startTime.value.slice(0, 2)) * 60 + Number(startTime.value.slice(3, 5));
+  const end = Number(endTime.value.slice(0, 2)) * 60 + Number(endTime.value.slice(3, 5));
+  if (
+    !isFieldValid(title.value) ||
+    !isFieldValid(location.value) ||
+    !isFieldValid(date.value) ||
+    !isFieldValid(startTime.value) ||
+    !isFieldValid(endTime.value) ||
+    (isDevoir.value && !isFieldValid(subject.value)) ||
+    end <= start
+  ) {
     return
   }
 
@@ -156,6 +170,7 @@ async function submit(): Promise<void> {
     } else {
       await createEvent(payload)
     }
+    emit('event-saved')
     closeEventPopUp()
   } catch (error) {
     console.error('Error saving event:', error)
