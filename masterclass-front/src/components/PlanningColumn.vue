@@ -16,16 +16,22 @@ const emit = defineEmits<{
   (e: 'request-add', payload: { date: string; startTime: string }): void;
 }>();
 
-function handleDblClick(ev: MouseEvent) {
+function handleDblClick(ev: MouseEvent):void {
   // compute time from click position
   const target = ev.currentTarget as HTMLElement
   const rect = target.getBoundingClientRect()
-  const y = ev.clientY - rect.top
-  const hoursFloat = (y / props.rowHeight) + props.startHour
+  const y = Math.min(Math.max(ev.clientY - rect.top, 0), rect.height)
+  const hoursFloat = y / props.rowHeight + props.startHour
   let h = Math.floor(hoursFloat)
-  let m = Math.round((hoursFloat - h) * 60)
-  // snap to 30 minutes
-  m = m < 15 ? 0 : m < 45 ? 30 : 0; if (m === 0 && (Math.round((hoursFloat - h) * 60) >= 45)) { h = h + 1 }
+  const minutes = (hoursFloat - h) * 60  // snap to 30 minutes
+
+  let m = minutes < 15 ? 0 : minutes < 45 ? 30 : 0
+  if (minutes >= 45) h += 1
+  // clamp to the last selectable slot (23:30)
+  if (h < props.startHour) h = props.startHour
+  if (h > 23) h = 23
+  if (h === 23 && m > 30) m = 30
+
   const hh = String(h).padStart(2, '0')
   const mm = String(m).padStart(2, '0')
   emit('request-add', { date: props.day.fullDateString, startTime: `${hh}:${mm}` })

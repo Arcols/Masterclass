@@ -6,7 +6,6 @@ import AddEventModal from '@/components/AddEventModal.vue'
 import PlanningBoard from '@/components/PlanningBoard.vue';
 import EventDetailModal from '@/components/EventDetailModal.vue';
 import type { EventData } from '@/components/EventCard.vue';
-import type { EventPayload } from '@/types/events'
 import { makeOnAddEvent, makeOnRequestAdd, makeHandleUpdateStatus, makeHandleDelete, makeHandleEdit } from '@/utils/appHandlers'
 
 const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
@@ -20,8 +19,11 @@ const selectedEvent = ref<EventData | null>(null);
 
 const handleUpdateStatus = makeHandleUpdateStatus(selectedEvent)
 const handleDelete = makeHandleDelete(selectedEvent)
-const handleEdit = makeHandleEdit(addEventRef)
-</script>
+const handleEditBase = makeHandleEdit(addEventRef)
+const handleEdit = (event: EventData) => {
+  selectedEvent.value = null
+  handleEditBase(event)
+}</script>
 
 <template>
   <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden">
@@ -57,5 +59,5 @@ const handleEdit = makeHandleEdit(addEventRef)
   <RouterView />
 
   <!-- Place AddEvent at app root so Header can open it via ref -->
-  <AddEventModal ref="addEventRef" />
+  <AddEventModal ref="addEventRef" @event-saved="loadEvents" />
 </template>

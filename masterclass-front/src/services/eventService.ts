@@ -14,7 +14,7 @@ export async function createEvent(payload: EventPayload): Promise<EventPayload> 
   // In a real app, the backend would return the saved object, possibly with an ID.
   const savedEvent = {
     ...payload,
-    id: payload.id || Date.now(), // Assign a new ID if it's a new event
+    id: payload.id ?? Date.now(), // Assign a new ID if it's a new event
   };
 
   console.log('Event saved successfully:', savedEvent);
