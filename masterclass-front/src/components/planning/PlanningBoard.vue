@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 import PlanningColumn from './PlanningColumn.vue';
-import type { EventData } from './EventCard.vue';
+import type { EventData } from '../event/EventCard.vue';
 import mockEvents from '@/mocks/events.json';
 
 // ── CONFIGURATION DE LA GRILLE ──

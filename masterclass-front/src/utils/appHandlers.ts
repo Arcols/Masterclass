@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import type { EventPayload } from '@/types/events'
-import type { EventData } from '@/components/EventCard.vue'
+import type { EventData } from '@/components/event/EventCard.vue'
 
 export function makeOnAddEvent(addEventRef: Ref<InstanceType<any> | null>) {
   return function onAddEvent(): void {

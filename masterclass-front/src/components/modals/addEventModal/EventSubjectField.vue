@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Classe } from '@/types/classes'
+import type { Classe } from '@/types/classes.ts'
 
 defineProps<{
   subject: string

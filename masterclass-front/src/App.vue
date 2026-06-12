@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Header from '@/components/Header.vue'
-import AddEventModal from '@/components/AddEventModal.vue'
-import PlanningBoard from '@/components/PlanningBoard.vue';
-import EventDetailModal from '@/components/EventDetailModal.vue';
-import type { EventData } from '@/components/EventCard.vue';
+import AddEventModal from '@/components/modals/AddEventModal.vue'
+import PlanningBoard from '@/components/planning/PlanningBoard.vue';
+import EventDetailModal from '@/components/event/EventDetailModal.vue';
+import type { EventData } from '@/components/event/EventCard.vue';
 import { makeOnAddEvent, makeOnRequestAdd, makeHandleUpdateStatus, makeHandleDelete, makeHandleEdit } from '@/utils/appHandlers'
 
 const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue';
-import EventCard, { type EventData } from './EventCard.vue';
-import type { PlanningDay } from '@/types/planningDay';
+import EventCard, { type EventData } from '../event/EventCard.vue';
+import type { PlanningDay } from '@/types/planningDay.ts';
 
 const props = defineProps<{
   day: PlanningDay;
