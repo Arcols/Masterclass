@@ -6,8 +6,10 @@ import AddEventModal from '@/components/AddEventModal.vue'
 import PlanningBoard from '@/components/PlanningBoard.vue';
 import EventDetailModal from '@/components/EventDetailModal.vue';
 import type { EventData } from '@/components/EventCard.vue';
+import type { EventPayload } from '@/types/events'
 
-const addEventRef = ref<any>(null)
+const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
+
 
 function onAddEvent(): void {
   addEventRef.value?.addEventPopup()
