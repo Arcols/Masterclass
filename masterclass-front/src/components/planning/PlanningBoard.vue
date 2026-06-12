@@ -2,9 +2,9 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 import PlanningColumn from './PlanningColumn.vue'
-import type { EventData } from './EventCard.vue'
 import mockEvents from '@/mocks/events.json'
 import PlanningFilters from '@/components/PlanningFilters.vue'
+import type { EventData } from '@/components/event/EventCard.vue'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -126,10 +126,6 @@ const nextWeek = () => {
   const newDate = new Date(currentDate.value)
   newDate.setDate(newDate.getDate() + 7)
   currentDate.value = newDate
-}
-
-const getEventsForDay = (fullDateStr: string) => {
-  return events.value.filter((e) => e.date === fullDateStr)
 }
 
 const updateStatus = (id: string, newValue: boolean) => {

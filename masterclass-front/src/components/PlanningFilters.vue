@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MultiSelectDropdown from './MultiSelectDropdown.vue';
-import EventBadge from './EventBadge.vue';
 import GroupBadge from './GroupBadge.vue';
+import EventBadge from '@/components/event/EventBadge.vue'
 
 defineProps<{
   selectedTypes: string[];
