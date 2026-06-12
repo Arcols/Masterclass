@@ -3,7 +3,7 @@ import { computed, ref, onMounted, onUnmounted } from 'vue';
 import EventCard, { type EventData } from './EventCard.vue';
 
 const props = defineProps<{
-  day: { name: string; date: string; fullDate: string; isToday: boolean };
+  day: { name: string; date: string; fullDateString: string; isToday: boolean };
   events: EventData[];
   startHour: number;
   rowHeight: number;
@@ -11,6 +11,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'toggle-complete', id: string, newValue: boolean): void;
+  (e: 'open-details', event: EventData): void;
 }>();
 
 const getEventStyle = (event: EventData) => {
@@ -68,6 +69,7 @@ const currentTimeTop = computed(() => {
         :event="event"
         layout="calendar"
         @toggle-complete="(id, val) => emit('toggle-complete', id, val)"
+        @open-details="(evt) => emit('open-details', evt)"
       />
     </div>
   </div>

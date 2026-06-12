@@ -101,6 +101,11 @@ const updateStatus = (id: string, newValue: boolean) => {
   const targetEvent = events.value.find(e => e.id === id);
   if (targetEvent) targetEvent.isCompleted = newValue;
 };
+
+const emit = defineEmits<{
+  (e: 'open-details', event: EventData): void;
+}>();
+
 </script>
 
 <template>
@@ -176,6 +181,7 @@ const updateStatus = (id: string, newValue: boolean) => {
             :row-height="ROW_HEIGHT"
             class="z-10"
             @toggle-complete="updateStatus"
+            @open-details="(evt) => emit('open-details', evt)"
           />
         </div>
       </div>

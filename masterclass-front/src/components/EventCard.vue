@@ -28,6 +28,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'toggle-complete', id: string, newValue: boolean): void;
+  (e: 'open-details', event: EventData): void;
 }>();
 
 const isList = computed(() => props.layout === 'list');
@@ -38,7 +39,8 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
 
 <template>
   <div
-    class="relative flex flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200"
+    @click="emit('open-details', event)"
+    class="relative flex flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer"
     :class="[
       isList ? 'p-4 pl-5' : 'p-2 pl-3',
       event.isCompleted ? 'bg-[var(--color-event-done-bg)] opacity-65' : 'bg-[var(--color-event-not-done-bg)]'
@@ -99,6 +101,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`);
         :class="isList ? 'w-6 h-6' : 'w-4 h-4'"
         :checked="event.isCompleted"
         :aria-label="event.isCompleted ? 'Marquer comme non terminé' : 'Marquer comme terminé'"
+        @click.stop
         @change="emit('toggle-complete', event.id, ($event.target as HTMLInputElement).checked)"
       />
     </div>
