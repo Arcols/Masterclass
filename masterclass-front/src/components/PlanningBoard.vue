@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 import PlanningColumn from './PlanningColumn.vue'
 import type { EventData } from './EventCard.vue'
 import mockEvents from '@/mocks/events.json'
+import PlanningFilters from '@/components/PlanningFilters.vue'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -19,6 +20,27 @@ const rowHeight = ref(MOBILE_ROW_HEIGHT)
 
 const updateRowHeight = () => {
   rowHeight.value = window.innerWidth < 768 ? MOBILE_ROW_HEIGHT : DESKTOP_ROW_HEIGHT
+}
+
+// ── GESTION DES FILTRES ──
+const selectedTypes = ref<string[]>([])
+const selectedGroups = ref<string[]>([])
+
+// Génère dynamiquement la liste de tous les groupes existants dans les données
+const availableGroups = computed(() => {
+  const groups = events.value.map(e => e.group)
+  return [...new Set(groups)] // Enlève les doublons
+})
+
+// ── FILTRAGE DES DONNÉES ──
+const getEventsForDay = (fullDateStr: string) => {
+  return events.value.filter((e) => {
+    const isSameDate = e.date === fullDateStr;
+    const isTypeMatched = selectedTypes.value.length === 0 || selectedTypes.value.includes(e.type);
+    const isGroupMatched = selectedGroups.value.length === 0 || selectedGroups.value.includes(e.group);
+
+    return isSameDate && isTypeMatched && isGroupMatched;
+  })
 }
 
 // ── GESTION DES DATES ──
@@ -106,10 +128,6 @@ const nextWeek = () => {
   currentDate.value = newDate
 }
 
-const getEventsForDay = (fullDateStr: string) => {
-  return events.value.filter((e) => e.date === fullDateStr)
-}
-
 const updateStatus = (id: string, newValue: boolean) => {
   const targetEvent = events.value.find((e) => e.id === id)
   if (targetEvent) targetEvent.isCompleted = newValue
@@ -124,7 +142,7 @@ const emit = defineEmits<{
   <div
     class="flex flex-col h-full bg-white md:rounded-xl border border-gray-200 overflow-hidden shadow-sm"
   >
-    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-50">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-50 shrink-0">
       <h2 class="text-lg font-bold text-[var(--color-black)] capitalize">{{ currentMonthYear }}</h2>
       <div class="flex items-center gap-1">
         <button
@@ -141,6 +159,12 @@ const emit = defineEmits<{
         </button>
       </div>
     </div>
+
+    <PlanningFilters
+      v-model:selected-types="selectedTypes"
+      v-model:selected-groups="selectedGroups"
+      :available-groups="availableGroups"
+    />
 
     <div class="flex-1 overflow-auto relative flex flex-col">
       <div class="sticky top-0 z-40 flex border-b border-gray-200 bg-white shadow-sm shrink-0">

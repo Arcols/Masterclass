@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
 
 const props = defineProps<{
   type?: 'devoir' | 'activite' | 'sport';
+  removable?: boolean; // Permet d'afficher la croix
+}>();
+
+const emit = defineEmits<{
+  (e: 'remove'): void;
 }>();
 
 const badgeConfig = computed(() => {
@@ -22,9 +28,17 @@ const badgeConfig = computed(() => {
 <template>
   <span
     v-if="badgeConfig"
-    class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide border shrink-0 uppercase"
+    class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide border shrink-0 uppercase"
     :class="badgeConfig.class"
   >
     {{ badgeConfig.label }}
+
+    <button
+      v-if="removable"
+      @click.stop="emit('remove')"
+      class="hover:scale-125 hover:text-[var(--color-red)] focus:outline-none flex items-center justify-center cursor-pointer"
+    >
+      <XMarkIcon class="w-3 h-3" stroke-width="3" />
+    </button>
   </span>
 </template>
