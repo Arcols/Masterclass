@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterView } from 'vue-router'
 import Header from '@/components/Header.vue'
 import AddEventModal from '@/components/AddEventModal.vue'
 import PlanningBoard from '@/components/PlanningBoard.vue';
@@ -55,8 +54,6 @@ const handleEdit = (event: EventData) => {
       @edit="handleEdit"
     />
   </div>
-
-  <RouterView />
 
   <!-- Place AddEvent at app root so Header can open it via ref -->
   <AddEventModal ref="addEventRef" @event-saved="loadEvents" />

@@ -8,12 +8,18 @@ import mockEvents from '@/mocks/events.json';
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7;
 const END_HOUR = 24;
-const ROW_HEIGHT = 80;
+const MOBILE_ROW_HEIGHT = 50
+const DESKTOP_ROW_HEIGHT = 80
 
 const blocksCount = END_HOUR - START_HOUR;
 const hours = Array.from({ length: blocksCount + 1 }, (_, i) => START_HOUR + i);
 
-const events = ref<EventData[]>(mockEvents as EventData[]);
+const events = ref<EventData[]>(mockEvents as EventData[])
+const rowHeight = ref(MOBILE_ROW_HEIGHT)
+
+const updateRowHeight = () => {
+  rowHeight.value = window.innerWidth < 768 ? MOBILE_ROW_HEIGHT : DESKTOP_ROW_HEIGHT
+}
 
 // ── GESTION DES DATES ──
 const currentDate = ref(new Date()); // Gère la semaine affichée (Navigation)
@@ -21,7 +27,12 @@ const now = ref(new Date());         // Gère l'instant T (Ligne rouge et "Aujou
 let timer: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
-  timer = setInterval(() => { now.value = new Date(); }, 60000);
+  updateRowHeight()
+  window.addEventListener('resize', updateRowHeight)
+
+  timer = setInterval(() => {
+    now.value = new Date()
+  }, 60000)
 });
 
 onUnmounted(() => {
@@ -163,7 +174,7 @@ const emit = defineEmits<{
             v-for="hour in hours.slice(0, -1)"
             :key="hour"
             class="relative border-transparent text-xs text-gray-400 text-right pr-2"
-            :style="{ height: `${ROW_HEIGHT}px` }"
+            :style="{ height: `${rowHeight}px` }"
           >
             <span class="absolute -top-2.5 right-2 bg-white px-1">
               {{ hour.toString().padStart(2, '0') }}:00
@@ -180,7 +191,7 @@ const emit = defineEmits<{
               v-for="i in blocksCount"
               :key="'line-' + i"
               class="w-full border-b border-gray-200"
-              :style="{ height: `${ROW_HEIGHT}px` }"
+              :style="{ height: `${rowHeight}px` }"
             ></div>
           </div>
 
@@ -190,7 +201,7 @@ const emit = defineEmits<{
             :day="day"
             :events="getEventsForDay(day.fullDateString)"
             :start-hour="START_HOUR"
-            :row-height="ROW_HEIGHT"
+            :row-height="rowHeight"
             class="z-10"
             @toggle-complete="updateStatus"
             @open-details="(evt) => emit('open-details', evt)"
