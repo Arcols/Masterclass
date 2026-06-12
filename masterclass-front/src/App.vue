@@ -55,6 +55,5 @@ const handleEdit = (event: EventData) => {
     />
   </div>
 
-  <!-- Place AddEvent at app root so Header can open it via ref -->
   <AddEventModal ref="addEventRef" @event-saved="loadEvents" />
 </template>
