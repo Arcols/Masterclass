@@ -5,7 +5,7 @@ import DetailEventModal from "@/components/DetailEventModal.vue";
 const event = ref({
   id: 1,
   title: "Showcase Yanis",
-  type: "devoir",
+  type: "homework",
   start: new Date("2026-06-11T14:00:00"),
   end: new Date("2026-06-11T16:30:00"),
   group: "FIL A1",
