@@ -5,18 +5,18 @@ import EventBadge from './EventBadge.vue'
 import PriorityIndicator from './PriorityIndicator.vue'
 
 export interface EventData {
-  id: string;
-  type: 'devoir' | 'activite' | 'sport';
-  title: string;
-  subject?: string | null;
-  description?: string | null;
-  date: string;
-  startTime: string;
-  endTime: string;
-  location?: string;
-  priority?: 'urgent' | 'normal' | 'faible' | null;
-  group: string;
-  isCompleted: boolean;
+  id: string
+  type: 'devoir' | 'activite' | 'sport'
+  title: string
+  subject?: string | null
+  description?: string | null
+  date: string
+  startTime: string
+  endTime: string
+  location?: string
+  priority?: 'urgent' | 'normal' | 'faible' | null
+  group: string
+  isCompleted: boolean
 }
 
 const props = withDefaults(
@@ -28,9 +28,9 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'toggle-complete', id: string, newValue: boolean): void;
-  (e: 'open-details', event: EventData): void;
-}>();
+  (e: 'toggle-complete', id: string, newValue: boolean): void
+  (e: 'open-details', event: EventData): void
+}>()
 
 const isList = computed(() => props.layout === 'list')
 const isDevoir = computed(() => props.event.type === 'devoir')
@@ -64,16 +64,16 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
 
         <span
           v-if="event.subject"
-          class="hidden md:block font-semibold text-gray-500 truncate w-full"
+          class="hidden md:block font-semibold text-gray-500 w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
           :class="isList ? 'text-sm' : 'text-[11px]'"
         >
           {{ event.subject }}
         </span>
         <span
           v-else
-          class="font-bold text-[var(--color-black)] truncate w-full"
+          class="font-bold text-[var(--color-black)] w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
           :class="[
-            isList ? 'text-lg' : 'text-sm',
+            isList ? 'text-lg' : 'text-sm md:text-[13px] text-[9px]',
             { 'line-through text-gray-400': event.isCompleted },
           ]"
         >
@@ -84,12 +84,12 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
       <EventBadge :type="event.type" class="hidden md:block shrink-0" />
     </div>
 
-    <div class="flex justify-between items-center mt-1">
+    <div class="flex justify-between items-center md:mt-1">
       <span
         v-if="event.subject"
-        class="flex font-bold text-[var(--color-black)] truncate pr-2"
+        class="flex font-bold text-[var(--color-black)] pr-2 whitespace-normal break-words md:truncate md:whitespace-nowrap"
         :class="[
-          isList ? 'text-xl' : 'text-[13px]',
+          isList ? 'text-xl' : 'md:text-[13px] text-[9px]',
           { 'line-through text-gray-600': event.isCompleted },
         ]"
       >
@@ -100,7 +100,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
         v-else-if="!isList && event.location"
         class="flex items-center text-gray-500 text-[11px]"
       >
-        <MapPinIcon class="w-3 h-3 mr-1" />
+        <MapPinIcon class="hidden md:block w-3 h-3 mr-1" />
         {{ event.location }}
       </div>
 

@@ -145,7 +145,7 @@ const emit = defineEmits<{
     <div class="flex-1 overflow-auto relative flex flex-col">
       <div class="sticky top-0 z-40 flex border-b border-gray-200 bg-white shadow-sm shrink-0">
         <div
-          class="w-14 md:w-16 shrink-0 sticky left-0 z-50 bg-white border-r border-gray-100"
+          class="w-12 md:w-16 shrink-0 sticky left-0 z-50 bg-white border-r border-gray-100"
         ></div>
 
         <div class="flex-1 grid grid-cols-7">
@@ -167,18 +167,18 @@ const emit = defineEmits<{
       <div class="h-4 shrink-0 bg-transparent"></div>
 
       <div class="flex flex-1 relative pb-6">
-        <div class="w-14 md:w-16 shrink-0 sticky left-0 z-30 bg-white border-r border-gray-100">
+        <div class="w-12 md:w-16 shrink-0 sticky left-0 z-30 bg-white border-r border-gray-100">
           <div
             v-for="hour in hours.slice(0, -1)"
             :key="hour"
-            class="relative border-transparent text-xs text-gray-400 text-right pr-2"
+            class="relative border-transparent text-xs text-gray-400 text-right md:pr-2"
             :style="{ height: `${rowHeight}px` }"
           >
             <span class="absolute -top-2.5 right-2 bg-white px-1">
               {{ hour.toString().padStart(2, '0') }}:00
             </span>
           </div>
-          <div class="relative text-xs text-gray-400 text-right pr-2">
+          <div class="relative text-xs text-gray-400 text-right md:pr-2">
             <span class="absolute -top-2.5 right-2 bg-white px-1">00:00</span>
           </div>
         </div>
