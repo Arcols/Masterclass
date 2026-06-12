@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { getClasses } from '@/services/classesService'
 import { createEvent,updateEvent } from '@/services/eventService'
 import type { Classe } from '@/types/classes'
@@ -59,6 +59,12 @@ onMounted(async (): Promise<void> => {
   if (!subject.value && classes.value[0]?.value) {
     subject.value = classes.value[0].value
   }
+  // add global key listener for Escape to close modal
+  window.addEventListener('keydown', closeOnEsc)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', closeOnEsc)
 })
 
 function getTodayDate(): string {
@@ -82,6 +88,14 @@ function resetForm(): void {
 
 function closeEventPopUp(): void {
   dialog.value = false
+}
+
+function closeOnEsc(event: KeyboardEvent): void {
+  if (event.key === 'Escape' || event.key === 'Esc') {
+    if (dialog.value) {
+      closeEventPopUp()
+    }
+  }
 }
 
 function updateEvent(eventToEdit: EventPayload) {
@@ -149,52 +163,34 @@ function isFieldValid(value: unknown): boolean {
 </script>
 
 <template>
-  <v-dialog v-model="dialog" max-width="760">
-    <v-card :class="['add-event-card', selectedType]" rounded="xl" class="pa-2 pa-md-4">
-      <v-card-title class="d-flex align-center justify-space-between text-h4 font-weight-bold py-4">
-        <span>{{ dialogTitle }}</span>
-        <v-btn icon variant="text" @click="closeEventPopUp()">
-          <span aria-hidden="true" style="font-size: 2rem; line-height: 1">×</span>
-        </v-btn>
-      </v-card-title>
+  <div v-if="dialog" class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/40" @click="closeEventPopUp()"></div>
 
-      <v-card-text>
-        <v-form @submit.prevent="submit">
-          <EventTypeSelector
-            v-model="selectedType"
-          />
+    <div :class="['add-event-card', selectedType]" class="relative bg-white rounded-xl w-full max-w-3xl mx-4 p-6 shadow-xl z-10">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-2xl font-bold">{{ dialogTitle }}</h3>
+        <button type="button" class="text-3xl leading-none text-gray-500" @click="closeEventPopUp()">&times;</button>
+      </div>
 
-          <EventBasicFields
-            v-model:title="title"
-            v-model:description="description"
-          />
+      <form @submit.prevent="submit">
+        <EventTypeSelector v-model="selectedType" />
 
-          <EventSubjectField
-            v-if="isDevoir"
-            v-model:subject="subject"
-            :classes="classes"
-          />
+        <EventBasicFields v-model:title="title" v-model:description="description" />
 
-          <EventDateTimeFields
-            v-model:location="location"
-            v-model:date="date"
-            v-model:startTime="startTime"
-            v-model:endTime="endTime"
-          />
+        <EventSubjectField v-if="isDevoir" v-model:subject="subject" :classes="classes" />
 
-          <v-btn
-            type="submit"
-            size="large"
-            block
-            rounded="lg"
-            class="mt-2 submit-btn"
-          >
-            Ajouter au planning
-          </v-btn>
-        </v-form>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+        <EventDateTimeFields v-model:location="location" v-model:date="date" v-model:startTime="startTime" v-model:endTime="endTime" />
+
+        <button
+          type="submit"
+          class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90"
+          style="background: var(--color-primary)"
+        >
+          Ajouter au planning
+        </button>
+      </form>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -203,12 +199,8 @@ function isFieldValid(value: unknown): boolean {
   background: var(--color-background);
 }
 
-.add-event-card :deep(.v-card-title) {
-  color: var(--color-black);
-}
-
-.submit-btn :deep(.v-btn__content), .submit-btn {
-  background: var(--color-primary) !important;
-  color: white !important;
-}
+/* keep a small compatibility hook for selected type classes */
+.add-event-card.devoir { }
+.add-event-card.activite { }
+.add-event-card.sport { }
 </style>
