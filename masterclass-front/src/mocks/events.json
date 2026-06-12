@@ -8,6 +8,7 @@
     "date": "2026-06-10",
     "startTime": "08:00",
     "endTime": "09:00",
+    "location": "J147",
     "priority": "urgent",
     "group": "FIL A1",
     "isCompleted": false
@@ -21,6 +22,7 @@
     "date": "2026-06-11",
     "startTime": "19:00",
     "endTime": "20:30",
+    "location": "J147",
     "priority": "normal",
     "group": "ANG G1",
     "isCompleted": true
