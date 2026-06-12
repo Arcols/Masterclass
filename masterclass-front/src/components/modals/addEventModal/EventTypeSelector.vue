@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EventType } from '@/types/events'
+import type { EventType } from '@/types/events.ts'
 
 withDefaults(
   defineProps<{

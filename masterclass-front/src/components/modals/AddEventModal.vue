@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
-import { getClasses } from '@/services/classesService'
-import { createEvent,updateEvent } from '@/services/eventService'
-import type { Classe } from '@/types/classes'
-import type { EventType, EventPayload } from '@/types/events'
-import EventTypeSelector from './AddEventModal/EventTypeSelector.vue'
-import EventBasicFields from './AddEventModal/EventBasicFields.vue'
-import EventSubjectField from './AddEventModal/EventSubjectField.vue'
-import EventDateTimeFields from './AddEventModal/EventDateTimeFields.vue'
+import { getClasses } from '@/services/classesService.ts'
+import { createEvent,updateEvent } from '@/services/eventService.ts'
+import type { Classe } from '@/types/classes.ts'
+import type { EventType, EventPayload } from '@/types/events.ts'
+import EventTypeSelector from '@/components/modals/addEventModal/EventTypeSelector.vue'
+import EventBasicFields from '@/components/modals/addEventModal/EventBasicFields.vue'
+import EventSubjectField from '@/components/modals/addEventModal/EventSubjectField.vue'
+import EventDateTimeFields from '@/components/modals/addEventModal/EventDateTimeFields.vue'
 
 const emit = defineEmits<{
   'event-saved': []
