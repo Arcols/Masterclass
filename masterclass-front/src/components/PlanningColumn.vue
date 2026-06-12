@@ -12,6 +12,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'toggle-complete', id: string, newValue: boolean): void;
+  (e: 'open-details', event: EventData): void;
 }>();
 
 const getEventStyle = (event: EventData) => {
@@ -73,6 +74,7 @@ const currentTimeTop = computed(() => {
         :event="event"
         layout="calendar"
         @toggle-complete="(id, val) => emit('toggle-complete', id, val)"
+        @open-details="(evt) => emit('open-details', evt)"
       />
     </div>
   </div>

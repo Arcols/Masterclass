@@ -5,17 +5,18 @@ import EventBadge from './EventBadge.vue'
 import PriorityIndicator from './PriorityIndicator.vue'
 
 export interface EventData {
-  id: string
-  type: 'devoir' | 'activite' | 'sport'
-  title: string
-  subject?: string | null
-  date: string
-  startTime: string
-  endTime: string
-  location?: string
-  priority?: 'urgent' | 'normal' | 'faible' | null
-  group: string
-  isCompleted: boolean
+  id: string;
+  type: 'devoir' | 'activite' | 'sport';
+  title: string;
+  subject?: string | null;
+  description?: string | null;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location?: string;
+  priority?: 'urgent' | 'normal' | 'faible' | null;
+  group: string;
+  isCompleted: boolean;
 }
 
 const props = withDefaults(
@@ -27,8 +28,9 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'toggle-complete', id: string, newValue: boolean): void
-}>()
+  (e: 'toggle-complete', id: string, newValue: boolean): void;
+  (e: 'open-details', event: EventData): void;
+}>();
 
 const isList = computed(() => props.layout === 'list')
 const isDevoir = computed(() => props.event.type === 'devoir')
@@ -38,7 +40,12 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
 
 <template>
   <div
-    class="relative flex h-full flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200"
+    role="button"
+    tabindex="0"
+    @click="emit('open-details', event)"
+    @keydown.enter="emit('open-details', event)"
+    @keydown.space.prevent="emit('open-details', event)"
+    class="relative flex h-full flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
     :class="[
       isList ? 'p-4 pl-5' : 'p-2 pl-3',
       event.isCompleted
@@ -107,6 +114,9 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
         ]"
         :checked="event.isCompleted"
         :aria-label="event.isCompleted ? 'Marquer comme non terminé' : 'Marquer comme terminé'"
+        @click.stop
+        @keydown.enter.stop
+        @keydown.space.stop
         @change="emit('toggle-complete', event.id, ($event.target as HTMLInputElement).checked)"
       />
     </div>
