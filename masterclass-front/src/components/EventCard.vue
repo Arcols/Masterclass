@@ -40,8 +40,12 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
 
 <template>
   <div
+    role="button"
+    tabindex="0"
     @click="emit('open-details', event)"
-    class="relative flex h-full flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer"
+    @keydown.enter="emit('open-details', event)"
+    @keydown.space.prevent="emit('open-details', event)"
+    class="relative flex h-full flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
     :class="[
       isList ? 'p-4 pl-5' : 'p-2 pl-3',
       event.isCompleted
@@ -111,6 +115,8 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
         :checked="event.isCompleted"
         :aria-label="event.isCompleted ? 'Marquer comme non terminé' : 'Marquer comme terminé'"
         @click.stop
+        @keydown.enter.stop
+        @keydown.space.stop
         @change="emit('toggle-complete', event.id, ($event.target as HTMLInputElement).checked)"
       />
     </div>

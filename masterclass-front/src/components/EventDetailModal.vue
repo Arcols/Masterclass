@@ -32,7 +32,7 @@ const isDevoir = computed(() => props.event.type === 'devoir');
 const formattedDate = computed(() => {
   if (!props.event.date) return 'Date non définie';
 
-  const d = new Date(props.event.date);
+  const d = new Date(`${props.event.date}T00:00:00`);
   const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
   const dateStr = new Intl.DateTimeFormat('fr-FR', options).format(d);
 
@@ -57,13 +57,18 @@ const modalTitle = computed(() => {
     class="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4"
     @click.self="emit('close')"
   >
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col animate-fade-in-up">
+    <dialog
+      open
+      class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col animate-fade-in-up p-0 m-0 border-none relative"
+      aria-labelledby="event-detail-title"
+    >
 
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h2 class="text-lg font-bold text-[var(--color-black)]">{{ modalTitle }}</h2>
+        <h2 id="event-detail-title" class="text-lg font-bold text-[var(--color-black)]">{{ modalTitle }}</h2>
         <button
           @click="emit('close')"
           class="p-1.5 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+          aria-label="Fermer la modale"
         >
           <XMarkIcon class="w-6 h-6" />
         </button>
@@ -153,7 +158,7 @@ const modalTitle = computed(() => {
         </div>
 
       </div>
-    </div>
+    </dialog>
   </div>
 </template>
 
