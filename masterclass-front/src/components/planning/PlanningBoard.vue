@@ -128,10 +128,6 @@ const nextWeek = () => {
   currentDate.value = newDate
 }
 
-const getEventsForDay = (fullDateStr: string) => {
-  return events.value.filter((e) => e.date === fullDateStr)
-}
-
 const updateStatus = (id: string, newValue: boolean) => {
   const targetEvent = events.value.find((e) => e.id === id)
   if (targetEvent) targetEvent.isCompleted = newValue
