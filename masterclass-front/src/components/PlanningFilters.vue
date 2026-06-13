@@ -2,16 +2,17 @@
 import MultiSelectDropdown from './MultiSelectDropdown.vue';
 import GroupBadge from './GroupBadge.vue';
 import EventBadge from '@/components/event/EventBadge.vue'
+import type { EventType, EventTypeOption } from '@/types/event.ts'
 
 defineProps<{
-  selectedTypes: string[];
+  selectedTypes: EventType[];
   selectedGroups: string[];
   availableGroups: string[];
 }>();
 
 const emit = defineEmits(['update:selectedTypes', 'update:selectedGroups']);
 
-const typeOptions = [
+const typeOptions: EventTypeOption[] = [
   { id: 'devoir', label: 'Devoir' },
   { id: 'activite', label: 'Activité' },
   { id: 'sport', label: 'Sport' }
@@ -32,13 +33,13 @@ const typeOptions = [
           <EventBadge
             v-for="t in selectedTypes"
             :key="t"
-            :type="t as any"
+            :type="t"
             removable
             @remove="remove(t)"
           />
         </template>
         <template #option="{ option }">
-          <EventBadge :type="option.id as any" />
+          <EventBadge :type="option.id as EventType" />
         </template>
       </MultiSelectDropdown>
     </div>

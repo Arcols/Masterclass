@@ -55,5 +55,5 @@ const handleEdit = (event: EventData) => {
     />
   </div>
 
-  <AddEventModal ref="addEventRef" @event-saved="loadEvents" />
+  <AddEventModal ref="addEventRef" />
 </template>

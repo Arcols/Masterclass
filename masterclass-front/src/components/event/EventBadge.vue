@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
+import type { EventType } from '@/types/event.ts'
 
 const props = defineProps<{
-  type?: 'devoir' | 'activite' | 'sport';
+  type?: EventType;
   removable?: boolean; // Permet d'afficher la croix
 }>();
 
