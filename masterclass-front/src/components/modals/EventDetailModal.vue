@@ -11,9 +11,9 @@ import {
   CheckCircleIcon,
   CheckIcon
 } from '@heroicons/vue/24/outline';
-import EventBadge from './EventBadge.vue';
-import PriorityIndicator from './PriorityIndicator.vue';
-import type { EventData } from './EventCard.vue';
+import EventBadge from '../event/EventBadge.vue';
+import PriorityIndicator from '../event/PriorityIndicator.vue';
+import type { EventData } from '../event/EventCard.vue';
 
 const props = defineProps<{
   event: EventData;
