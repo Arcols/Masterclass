@@ -35,7 +35,7 @@ const emit = defineEmits<{
 const isList = computed(() => props.layout === 'list')
 const isDevoir = computed(() => props.event.type === 'devoir')
 
-const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
+const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)`)
 </script>
 
 <template>
