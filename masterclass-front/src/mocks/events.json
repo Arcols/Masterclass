@@ -50,5 +50,59 @@
     "location": "Gymnase",
     "group": "FIL A1",
     "isCompleted": false
+  },
+  {
+    "id": "5",
+    "type": "devoir",
+    "title": "Projet final - Mathématiques",
+    "subject": "Mathématiques de base",
+    "description": "Finaliser et rendre le projet de synthèse sur les intégrales et leurs applications.",
+    "date": "2026-06-15",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "location": "J147",
+    "priority": "urgent",
+    "group": "FIL A1",
+    "isCompleted": false
+  },
+  {
+    "id": "6",
+    "type": "devoir",
+    "title": "Partiel Informatique",
+    "subject": "Informatique",
+    "description": "Évaluation sur les bases de données et les structures de données.",
+    "date": "2026-06-16",
+    "startTime": "14:00",
+    "endTime": "16:00",
+    "location": "Amphi A",
+    "priority": "urgent",
+    "group": "FIL A1",
+    "isCompleted": false
+  },
+  {
+    "id": "7",
+    "type": "devoir",
+    "title": "Présentation orale Anglais",
+    "subject": "Anglais",
+    "description": "Présentation individuelle sur un sujet d'actualité en anglais.",
+    "date": "2026-06-17",
+    "startTime": "09:00",
+    "endTime": "10:00",
+    "location": "J147",
+    "priority": "normal",
+    "group": "ANG G1",
+    "isCompleted": false
+  },
+  {
+    "id": "8",
+    "type": "activite",
+    "title": "Réunion projet de groupe",
+    "description": "Point d'avancement et répartition des tâches pour le projet final du semestre.",
+    "date": "2026-06-19",
+    "startTime": "15:00",
+    "endTime": "16:30",
+    "location": "Salle de réunion",
+    "group": "FIL A1",
+    "isCompleted": false
   }
 ]
