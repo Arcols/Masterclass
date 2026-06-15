@@ -67,7 +67,7 @@ const modalTitle = computed(() => {
         <h2 id="event-detail-title" class="text-lg font-bold text-[var(--color-black)]">{{ modalTitle }}</h2>
         <button
           @click="emit('close')"
-          class="p-1.5 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+          class="p-1.5 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
           aria-label="Fermer la modale"
         >
           <XMarkIcon class="w-6 h-6" />
