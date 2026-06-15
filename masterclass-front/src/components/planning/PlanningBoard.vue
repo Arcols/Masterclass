@@ -5,6 +5,7 @@ import PlanningColumn from './PlanningColumn.vue'
 import mockEvents from '@/mocks/events.json'
 import PlanningFilters from '@/components/PlanningFilters.vue'
 import type { EventData } from '@/components/event/EventCard.vue'
+import type { EventType } from '@/types/event.ts'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -23,7 +24,7 @@ const updateRowHeight = () => {
 }
 
 // ── GESTION DES FILTRES ──
-const selectedTypes = ref<string[]>([])
+const selectedTypes = ref<EventType[]>([])
 const selectedGroups = ref<string[]>([])
 
 // Génère dynamiquement la liste de tous les groupes existants dans les données
