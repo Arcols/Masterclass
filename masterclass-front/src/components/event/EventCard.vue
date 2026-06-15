@@ -89,7 +89,7 @@ const leftBarColor = computed(() => `var(--color-${props.event.type}-stroke)`)
         v-if="event.subject"
         class="flex font-bold text-[var(--color-black)] truncate pr-2"
         :class="[
-          isList ? 'text-xl' : 'text-[13px]',
+          isList ? 'text-lg' : 'text-[13px]',
           { 'line-through text-gray-600': event.isCompleted },
         ]"
       >
