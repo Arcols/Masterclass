@@ -14,6 +14,7 @@ const emit = defineEmits(['update:selectedTypes', 'update:selectedGroups']);
 
 const typeOptions: EventTypeOption[] = [
   { id: 'devoir', label: 'Devoir' },
+  { id: 'examen', label: 'Examen' },
   { id: 'activite', label: 'Activité' },
   { id: 'sport', label: 'Sport' }
 ];

@@ -1,6 +1,6 @@
 // This file centralizes the event type definitions.
 
-export type EventType = 'devoir' | 'activite' | 'sport';
+export type EventType = 'devoir' | 'activite' | 'sport' | 'examen';
 
 export interface EventPayload {
   id?: number | string; // Optional: will be present for existing events

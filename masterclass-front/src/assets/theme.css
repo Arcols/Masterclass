@@ -11,6 +11,7 @@
 
   /* Couleurs pour les types d'évènements */
   --color-tag-devoir: #4b8c2a;
+  --color-tag-examen: #703C26;
   --color-tag-activite: #4c3cda;
   --color-tag-sport: #a21caf;
 
@@ -23,23 +24,18 @@
   --color-tag-devoir-txt: var(--color-tag-devoir);
   --color-tag-devoir-bg: transparent;
   --color-tag-devoir-border: var(--color-tag-devoir);
+  --color-tag-devoir-txt: var(--color-tag-devoir);
+  --color-tag-devoir-bg: transparent;
+  --color-tag-devoir-border: var(--color-tag-devoir);
+  --color-tag-examen-txt: var(--color-tag-examen);
+  --color-tag-examen-bg: transparent;
+  --color-tag-examen-border: var(--color-tag-examen);
   --color-tag-activite-txt: var(--color-tag-activite);
   --color-tag-activite-bg: transparent;
   --color-tag-activite-border: var(--color-tag-activite);
   --color-tag-sport-txt: var(--color-tag-sport);
   --color-tag-sport-bg: transparent;
   --color-tag-sport-border: var(--color-tag-sport);
-
-  /* Couleurs pour les PRIORITÉS (Style Statut/Rempli) */
-  --color-priority-urgent-txt: #ef4444;
-  --color-priority-urgent-bg: #fef2f2;
-  --color-priority-urgent-border: #fecaca;
-  --color-priority-normal-txt: #c2410c;
-  --color-priority-normal-bg: #ffedd5;
-  --color-priority-normal-border: #fed7aa;
-  --color-priority-faible-txt: #047857;
-  --color-priority-faible-bg: #d1fae5;
-  --color-priority-faible-border: #a7f3d0;
 
   /* font */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
