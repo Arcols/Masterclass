@@ -69,6 +69,9 @@ const handleLogin = async () => {
               placeholder="••••••••••••••••••••"
               class="rounded-md border border-gray-300 p-2.5 text-sm placeholder-gray-400 focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] focus:outline-none transition-shadow"
             />
+            <a class="text-sm text-[var(--color-black)] underline hover:text-[var(--color-primary)] font-medium transition-colors duration-500 cursor-pointer" href="/forgot-password">
+              Mot de passe oublié ?
+            </a>
           </div>
 
           <p v-if="errorMessage" class="text-sm text-red-500 text-center">
