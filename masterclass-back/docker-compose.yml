@@ -1,0 +1,15 @@
+services:
+  mariadb:
+    image: mariadb:lts
+    container_name: mariadb_masterclass
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: masterclassdb
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/main/resources/import.sql:/docker-entrypoint-initdb.d/02-import.sql
