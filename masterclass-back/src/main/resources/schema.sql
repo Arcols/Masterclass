@@ -1,3 +1,11 @@
+DROP TABLE IF EXISTS `User_Group`;
+DROP TABLE IF EXISTS `Comment`;
+DROP TABLE IF EXISTS `Note`;
+DROP TABLE IF EXISTS `Event`;
+DROP TABLE IF EXISTS `User`;
+DROP TABLE IF EXISTS `Group`;
+DROP TABLE IF EXISTS `Subject`;
+
 CREATE TABLE `User`(
                        USE_id VARCHAR(50),
                        USE_firstname VARCHAR(50),
