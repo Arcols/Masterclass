@@ -58,22 +58,23 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       :style="{ backgroundColor: leftBarColor }"
     ></div>
 
-    <div class="flex justify-between items-start gap-2">
+    <div class="flex justify-between items-start md:gap-2">
       <div class="flex flex-col items-start gap-1 min-w-0">
         <PriorityIndicator :priority="event.priority" class="hidden md:flex" />
 
+        <!-- Affichage des devoirs -->
         <span
           v-if="event.subject"
-          class="hidden md:block font-semibold text-gray-500 truncate w-full"
+          class="hidden md:block font-semibold text-gray-500 w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
           :class="isList ? 'text-sm' : 'text-[11px]'"
         >
           {{ event.subject }}
         </span>
         <span
           v-else
-          class="font-bold text-[var(--color-black)] truncate w-full"
+          class="font-bold text-[var(--color-black)] w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
           :class="[
-            isList ? 'text-lg' : 'text-sm',
+            isList ? 'text-lg' : 'md:text-[13px] text-[9px]',
             { 'line-through text-gray-400': event.isCompleted },
           ]"
         >
@@ -81,15 +82,16 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
         </span>
       </div>
 
-      <EventBadge :type="event.type" class="hidden md:block shrink-0" />
+      <EventBadge :type="event.type" class="hidden md:block md:shrink-0" />
     </div>
 
-    <div class="flex justify-between items-center mt-1">
+    <!-- Affichage des détails de l'événement -->
+    <div class="flex justify-between items-center md:mt-1">
       <span
         v-if="event.subject"
-        class="flex font-bold text-[var(--color-black)] truncate pr-2"
+        class="flex font-bold text-[var(--color-black)] whitespace-normal break-words md:truncate md:whitespace-nowrap pr-2"
         :class="[
-          isList ? 'text-lg' : 'text-[13px]',
+          isList ? 'text-lg' : 'md:text-[13px] text-[9px]',
           { 'line-through text-gray-600': event.isCompleted },
         ]"
       >
@@ -100,7 +102,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
         v-else-if="!isList && event.location"
         class="flex items-center text-gray-500 text-[11px]"
       >
-        <MapPinIcon class="w-3 h-3 mr-1" />
+        <MapPinIcon class="hidden md:block w-3 h-3 mr-1" />
         {{ event.location }}
       </div>
 
