@@ -38,7 +38,7 @@ const handleEdit = (event: EventData) => {
       @open-history="router.push('/history')"
     />
 
-    <main class="flex-1 flex flex-col p-4 md:p-6 lg:p-8 min-h-0">
+    <main class="flex-1 flex flex-col p-0 md:p-6 lg:p-8 min-h-0">
       <PlanningBoard
         class="flex-1 min-h-0"
         @open-details="(evt) => selectedEvent = evt"

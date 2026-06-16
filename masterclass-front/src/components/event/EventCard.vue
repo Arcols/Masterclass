@@ -58,10 +58,11 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       :style="{ backgroundColor: leftBarColor }"
     ></div>
 
-    <div class="flex justify-between items-start gap-2">
+    <div class="flex justify-between items-start md:gap-2">
       <div class="flex flex-col items-start gap-1 min-w-0">
         <PriorityIndicator :priority="event.priority" class="hidden md:flex" />
 
+        <!-- Affichage des devoirs -->
         <span
           v-if="event.subject"
           class="hidden md:block font-semibold text-gray-500 w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
@@ -81,9 +82,10 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
         </span>
       </div>
 
-      <EventBadge :type="event.type" class="hidden md:block shrink-0" />
+      <EventBadge :type="event.type" class="hidden md:block md:shrink-0" />
     </div>
 
+    <!-- Affichage des détails de l'événement -->
     <div class="flex justify-between items-center md:mt-1">
       <span
         v-if="event.subject"

@@ -185,14 +185,14 @@ function isFieldValid(value: unknown): boolean {
 </script>
 
 <template>
-  <div v-if="isDialogVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4" @click.self="closeEventPopUp()">
+  <div v-if="isDialogVisible" class="fixed inset-0 z-50 flex items-start justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4 pt-16" @click.self="closeEventPopUp()">
     <transition name="modal-fade">
       <dialog
         v-if="isDialogVisible"
         ref="dialogRef"
         open
         :class="['add-event-card', selectedType]"
-        class="relative bg-white rounded-xl w-full max-w-3xl mx-4 p-6 shadow-xl z-10 border-none m-0 animate-fade-in-up"
+        class="relative bg-white rounded-xl w-full max-w-3xl mx-0 my-6 p-4 sm:p-6 shadow-xl z-10 border-none animate-fade-in-up max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain"
         @keydown.esc.prevent="closeEventPopUp()"
       >
         <div class="flex items-center justify-between mb-4">
@@ -232,11 +232,6 @@ function isFieldValid(value: unknown): boolean {
   color: var(--color-black);
   background: var(--color-background);
 }
-
-/* keep a small compatibility hook for selected type classes */
-.add-event-card.devoir { }
-.add-event-card.activite { }
-.add-event-card.sport { }
 
 .animate-fade-in-up {
   animation: fadeInUp 0.2s ease-out forwards;
