@@ -112,7 +112,7 @@ const logout = () => {
         >
           <button
             @click="goToProfile"
-            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors cursor-pointer"
           >
             <UserIcon class="w-4 h-4" />
             Mon Profil
@@ -122,7 +122,7 @@ const logout = () => {
 
           <button
             @click="logout"
-            class="w-full text-left px-4 py-2 text-sm text-[var(--color-red)] hover:bg-red-50 flex items-center gap-2 transition-colors"
+            class="w-full text-left px-4 py-2 text-sm text-[var(--color-red)] hover:bg-red-50 flex items-center gap-2 transition-colors cursor-pointer"
           >
             <ArrowRightStartOnRectangleIcon class="w-4 h-4" />
             Se déconnecter
