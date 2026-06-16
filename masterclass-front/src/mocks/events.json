@@ -10,7 +10,8 @@
     "endTime": "09:00",
     "location": "J147",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": true
   },
   {
     "id": "2",
@@ -24,7 +25,8 @@
     "endTime": "20:30",
     "location": "J147",
     "group": "ANG G1",
-    "isCompleted": true
+    "isCompleted": true,
+    "isFavorite": true
   },
   {
     "id": "3",
@@ -36,7 +38,8 @@
     "endTime": "13:00",
     "location": "MDE",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": false
   },
   {
     "id": "4",
@@ -48,7 +51,8 @@
     "endTime": "23:59",
     "location": "Gymnase",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": false
   },
   {
     "id": "5",
@@ -61,7 +65,8 @@
     "endTime": "12:00",
     "location": "J147",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": true
   },
   {
     "id": "6",
@@ -74,7 +79,8 @@
     "endTime": "16:00",
     "location": "Amphi A",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": false
   },
   {
     "id": "7",
@@ -87,7 +93,8 @@
     "endTime": "10:15",
     "location": "J147",
     "group": "ANG G1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": true
   },
   {
     "id": "8",
@@ -99,7 +106,8 @@
     "endTime": "16:30",
     "location": "Salle de réunion",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+    "isFavorite": true
   },{
     "id": "9",
     "type": "examen",
@@ -111,6 +119,7 @@
     "endTime": "12:00",
     "location": "J147",
     "group": "FIL A1",
-    "isCompleted": false
+    "isCompleted": false,
+  "isFavorite": false
   }
 ]

@@ -12,7 +12,9 @@ import {
   CheckIcon,
   LinkIcon,
   PlusIcon,
+  StarIcon as StarOutline, // 👈 Import de l'étoile vide
 } from '@heroicons/vue/24/outline'
+import { StarIcon as StarSolid } from '@heroicons/vue/24/solid'
 import EventBadge from '../event/EventBadge.vue'
 import type { EventData } from '../event/EventCard.vue'
 
@@ -30,6 +32,7 @@ const emit = defineEmits<{
   (e: 'delete', id: string): void
   (e: 'edit', event: EventData): void
   (e: 'toggle-complete', id: string, newValue: boolean): void
+  (e: 'toggle-favorite', id: string, newValue: boolean): void
 }>()
 
 // ── FERMETURE AVEC LA TOUCHE ÉCHAP ──
@@ -153,12 +156,27 @@ const submitNewItem = () => {
         <h2 id="event-detail-title" class="text-lg font-bold text-[var(--color-black)]">
           {{ modalTitle }}
         </h2>
-        <button
-          @click="emit('close')"
-          class="p-1.5 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
-        >
-          <XMarkIcon class="w-6 h-6" />
-        </button>
+
+        <!-- ── ACTIONS D'EN-TÊTE ── -->
+        <div class="flex items-center gap-1">
+          <!-- Bouton Favori -->
+          <button
+            @click="emit('toggle-favorite', event.id, !event.isFavorite)"
+            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
+            :title="event.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+          >
+            <StarSolid v-if="event.isFavorite" class="w-6 h-6 text-yellow-400 drop-shadow-sm" />
+            <StarOutline v-else class="w-6 h-6 text-gray-400 hover:text-gray-600" />
+          </button>
+
+          <!-- Bouton Fermer -->
+          <button
+            @click="emit('close')"
+            class="p-1.5 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
+          >
+            <XMarkIcon class="w-6 h-6" />
+          </button>
+        </div>
       </div>
 
       <div class="flex-1 overflow-y-auto p-6 space-y-6">

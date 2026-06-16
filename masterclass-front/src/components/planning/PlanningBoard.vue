@@ -5,7 +5,6 @@ import PlanningColumn from './PlanningColumn.vue'
 import mockEvents from '@/mocks/events.json'
 import type { EventData } from '@/components/event/EventCard.vue'
 import type { EventType } from '@/types/event.ts'
-// Remplacement de FiltersEvents par la modale
 import FilterModal from '@/components/modals/FilterModal.vue'
 
 // ── CONFIGURATION DE LA GRILLE ──
@@ -27,16 +26,18 @@ const updateRowHeight = () => {
 // ── GESTION DES FILTRES ──
 const selectedTypes = ref<EventType[]>([])
 const selectedGroups = ref<string[]>([])
+const showFavoritesOnly = ref(false)
 const isFilterModalOpen = ref(false)
 
 // Calcul du nombre de filtres actifs
 const activeFilterCount = computed(() => {
-  return selectedTypes.value.length + selectedGroups.value.length
+  return selectedTypes.value.length + selectedGroups.value.length + (showFavoritesOnly.value ? 1 : 0)
 })
 
 const resetFilters = () => {
   selectedTypes.value = []
   selectedGroups.value = []
+  showFavoritesOnly.value = false
 }
 
 // Génère dynamiquement la liste de tous les groupes existants dans les données
@@ -51,8 +52,9 @@ const getEventsForDay = (fullDateStr: string) => {
     const isSameDate = e.date === fullDateStr;
     const isTypeMatched = selectedTypes.value.length === 0 || selectedTypes.value.includes(e.type);
     const isGroupMatched = selectedGroups.value.length === 0 || selectedGroups.value.includes(e.group);
+    const isFavoriteMatched = !showFavoritesOnly.value || e.isFavorite;
 
-    return isSameDate && isTypeMatched && isGroupMatched;
+    return isSameDate && isTypeMatched && isGroupMatched && isFavoriteMatched;
   })
 }
 
@@ -237,6 +239,7 @@ const props = defineProps<{
       :available-groups="availableGroups"
       @update:selected-types="selectedTypes = $event"
       @update:selected-groups="selectedGroups = $event"
+      @update:show-favorites-only="showFavoritesOnly = $event"
       @close="isFilterModalOpen = false"
     />
 
