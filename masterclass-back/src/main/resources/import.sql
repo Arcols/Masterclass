@@ -10,6 +10,7 @@ INSERT INTO `Group` (GRO_id, GRO_name) VALUES
 
 INSERT INTO User_Group (USE_id, GRO_id) VALUES
                                             ('U1', 'G1'),
+                                            ('U1', 'G2'),
                                             ('U2', 'G2'),
                                             ('U3', 'G3');
 
