@@ -9,7 +9,6 @@
     "startTime": "08:00",
     "endTime": "09:00",
     "location": "J147",
-    "priority": "urgent",
     "group": "FIL A1",
     "isCompleted": false
   },
@@ -19,11 +18,11 @@
     "title": "CV en anglais",
     "subject": "Anglais",
     "description": "Rédiger et mettre en page un CV professionnel en anglais pour la future recherche de stage.",
+    "submissionLink": "https://moodle.imt-atlantique.fr/mod/assign/view.php?id=12345",
     "date": "2026-06-11",
     "startTime": "19:00",
     "endTime": "20:30",
     "location": "J147",
-    "priority": "normal",
     "group": "ANG G1",
     "isCompleted": true
   },
@@ -61,7 +60,6 @@
     "startTime": "10:00",
     "endTime": "12:00",
     "location": "J147",
-    "priority": "urgent",
     "group": "FIL A1",
     "isCompleted": false
   },
@@ -75,7 +73,6 @@
     "startTime": "14:00",
     "endTime": "16:00",
     "location": "Amphi A",
-    "priority": "urgent",
     "group": "FIL A1",
     "isCompleted": false
   },
@@ -89,7 +86,6 @@
     "startTime": "09:00",
     "endTime": "10:00",
     "location": "J147",
-    "priority": "normal",
     "group": "ANG G1",
     "isCompleted": false
   },
@@ -102,6 +98,19 @@
     "startTime": "15:00",
     "endTime": "16:30",
     "location": "Salle de réunion",
+    "group": "FIL A1",
+    "isCompleted": false
+  },
+  {
+    "id": "9",
+    "type": "examen",
+    "title": "Examen Final de Physique",
+    "subject": "Physique",
+    "description": "Examen couvrant tout le programme du semestre 2. Calculatrice type collège autorisée.",
+    "date": "2026-06-20",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "location": "Amphi B",
     "group": "FIL A1",
     "isCompleted": false
   }
