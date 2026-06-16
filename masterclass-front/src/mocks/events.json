@@ -81,13 +81,13 @@
   },
   {
     "id": "7",
-    "type": "devoir",
+    "type": "examen",
     "title": "Présentation orale Anglais",
     "subject": "Anglais",
     "description": "Présentation individuelle sur un sujet d'actualité en anglais.",
     "date": "2026-06-17",
     "startTime": "09:00",
-    "endTime": "10:00",
+    "endTime": "10:15",
     "location": "J147",
     "priority": "normal",
     "group": "ANG G1",
@@ -102,6 +102,19 @@
     "startTime": "15:00",
     "endTime": "16:30",
     "location": "Salle de réunion",
+    "group": "FIL A1",
+    "isCompleted": false
+  },{
+    "id": "9",
+    "type": "examen",
+    "title": "DS Graphes",
+    "subject": "Mathématiques",
+    "description": "Devoir surveillé sur les graphes et leurs applications.",
+    "date": "2026-06-19",
+    "startTime": "10:00",
+    "endTime": "12:00",
+    "location": "J147",
+    "priority": "normal",
     "group": "FIL A1",
     "isCompleted": false
   }
