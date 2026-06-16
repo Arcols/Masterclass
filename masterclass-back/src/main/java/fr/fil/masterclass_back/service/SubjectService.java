@@ -2,7 +2,9 @@ package fr.fil.masterclass_back.service;
 
 import fr.fil.masterclass_back.repository.SubjectRepository;
 import org.springframework.stereotype.Service;
-
+import fr.fil.masterclass_back.model.Subject;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 @Service
@@ -16,11 +18,13 @@ public class SubjectService {
     public String getHelloData() {
         long totalSubjects = subjectRepository.count();
 
-        String nomMatiere = subjectRepository.findById("S1")
+        List<Subject> subjects = subjectRepository.findAll();
+
+        String listeNoms = subjects.stream()
                 .map(subject -> subject.getSubName())
-                .orElse("Matière non trouvée");
+                .collect(Collectors.joining(", "));
 
         return "Hello World ! La connexion MariaDB fonctionne à merveille. Il y a actuellement "
-                + totalSubjects + " matières enregistrées dans la base. (Test ID S1 : " + nomMatiere + ")";
+                + totalSubjects + " matières enregistrées : " + listeNoms;
     }
 }
