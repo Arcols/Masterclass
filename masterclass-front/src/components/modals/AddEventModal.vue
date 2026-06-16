@@ -7,7 +7,8 @@ import type { EventType, EventPayload } from '@/types/events.ts'
 import EventTypeSelector from '@/components/modals/addEventModal/EventTypeSelector.vue'
 import EventBasicFields from '@/components/modals/addEventModal/EventBasicFields.vue'
 import EventSubjectField from '@/components/modals/addEventModal/EventSubjectField.vue'
-import EventDateTimeFields from '@/components/modals/addEventModal/EventDateTimeFields.vue'
+import EventDateLocationFields from '@/components/modals/addEventModal/EventDateLocationFields.vue'
+import EventTimeFields from './addEventModal/EventTimeFields.vue'
 
 const emit = defineEmits<{
   'event-saved': []
@@ -37,13 +38,16 @@ const location = ref<string>('')
 const date = ref<string>(getTodayDate())
 const startTime = ref<string>('08:00')
 const endTime = ref<string>('09:00')
+const dueTime = ref<string>('08:00')
 
 const typeLabels: Record<EventType, string> = {
   devoir: 'Devoir',
+  examen: 'Examen',
   activite: 'Activité',
   sport: 'Sport',
 }
 
+const isExamen = computed<boolean>(() => selectedType.value === 'examen')
 const isDevoir = computed<boolean>(() => selectedType.value === 'devoir')
 
 const dialogTitle = computed<string>(() => {
@@ -81,6 +85,7 @@ function resetForm(): void {
   date.value = getTodayDate()
   startTime.value = '08:00'
   endTime.value = '09:00'
+  dueTime.value = '08:00'
   isEditMode.value = false
   eventIdToEdit.value = undefined
 }
@@ -109,6 +114,7 @@ function populateFormForEdit(eventToEdit: EventPayload) {
   date.value = eventToEdit.date
   startTime.value = eventToEdit.startTime
   endTime.value = eventToEdit.endTime
+  dueTime.value = eventToEdit.dueTime
 }
 
 function addEventPopup(eventToEdit?: EventPayload): void {
@@ -128,6 +134,7 @@ function addEventPopup(eventToEdit?: EventPayload): void {
        date.value = eventToEdit.date ?? date.value
        startTime.value = eventToEdit.startTime ?? startTime.value
        endTime.value = eventToEdit.endTime ?? endTime.value
+       dueTime.value = eventToEdit.dueTime ?? dueTime.value
      }
    }
 
@@ -146,7 +153,9 @@ async function submit(): Promise<void> {
     !isFieldValid(date.value) ||
     !isFieldValid(startTime.value) ||
     !isFieldValid(endTime.value) ||
+    (isExamen.value && !isFieldValid(subject.value)) ||
     (isDevoir.value && !isFieldValid(subject.value)) ||
+    (isDevoir.value && !isFieldValid(dueTime.value)) ||
     end <= start
   ) {
     return
@@ -162,6 +171,7 @@ async function submit(): Promise<void> {
     date: date.value,
     startTime: startTime.value,
     endTime: endTime.value,
+    dueTime: dueTime.value,
   }
 
   try {
@@ -210,10 +220,14 @@ function isFieldValid(value: unknown): boolean {
 
           <EventBasicFields v-model:title="title" v-model:description="description" />
 
-          <EventSubjectField v-if="isDevoir" v-model:subject="subject" :classes="classes" />
+          <EventSubjectField v-if="isExamen || isDevoir" v-model:subject="subject" :classes="classes" />
 
-          <EventDateTimeFields v-model:location="location" v-model:date="date" v-model:startTime="startTime" v-model:endTime="endTime" />
+          <EventDateLocationFields v-model:location="location" v-model:date="date" />
 
+          <EventTimeFields v-if="isDevoir" v-model:dueTime="dueTime" />
+          
+          <EventTimeFiels v-else v-model:startTime="startTime" v-model:endTime="endTime" />
+          
           <button
             type="submit"
             class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90"

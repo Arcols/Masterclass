@@ -12,5 +12,6 @@ export interface EventPayload {
   date: string; // Format: YYYY-MM-DD
   startTime: string; // Format: HH:mm
   endTime: string; // Format: HH:mm
+  dueTime: string; // Format: HH:mm, optional for 'devoir' and 'examen'
 }
 
