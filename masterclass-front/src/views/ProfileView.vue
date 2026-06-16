@@ -112,7 +112,7 @@ const handlePasswordChange = (payload: { current: string, new: string }) => {
           </div>
           <button
             @click="showPasswordModal = true"
-            class="text-xs font-medium text-[var(--color-primary)] hover:underline"
+            class="text-xs font-medium text-[var(--color-primary)] hover:underline cursor-pointer"
           >
             Modifier
           </button>
@@ -121,7 +121,7 @@ const handlePasswordChange = (payload: { current: string, new: string }) => {
         <div class="pt-6">
           <button
             @click="startEditing"
-            class="w-full flex items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90"
+            class="w-full flex items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90 cursor-pointer"
           >
             <PencilIcon class="w-5 h-5" />
             Modifier mon profil
@@ -178,12 +178,12 @@ const handlePasswordChange = (payload: { current: string, new: string }) => {
         </div>
 
         <div class="pt-6">
-          <button type="submit" class="w-full rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90">
+          <button type="submit" class="w-full rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90 cursor-pointer">
             Sauvegarder les modifications
           </button>
 
           <div class="text-center mt-3">
-            <button type="button" @click="cancelEditing" class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium">
+            <button type="button" @click="cancelEditing" class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium cursor-pointer">
               Annuler
             </button>
           </div>

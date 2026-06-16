@@ -131,7 +131,7 @@ const modalTitle = computed(() => {
           <button
             v-if="isDevoir"
             @click="emit('toggle-complete', event.id, !event.isCompleted)"
-            class="flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors"
+            class="flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors cursor-pointer"
             :class="event.isCompleted ? 'bg-gray-200 text-gray-700' : 'bg-[var(--color-primary)] text-white hover:opacity-90'"
           >
             <CheckIcon v-if="!event.isCompleted" class="w-4 h-4" />
@@ -140,17 +140,15 @@ const modalTitle = computed(() => {
 
           <button
             @click="emit('edit', event)"
-            class="flex items-center justify-center gap-2 px-4 py-2 rounded-md border border-gray-200 font-medium text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            class="flex items-center justify-center gap-2 px-4 py-2 rounded-md border border-gray-200 font-medium text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
           >
             <PencilIcon class="w-4 h-4" />
             Modifier
           </button>
 
-          <div class="flex-1"></div>
-
           <button
             @click="emit('delete', event.id)"
-            class="flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm text-[var(--color-red)] bg-red-50 hover:bg-red-100 transition-colors"
+            class="flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm text-[var(--color-red)] bg-red-50 hover:bg-red-100 transition-colors cursor-pointer"
           >
             <TrashIcon class="w-4 h-4" />
             Supprimer
