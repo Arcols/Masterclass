@@ -30,14 +30,14 @@ const handleEdit = (event: EventData) => {
 </script>
 
 <template>
-  <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden">
+  <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden relative">
+
     <Header
-      class="z-50 bg-[var(--color-background)] shadow-sm shrink-0"
+      class="z-100 bg-[var(--color-background)] shadow-sm shrink-0"
       :show-actions="true"
       :show-profile="true"
       subtitle="FIL A1 2028"
       @add-event="onAddEvent"
-      @open-history="router.push('/history')"
     />
 
     <main class="flex-1 flex gap-6 p-4 md:p-6 lg:p-8 min-h-0 overflow-hidden">
@@ -63,6 +63,16 @@ const handleEdit = (event: EventData) => {
       @delete="handleDelete"
       @edit="handleEdit"
     />
+
+    <button
+      @click="onAddEvent"
+      class="md:hidden fixed bottom-6 right-6 z-[90] w-11 h-11 bg-[var(--color-primary)] text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform focus:outline-none cursor-pointer"
+      aria-label="Ajouter un événement"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 256 256" fill="currentColor">
+        <path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z" />
+      </svg>
+    </button>
   </div>
 
   <AddEventModal ref="addEventRef" />
