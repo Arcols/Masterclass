@@ -40,7 +40,7 @@ const handleEdit = (event: EventData) => {
       @add-event="onAddEvent"
     />
 
-    <main class="flex-1 flex gap-6 p-4 md:p-6 lg:p-8 min-h-0 overflow-hidden">
+    <main class="flex-1 flex gap-4 md:p-2 lg:p-4 min-h-0 overflow-hidden">
       <PlanningBoard
         class="flex-1 min-w-0 min-h-0"
         :is-sidebar-open="isTodoListOpen"
