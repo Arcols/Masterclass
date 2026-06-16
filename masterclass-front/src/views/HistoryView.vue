@@ -6,7 +6,7 @@ import EventCard, { type EventData } from '@/components/event/EventCard.vue';
 import EventDetailModal from '@/components/modals/EventDetailModal.vue';
 import mockEvents from '@/mocks/events.json';
 import type { EventType } from '@/types/event.ts';
-import PlanningFilters from '@/components/PlanningFilters.vue'
+import FiltersEvents from '@/components/FiltersEvents.vue'
 
 // ── DONNÉES ──
 const allEvents = ref<EventData[]>(mockEvents as EventData[]);
@@ -82,7 +82,7 @@ const handleEdit = (event: EventData) => {
       </h1>
 
       <div class="flex justify-center w-full max-w-4xl mb-8">
-        <PlanningFilters
+        <FiltersEvents
           class="!bg-transparent !border-none !px-0 justify-center"
           v-model:selected-types="selectedTypes"
           v-model:selected-groups="selectedGroups"
