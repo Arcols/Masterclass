@@ -2,19 +2,18 @@
 import { computed } from 'vue'
 import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline'
 import EventBadge from './EventBadge.vue'
-import PriorityIndicator from './PriorityIndicator.vue'
 
 export interface EventData {
   id: string;
-  type: 'devoir' | 'activite' | 'sport';
+  type: 'devoir' | 'activite' | 'sport' | 'examen';
   title: string;
   subject?: string | null;
   description?: string | null;
   date: string;
   startTime: string;
   endTime: string;
+  submissionLink?: string;
   location?: string;
-  priority?: 'urgent' | 'normal' | 'faible' | null;
   group: string;
   isCompleted: boolean;
 }
@@ -60,8 +59,6 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
 
     <div class="flex justify-between items-start md:gap-2">
       <div class="flex flex-col items-start gap-1 min-w-0">
-        <PriorityIndicator :priority="event.priority" class="hidden md:flex" />
-
         <!-- Affichage des devoirs -->
         <span
           v-if="event.subject"

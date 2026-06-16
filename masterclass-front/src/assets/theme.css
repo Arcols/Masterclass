@@ -37,17 +37,6 @@
   --color-tag-sport-bg: transparent;
   --color-tag-sport-border: var(--color-tag-sport);
 
-  /* Couleurs pour les PRIORITÉS (Style Statut/Rempli) */
-  --color-priority-urgent-txt: #ef4444;
-  --color-priority-urgent-bg: #fef2f2;
-  --color-priority-urgent-border: #fecaca;
-  --color-priority-normal-txt: #c2410c;
-  --color-priority-normal-bg: #ffedd5;
-  --color-priority-normal-border: #fed7aa;
-  --color-priority-faible-txt: #047857;
-  --color-priority-faible-bg: #d1fae5;
-  --color-priority-faible-border: #a7f3d0;
-
   /* font */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
 }

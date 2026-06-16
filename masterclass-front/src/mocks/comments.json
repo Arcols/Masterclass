@@ -1,0 +1,44 @@
+[
+  {
+    "id": "c1",
+    "eventId": "1",
+    "author": "Damien",
+    "datetime": "09/06/2026 à 17:03",
+    "content": "Attention, l'exercice 3 sur les intégrales doubles est assez complexe. N'hésitez pas à relire le dernier cours."
+  },
+  {
+    "id": "c2",
+    "eventId": "1",
+    "author": "Salomé",
+    "datetime": "09/06/2026 à 18:30",
+    "content": "Merci Damien ! Est-ce que quelqu'un sait si la calculatrice est autorisée ?"
+  },
+  {
+    "id": "c3",
+    "eventId": "1",
+    "author": "Prof. Martin",
+    "datetime": "10/06/2026 à 08:15",
+    "content": "Bonjour à tous, oui la calculatrice type collège est autorisée."
+  },
+  {
+    "id": "c4",
+    "eventId": "2",
+    "author": "Yanis",
+    "datetime": "10/06/2026 à 14:00",
+    "content": "J'ai trouvé un super template de CV sur Canva, je peux le partager si vous voulez."
+  },
+  {
+    "id": "c5",
+    "eventId": "6",
+    "author": "Lucas",
+    "datetime": "15/06/2026 à 10:00",
+    "content": "Le partiel portera uniquement sur SQL ou aussi sur NoSQL ?"
+  },
+  {
+    "id": "c6",
+    "eventId": "3",
+    "author": "BDE",
+    "datetime": "11/06/2026 à 16:00",
+    "content": "N'oubliez pas vos ecocups pour le showcase !"
+  }
+]
