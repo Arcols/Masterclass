@@ -1,45 +1,52 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { PencilIcon } from '@heroicons/vue/24/outline';
 import Header from '@/components/Header.vue';
 import mockGroups from '@/mocks/groups.json';
+import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue';
+import mockUser from '@/mocks/users.json';
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
-import mockUser from '@/mocks/users.json'
 
 const userProfile = ref({ ...mockUser });
-
 const availableGroups = mockGroups as string[];
 
-// --- GESTION DE L'ÉTAT ---
+// --- GESTION DE L'ÉTAT DU PROFIL ---
 const isEditing = ref(false);
 const userForm = ref({ ...userProfile.value });
 
-// Lance le mode édition en copiant les données actuelles
 const startEditing = () => {
   userForm.value = { ...userProfile.value };
   isEditing.value = true;
 };
 
-// Annule l'édition
 const cancelEditing = () => {
   isEditing.value = false;
 };
 
-// Sauvegarde l'édition
 const saveProfile = () => {
   if (userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.');
     return;
   }
-  // On met à jour les vraies données
   userProfile.value = { ...userForm.value };
   isEditing.value = false;
   console.log("Profil sauvegardé :", userProfile.value);
 };
+
+// --- GESTION DU MOT DE PASSE ---
+const showPasswordModal = ref(false);
+
+const handlePasswordChange = (payload: { current: string, new: string }) => {
+  console.log("Demande de changement de mot de passe avec :", payload);
+  // Ici, tu appelleras ton API plus tard.
+  alert('Mot de passe mis à jour avec succès !');
+  showPasswordModal.value = false;
+};
 </script>
 
 <template>
-  <div class="w-full min-h-screen flex flex-col bg-white">
+  <div class="w-full min-h-screen flex flex-col bg-white relative">
 
     <Header
       class="z-50 bg-white border-b border-gray-100 shrink-0"
@@ -98,16 +105,25 @@ const saveProfile = () => {
           </p>
         </div>
 
-        <div>
-          <p class="text-xs font-medium text-[var(--color-primary)]">Mot de passe</p>
-          <p class="text-gray-500 text-sm mt-0.5 tracking-widest">*************</p>
+        <div class="flex items-center justify-between border-t border-gray-100 pt-4 mt-4">
+          <div>
+            <p class="text-xs font-medium text-[var(--color-primary)]">Mot de passe</p>
+            <p class="text-gray-500 text-sm mt-0.5 tracking-widest">*************</p>
+          </div>
+          <button
+            @click="showPasswordModal = true"
+            class="text-xs font-medium text-[var(--color-primary)] hover:underline"
+          >
+            Modifier
+          </button>
         </div>
 
-        <div class="pt-4">
+        <div class="pt-6">
           <button
             @click="startEditing"
-            class="w-full rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90"
+            class="w-full flex items-center justify-center gap-2 rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90"
           >
+            <PencilIcon class="w-5 h-5" />
             Modifier mon profil
           </button>
         </div>
@@ -161,23 +177,9 @@ const saveProfile = () => {
           <input v-model="userForm.email" type="email" required class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none" />
         </div>
 
-        <div class="flex flex-col text-left">
-          <label class="mb-1 text-xs font-medium text-gray-700">
-            Mot de passe<span class="text-[var(--color-red)]">*</span>
-          </label>
-          <input type="password" placeholder="*************" class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none" />
-        </div>
-
-        <div class="flex flex-col text-left">
-          <label class="mb-1 text-xs font-medium text-gray-700">
-            Confirmation du mot de passe<span class="text-[var(--color-red)]">*</span>
-          </label>
-          <input type="password" placeholder="*************" class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none" />
-        </div>
-
-        <div class="pt-4">
+        <div class="pt-6">
           <button type="submit" class="w-full rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90">
-            Sauvegarder
+            Sauvegarder les modifications
           </button>
 
           <div class="text-center mt-3">
@@ -190,5 +192,11 @@ const saveProfile = () => {
       </form>
 
     </main>
+
+    <ChangePasswordModal
+      v-if="showPasswordModal"
+      @close="showPasswordModal = false"
+      @save="handlePasswordChange"
+    />
   </div>
 </template>
