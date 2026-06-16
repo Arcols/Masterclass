@@ -78,13 +78,13 @@
   },
   {
     "id": "7",
-    "type": "devoir",
+    "type": "examen",
     "title": "Présentation orale Anglais",
     "subject": "Anglais",
     "description": "Présentation individuelle sur un sujet d'actualité en anglais.",
     "date": "2026-06-17",
     "startTime": "09:00",
-    "endTime": "10:00",
+    "endTime": "10:15",
     "location": "J147",
     "group": "ANG G1",
     "isCompleted": false
@@ -100,17 +100,16 @@
     "location": "Salle de réunion",
     "group": "FIL A1",
     "isCompleted": false
-  },
-  {
+  },{
     "id": "9",
     "type": "examen",
-    "title": "Examen Final de Physique",
-    "subject": "Physique",
-    "description": "Examen couvrant tout le programme du semestre 2. Calculatrice type collège autorisée.",
-    "date": "2026-06-20",
-    "startTime": "08:00",
+    "title": "DS Graphes",
+    "subject": "Mathématiques",
+    "description": "Devoir surveillé sur les graphes et leurs applications.",
+    "date": "2026-06-19",
+    "startTime": "10:00",
     "endTime": "12:00",
-    "location": "Amphi B",
+    "location": "J147",
     "group": "FIL A1",
     "isCompleted": false
   }

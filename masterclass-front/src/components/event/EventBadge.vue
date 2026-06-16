@@ -16,6 +16,8 @@ const badgeConfig = computed(() => {
   switch (props.type) {
     case 'devoir':
       return { label: 'DEVOIR', class: 'bg-[var(--color-tag-devoir-bg)] text-[var(--color-tag-devoir-txt)] border-[var(--color-tag-devoir-border)]' };
+    case 'examen':
+      return { label: 'EXAMEN', class: 'bg-[var(--color-tag-examen-bg)] text-[var(--color-tag-examen-txt)] border-[var(--color-tag-examen-border)]' };
     case 'activite':
       return { label: 'ACTIVITÉ', class: 'bg-[var(--color-tag-activite-bg)] text-[var(--color-tag-activite-txt)] border-[var(--color-tag-activite-border)]' };
     case 'sport':

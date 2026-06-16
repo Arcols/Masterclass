@@ -1,4 +1,4 @@
-export type EventType = 'devoir' | 'activite' | 'sport' | 'examen';
+export type EventType = 'devoir' | 'examen' | 'activite' | 'sport';
 
 export interface EventTypeOption {
   id: EventType;

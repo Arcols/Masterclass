@@ -11,6 +11,7 @@
 
   /* Couleurs pour les types d'évènements */
   --color-tag-devoir: #4b8c2a;
+  --color-tag-examen: #703C26;
   --color-tag-activite: #4c3cda;
   --color-tag-sport: #a21caf;
 
@@ -23,6 +24,12 @@
   --color-tag-devoir-txt: var(--color-tag-devoir);
   --color-tag-devoir-bg: transparent;
   --color-tag-devoir-border: var(--color-tag-devoir);
+  --color-tag-devoir-txt: var(--color-tag-devoir);
+  --color-tag-devoir-bg: transparent;
+  --color-tag-devoir-border: var(--color-tag-devoir);
+  --color-tag-examen-txt: var(--color-tag-examen);
+  --color-tag-examen-bg: transparent;
+  --color-tag-examen-border: var(--color-tag-examen);
   --color-tag-activite-txt: var(--color-tag-activite);
   --color-tag-activite-bg: transparent;
   --color-tag-activite-border: var(--color-tag-activite);
