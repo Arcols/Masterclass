@@ -7,6 +7,7 @@ export interface EventPayload {
   type: EventType;
   title: string;
   description: string;
+  group?: string;
   subject?: string;
   location: string;
   date: string; // Format: YYYY-MM-DD

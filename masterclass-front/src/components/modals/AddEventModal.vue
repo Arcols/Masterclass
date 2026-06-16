@@ -33,6 +33,7 @@ const eventIdToEdit = ref<number | string | undefined>(undefined)
 
 const title = ref<string>('')
 const description = ref<string>('')
+const group = ref<string>('')
 const subject = ref<string>('')
 const location = ref<string>('')
 const date = ref<string>(getTodayDate())
@@ -80,6 +81,7 @@ function resetForm(): void {
   selectedType.value = 'devoir'
   title.value = ''
   description.value = ''
+  group.value = ''
   subject.value = classes.value[0]?.value ?? ''
   location.value = ''
   date.value = getTodayDate()
@@ -109,6 +111,7 @@ function populateFormForEdit(eventToEdit: EventPayload) {
   selectedType.value = eventToEdit.type
   title.value = eventToEdit.title
   description.value = eventToEdit.description
+  group.value = eventToEdit.group ?? ''
   subject.value = eventToEdit.subject ?? ''
   location.value = eventToEdit.location
   date.value = eventToEdit.date
@@ -129,6 +132,7 @@ function addEventPopup(eventToEdit?: EventPayload): void {
        selectedType.value = eventToEdit.type ?? selectedType.value
        title.value = eventToEdit.title ?? ''
        description.value = eventToEdit.description ?? ''
+      group.value = eventToEdit.group ?? group.value
        subject.value = eventToEdit.subject ?? subject.value
        location.value = eventToEdit.location ?? ''
        date.value = eventToEdit.date ?? date.value
@@ -166,6 +170,7 @@ async function submit(): Promise<void> {
     type: selectedType.value,
     title: title.value,
     description: description.value,
+    group: group.value || undefined,
     subject: isDevoir.value ? subject.value : undefined,
     location: location.value,
     date: date.value,
@@ -218,15 +223,15 @@ function isFieldValid(value: unknown): boolean {
         <form @submit.prevent="submit">
           <EventTypeSelector v-model="selectedType" :locked="isEditMode" />
 
-          <EventBasicFields v-model:title="title" v-model:description="description" />
+          <EventBasicFields v-model:title="title" v-model:description="description" v-model:group="group" />
 
           <EventSubjectField v-if="isExamen || isDevoir" v-model:subject="subject" :classes="classes" />
 
-          <EventDateLocationFields v-model:location="location" v-model:date="date" />
+          <EventDateLocationFields v-model:location="location" v-model:date="date" v-model:isDevoir="isDevoir" />
 
           <EventTimeFields v-if="isDevoir" v-model:dueTime="dueTime" />
           
-          <EventTimeFiels v-else v-model:startTime="startTime" v-model:endTime="endTime" />
+          <EventTimeFields v-else v-model:startTime="startTime" v-model:endTime="endTime" />
           
           <button
             type="submit"

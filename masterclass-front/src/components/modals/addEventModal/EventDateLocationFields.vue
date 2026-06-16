@@ -19,6 +19,7 @@ import { fr } from 'date-fns/locale/fr'
 const props = defineProps<{
   location: string
   date: string
+  isDevoir: boolean
 }>()
 
 const emit = defineEmits<{
@@ -101,7 +102,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
+    <div v-if="props.isDevoir === false">
       <label class="block text-sm font-medium text-gray-700 mb-1">Lieu *</label>
       <input
         type="text"
@@ -110,6 +111,16 @@ onBeforeUnmount(() => {
         placeholder="Ex: Chez Clovis"
         class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
         required
+      />
+    </div>
+    <div v-else>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Lien du rendu</label>
+      <input
+        type="text"
+        :value="location"
+        @input="$emit('update:location', ($event.target as HTMLInputElement).value)"
+        placeholder="Ex: https://moodle/cours-maths"
+        class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
       />
     </div>
 
