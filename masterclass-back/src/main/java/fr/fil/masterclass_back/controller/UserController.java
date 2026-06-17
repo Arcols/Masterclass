@@ -35,6 +35,13 @@ public class UserController {
                 return ResponseEntity.badRequest().body("Les mots de passe ne correspondent pas");
             }
 
+            if (request.getPassword().length() < 8) {
+                return ResponseEntity.badRequest().body("Le mot de passe doit faire au moins 8 caractères");
+            }
+            if (!request.getPassword().matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+                return ResponseEntity.badRequest().body("Le mot de passe doit contenir au moins un caractère spécial");
+            }
+
             // Mapping RegisterRequest → User
             User user = new User();
             user.setUseFirstname(request.getFirstname());
