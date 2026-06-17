@@ -54,6 +54,18 @@ public class UserService {
         userRepository.save(user);
         pendingUsers.remove(token);
     }
+
+    public User connection(String mail, String password) {
+        User user = userRepository.findByUseMail(mail)
+                .orElseThrow(() -> new RuntimeException("Compte inexistant"));
+
+        if (!passwordService.verify(password, user.getUsePassword())) {
+            throw new RuntimeException("Email ou mot de passe incorrect");
+        }
+
+        return user;
+    }
+
     public Optional<User> GetUserById(String id) {
         return userRepository.findById(id);
     }

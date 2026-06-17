@@ -1,18 +1,34 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
+import { ref } from 'vue'
+import { login } from '@/services/userService'
+import { onMounted } from 'vue'
+import { useAuth } from '@/utils/checkingAuth'
+
+const { requireAuth } = useAuth()
+
+onMounted(async () => {
+  await requireAuth() // ✅ redirige vers /login si token invalide
+})
 
 const router = useRouter()
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
 
-const handleLogin = () => {
-  // Redirection vers le planning
-  router.push('/')
+const handleLogin = async () => {
+  try {
+    await login(email.value, password.value)
+    router.push('/')
+  } catch (e: any) {
+    errorMessage.value = e.message
+  }
 }
 </script>
 
 <template>
   <div class="w-full min-h-screen flex flex-col bg-white">
-
     <!-- Header (juste partie gauche) -->
     <Header
       class="z-20 bg-[var(--color-background)] shadow-sm shrink-0"
@@ -27,12 +43,12 @@ const handleLogin = () => {
 
       <div class="w-full max-w-md">
         <form @submit.prevent="handleLogin" class="space-y-5">
-
           <div class="flex flex-col text-left">
             <label for="email" class="mb-1 text-sm font-medium text-gray-700">
               Email<span class="text-[var(--color-red)]">*</span>
             </label>
             <input
+              v-model="email"
               id="email"
               type="email"
               required
@@ -46,6 +62,7 @@ const handleLogin = () => {
               Mot de passe<span class="text-[var(--color-red)]">*</span>
             </label>
             <input
+              v-model="password"
               id="password"
               type="password"
               required
@@ -53,6 +70,10 @@ const handleLogin = () => {
               class="rounded-md border border-gray-300 p-2.5 text-sm placeholder-gray-400 focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] focus:outline-none transition-shadow"
             />
           </div>
+
+          <p v-if="errorMessage" class="text-sm text-red-500 text-center">
+            {{ errorMessage }}
+          </p>
 
           <button
             type="submit"
@@ -62,11 +83,13 @@ const handleLogin = () => {
           </button>
 
           <div class="text-center mt-5">
-            <router-link to="/register" class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium">
+            <router-link
+              to="/register"
+              class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium"
+            >
               Pas encore de compte ?
             </router-link>
           </div>
-
         </form>
       </div>
     </div>
