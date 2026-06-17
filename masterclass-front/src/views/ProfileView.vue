@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { PencilIcon } from '@heroicons/vue/24/outline'
 import Header from '@/components/Header.vue'
 import mockGroups from '@/mocks/groups.json'
@@ -7,6 +7,29 @@ import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue'
 import mockUser from '@/mocks/users.json'
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
+import { getUserById } from '@/services/userService.ts'
+
+interface UserProfileData {
+  firstName?: string
+  lastName?: string
+  email?: string
+  description?: string
+  groups?: string[]
+}
+
+interface BackendUserResponse {
+  useFirstname: string
+  useLastname: string
+  useMail: string
+  useDescription: string
+  groups: { groId: string }[]
+}
+
+const userProfile = ref<UserProfileData>({})
+const userForm = ref<UserProfileData>({})
+const availableGroups = ref<string[]>([])
+const isEditing = ref(false)
+const showPasswordModal = ref(false)
 import { onMounted } from 'vue'
 import { useAuth } from '@/utils/checkingAuth'
 
@@ -14,26 +37,41 @@ const { requireAuth } = useAuth()
 
 onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
+
+  const userId = 'U1'
+  try {
+    const rawData = await getUserById(userId)
+    if (rawData) {
+      const data = JSON.parse(rawData) as BackendUserResponse
+
+      userProfile.value = {
+        firstName: data.useFirstname,
+        lastName: data.useLastname,
+        email: data.useMail,
+        description: data.useDescription,
+        groups: data.groups ? data.groups.map((g) => g.groId) : [],
+      }
+    } else {
+      throw new Error("Réponse de l'API vide")
+    }
+  } catch (error) {
+    console.warn('Erreur de récupération du profil :', error)
+  }
+
+  userForm.value = { ...userProfile.value }
 })
 
-const userProfile = ref({ ...mockUser })
-const availableGroups = mockGroups as string[]
-
-// --- GESTION DE L'ÉTAT DU PROFIL ---
-const isEditing = ref(false)
-const userForm = ref({ ...userProfile.value })
-
 const startEditing = () => {
-  userForm.value = { ...userProfile.value }
-  isEditing.value = true
-}
+  userForm.value = { ...userProfile.value };
+  isEditing.value = true;
+};
 
 const cancelEditing = () => {
-  isEditing.value = false
-}
+  isEditing.value = false;
+};
 
 const saveProfile = () => {
-  if (userForm.value.groups.length === 0) {
+  if (!userForm.value.groups || userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.')
     return
   }
@@ -42,19 +80,17 @@ const saveProfile = () => {
   console.log('Profil sauvegardé :', userProfile.value)
 }
 
-// --- GESTION DU MOT DE PASSE ---
-const showPasswordModal = ref(false)
-
-const handlePasswordChange = (payload: { current: string; new: string }) => {
-  console.log('Demande de changement de mot de passe avec :', payload)
+const handlePasswordChange = (payload: { current: string, new: string }) => {
+  console.log("Demande de changement de mot de passe avec :", payload);
   // Ici, tu appelleras ton API plus tard.
-  alert('Mot de passe mis à jour avec succès !')
-  showPasswordModal.value = false
-}
+  alert('Mot de passe mis à jour avec succès !');
+  showPasswordModal.value = false;
+};
 </script>
 
 <template>
   <div class="w-full min-h-screen flex flex-col bg-white relative">
+
     <Header
       class="z-50 bg-white border-b border-gray-100 shrink-0"
       :show-add-event-button="false"
@@ -64,6 +100,7 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
     />
 
     <main class="flex-1 flex flex-col items-center py-10 px-4 overflow-y-auto">
+
       <div class="flex flex-col items-center">
         <img
           src="@/assets/avatar-placeholder.svg"
@@ -76,6 +113,7 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
       </div>
 
       <div v-if="!isEditing" class="w-full max-w-md mt-10 space-y-6">
+
         <div>
           <p class="text-xs font-medium text-[var(--color-primary)]">Prénom</p>
           <p class="text-gray-800 text-sm mt-0.5">{{ userProfile.firstName }}</p>
@@ -96,7 +134,11 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
         <div>
           <p class="text-xs font-medium text-[var(--color-primary)] mb-1.5">Groupe(s)</p>
           <div class="flex flex-wrap gap-2">
-            <GroupBadge v-for="g in userProfile.groups" :key="g" :group="g" />
+            <GroupBadge
+              v-for="g in userProfile.groups"
+              :key="g"
+              :group="g"
+            />
           </div>
         </div>
 
@@ -129,61 +171,42 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
             Modifier mon profil
           </button>
         </div>
+
       </div>
 
       <form v-else @submit.prevent="saveProfile" class="w-full max-w-md mt-8 space-y-4">
+
         <div class="flex flex-col text-left">
           <label class="mb-1 text-xs font-medium text-gray-700">
             Prénom<span class="text-[var(--color-red)]">*</span>
           </label>
-          <input
-            v-model="userForm.firstName"
-            type="text"
-            required
-            class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none"
-          />
+          <input v-model="userForm.firstName" type="text" required class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none" />
         </div>
 
         <div class="flex flex-col text-left">
           <label class="mb-1 text-xs font-medium text-gray-700">
             Nom<span class="text-[var(--color-red)]">*</span>
           </label>
-          <input
-            v-model="userForm.lastName"
-            type="text"
-            required
-            class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none"
-          />
+          <input v-model="userForm.lastName" type="text" required class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none" />
         </div>
 
         <div class="flex flex-col text-left">
           <label class="mb-1 text-xs font-medium text-gray-700">Description</label>
-          <textarea
-            v-model="userForm.description"
-            rows="3"
-            class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none resize-none"
-          ></textarea>
+          <textarea v-model="userForm.description" rows="3" class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none resize-none"></textarea>
         </div>
 
         <div class="flex flex-col text-left">
           <label class="mb-1 text-xs font-medium text-gray-700">
-            Groupe(s)<span class="text-[var(--color-red)]">*</span
-            ><span class="text-[10px] text-[var(--color-red)] font-normal ml-1">(min. 1)</span>
+            Groupe(s)<span class="text-[var(--color-red)]">*</span><span class="text-[10px] text-[var(--color-red)] font-normal ml-1">(min. 1)</span>
           </label>
           <MultiSelectDropdown
             class="w-full"
-            :options="availableGroups.map((g) => ({ id: g, label: g }))"
+            :options="availableGroups.map(g => ({ id: g, label: g }))"
             :modelValue="userForm.groups"
             @update:modelValue="userForm.groups = $event"
           >
             <template #selected="{ remove }">
-              <GroupBadge
-                v-for="g in userForm.groups"
-                :key="g"
-                :group="g"
-                removable
-                @remove="remove(g)"
-              />
+              <GroupBadge v-for="g in userForm.groups" :key="g" :group="g" removable @remove="remove(g)" />
             </template>
             <template #option="{ option }">
               <GroupBadge :group="option.id" />
@@ -195,33 +218,23 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
           <label class="mb-1 text-xs font-medium text-gray-700">
             Email<span class="text-[var(--color-red)]">*</span>
           </label>
-          <input
-            v-model="userForm.email"
-            type="email"
-            required
-            class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none"
-          />
+          <input v-model="userForm.email" type="email" required class="rounded-md border border-gray-300 p-2 text-sm focus:border-[var(--color-primary)] focus:outline-none" />
         </div>
 
         <div class="pt-6">
-          <button
-            type="submit"
-            class="w-full rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90 cursor-pointer"
-          >
+          <button type="submit" class="w-full rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90 cursor-pointer">
             Sauvegarder les modifications
           </button>
 
           <div class="text-center mt-3">
-            <button
-              type="button"
-              @click="cancelEditing"
-              class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium cursor-pointer"
-            >
+            <button type="button" @click="cancelEditing" class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium cursor-pointer">
               Annuler
             </button>
           </div>
         </div>
+
       </form>
+
     </main>
 
     <ChangePasswordModal
