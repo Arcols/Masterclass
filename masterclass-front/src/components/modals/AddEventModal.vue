@@ -98,9 +98,9 @@ function resetForm(): void {
 }
 
 function closeEventPopUp(): void {
-   isDialogVisible.value = false
-   dialogRef.value?.close()
- }
+  isDialogVisible.value = false
+  dialogRef.value?.close()
+}
 
 function closeOnEsc(event: KeyboardEvent): void {
   if (event.key === 'Escape' || event.key === 'Esc') {
@@ -226,10 +226,10 @@ function isFieldValid(value: unknown): boolean {
         ref="dialogRef"
         open
         :class="['add-event-card', selectedType]"
-        class="relative bg-white rounded-xl w-full max-w-3xl mx-0 my-6 p-4 sm:p-6 shadow-xl z-10 border-none animate-fade-in-up max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain"
+        class="relative bg-white rounded-xl w-full max-w-3xl mx-0 my-6 shadow-xl z-10 border-none animate-fade-in-up max-h-[calc(100dvh-7rem)] overflow-hidden flex flex-col"
         @keydown.esc.prevent="closeEventPopUp()"
       >
-        <div class="flex items-center justify-between mb-4">
+        <div class="shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-100 bg-white">
           <h3 class="text-2xl font-bold">{{ dialogTitle }}</h3>
           <button
             type="button"
@@ -239,7 +239,7 @@ function isFieldValid(value: unknown): boolean {
           >&times;</button>
         </div>
 
-        <form @submit.prevent="submit">
+        <form id="add-event-form" class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-4" @submit.prevent="submit">
           <EventTypeSelector v-model="selectedType" :locked="isEditMode" />
 
           <EventBasicFields v-model:title="title" v-model:description="description" v-model:group="group" :show-group-error="groupError" />
@@ -251,15 +251,18 @@ function isFieldValid(value: unknown): boolean {
           <EventTimeFields v-if="!isDevoir" v-model:startTime="startTime" v-model:endTime="endTime" />
 
           <EventDevoirDateLink v-if="isDevoir" v-model:submissionLink="submissionLink" v-model:date="date" v-model:dueTime="dueTime" v-model:isDevoir="isDevoir" />
-          
+        </form>
+
+        <div class="shrink-0 flex items-center gap-3 px-4 sm:px-6 py-4 border-t border-gray-100 bg-white">
           <button
             type="submit"
-            class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90 cursor-pointer"
+            form="add-event-form"
+            class="w-full py-3 rounded-lg text-white font-medium hover:brightness-90 cursor-pointer"
             style="background: var(--color-primary)"
           >
             Ajouter au planning
           </button>
-        </form>
+        </div>
       </dialog>
     </transition>
   </div>
