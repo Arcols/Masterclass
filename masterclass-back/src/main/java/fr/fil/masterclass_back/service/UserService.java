@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import fr.fil.masterclass_back.model.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
