@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import fr.fil.masterclass_back.model.User;
 
 @RestController
 @RequestMapping("/api/users")
@@ -58,6 +56,7 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id) {
@@ -65,7 +64,7 @@ public class UserController {
                 .map(user -> ResponseEntity.ok().body(user))
                 .orElse(ResponseEntity.notFound().build());
     }
-    }
+
 
     @GetMapping("/confirm")
     public ResponseEntity<String> confirm(@RequestParam String token) {
