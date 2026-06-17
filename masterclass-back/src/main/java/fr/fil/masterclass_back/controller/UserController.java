@@ -66,8 +66,20 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        return userService.getUserById(id)
+    public ResponseEntity<User> GetUserById(@PathVariable String id) {
+        return userService.GetUserById(id)
+                .map(user -> ResponseEntity.ok().body(user))
+                .orElse(ResponseEntity.notFound().build()); // 404 si introuvable
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> UpdateUserById(@PathVariable String id, @RequestBody User userDetails) {
+
+        if (userDetails.getUseId() != null && !userDetails.getUseId().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return userService.UpdateUserById(id, userDetails)
                 .map(user -> ResponseEntity.ok().body(user))
                 .orElse(ResponseEntity.notFound().build());
     }
