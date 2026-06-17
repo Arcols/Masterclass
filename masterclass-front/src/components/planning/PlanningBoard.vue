@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
+import { ChevronLeftIcon, ChevronRightIcon, ViewColumnsIcon } from '@heroicons/vue/24/outline'
 import PlanningColumn from './PlanningColumn.vue'
 import mockEvents from '@/mocks/events.json'
-import PlanningFilters from '@/components/PlanningFilters.vue'
 import type { EventData } from '@/components/event/EventCard.vue'
 import type { EventType } from '@/types/event.ts'
+import FiltersEvents from '@/components/FiltersEvents.vue'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -137,6 +137,12 @@ const updateStatus = (id: string, newValue: boolean) => {
 const emit = defineEmits<{
   (e: 'open-details', event: EventData): void;
   (e: 'request-add', payload: { date: string; startTime: string }): void;
+  (e: 'toggle-sidebar'): void;
+}>();
+
+// prop pour savoir si la sidebar est déjà ouverte ou non
+const props = defineProps<{
+  isSidebarOpen?: boolean;
 }>();
 
 </script>
@@ -160,10 +166,19 @@ const emit = defineEmits<{
         >
           <ChevronRightIcon class="w-5 h-5" />
         </button>
+
+        <button
+          @click="emit('toggle-sidebar')"
+          class="hidden lg:flex items-center justify-center p-2 border border-gray-200 rounded-md transition-colors cursor-pointer"
+          :class="isSidebarOpen ? 'bg-gray-100 text-[var(--color-primary)]' : 'bg-white text-gray-500 hover:bg-gray-50'"
+          title="Afficher/Masquer la Timeline des devoirs"
+        >
+          <ViewColumnsIcon class="w-5 h-5" />
+        </button>
       </div>
     </div>
 
-    <PlanningFilters
+    <FiltersEvents
       v-model:selected-types="selectedTypes"
       v-model:selected-groups="selectedGroups"
       :available-groups="availableGroups"

@@ -49,4 +49,7 @@ public class UserService {
         userRepository.save(user);
         pendingUsers.remove(token);
     }
+    public Optional<User> getUserById(String id) {
+        return userRepository.findById(id);
+    }
 }

@@ -141,7 +141,7 @@ const submitNewItem = () => {
 
 <template>
   <div
-    class="fixed inset-0 z-100 flex items-center justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4"
+    class="fixed inset-0 z-999 flex items-center justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4"
     @click.self="emit('close')"
   >
     <dialog
