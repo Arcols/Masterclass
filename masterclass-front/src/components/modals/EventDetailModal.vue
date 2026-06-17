@@ -152,52 +152,49 @@ const submitNewItem = () => {
       class="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col animate-fade-in-up p-0 m-0 border-none relative"
       aria-labelledby="event-detail-title"
     >
-      <div class="shrink-0 flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h2 id="event-detail-title" class="text-lg font-bold text-[var(--color-black)]">
+      <div class="shrink-0 flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-gray-100">
+        <h2 id="event-detail-title" class="text-base md:text-lg font-bold text-[var(--color-black)] truncate pr-2">
           {{ modalTitle }}
         </h2>
 
-        <!-- ── ACTIONS D'EN-TÊTE ── -->
-        <div class="flex items-center gap-1">
-          <!-- Bouton Favori -->
+        <div class="flex items-center gap-1 shrink-0">
           <button
             @click="emit('toggle-favorite', event.id, !event.isFavorite)"
             class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
             :title="event.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <StarSolid v-if="event.isFavorite" class="w-6 h-6 text-[var(--color-event-favorite-selected)] drop-shadow-sm" />
-            <StarOutline v-else class="w-6 h-6 text-[var(--color-event-favorite-unselected)] hover:text-gray-600" />
+            <StarSolid v-if="event.isFavorite" class="w-5 h-5 md:w-6 md:h-6 text-[var(--color-event-favorite-selected)] drop-shadow-sm" />
+            <StarOutline v-else class="w-5 h-5 md:w-6 md:h-6 text-[var(--color-event-favorite-unselected)] hover:text-gray-600" />
           </button>
 
-          <!-- Bouton Fermer -->
           <button
             @click="emit('close')"
             class="p-1.5 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
           >
-            <XMarkIcon class="w-6 h-6" />
+            <XMarkIcon class="w-5 h-5 md:w-6 md:h-6" />
           </button>
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-6 space-y-6">
-        <div class="flex items-center gap-4">
+      <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
+        <div class="flex items-center gap-3 md:gap-4">
           <div
             v-if="isDevoir || isExamen"
-            class="w-12 h-12 shrink-0 rounded-full border border-gray-200 flex items-center justify-center bg-gray-50"
+            class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-full border border-gray-200 flex items-center justify-center bg-gray-50"
           >
-            <CheckCircleIcon class="w-7 h-7 text-gray-500" />
+            <CheckCircleIcon class="w-6 h-6 md:w-7 md:h-7 text-gray-500" />
           </div>
           <div
             v-else
-            class="w-12 h-12 shrink-0 rounded-lg flex items-center justify-center bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
+            class="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg flex items-center justify-center bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
           >
-            <CalendarIcon class="w-7 h-7" />
+            <CalendarIcon class="w-6 h-6 md:w-7 md:h-7" />
           </div>
 
-          <div class="flex flex-col items-start gap-1">
+          <div class="flex flex-col items-start gap-0.5 md:gap-1">
             <EventBadge :type="event.type" />
-            <h3 class="text-xl font-bold text-[var(--color-black)]">{{ event.title }}</h3>
-            <span v-if="event.subject" class="text-sm font-semibold text-gray-500">
+            <h3 class="text-lg md:text-xl font-bold text-[var(--color-black)] leading-tight">{{ event.title }}</h3>
+            <span v-if="event.subject" class="text-xs md:text-sm font-semibold text-gray-500">
               {{ event.subject }}
             </span>
           </div>
@@ -205,20 +202,20 @@ const submitNewItem = () => {
 
         <hr class="border-gray-100" />
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-2 md:gap-3">
           <div
-            class="flex items-center text-sm"
+            class="flex items-center text-xs md:text-sm"
             :class="isRedDate ? 'text-[var(--color-red)] font-medium' : 'text-gray-800'"
           >
-            <ClockIcon class="w-5 h-5 mr-3 shrink-0" />
+            <ClockIcon class="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 shrink-0" />
             {{ formattedDate }}
           </div>
-          <div class="flex items-center text-sm text-gray-800">
-            <UserGroupIcon class="w-5 h-5 mr-3 shrink-0 text-gray-500" />
+          <div class="flex items-center text-xs md:text-sm text-gray-800">
+            <UserGroupIcon class="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 shrink-0 text-gray-500" />
             Groupe : <span class="font-medium ml-1">{{ event.group }}</span>
           </div>
-          <div v-if="event.location" class="flex items-center text-sm text-gray-800">
-            <MapPinIcon class="w-5 h-5 mr-3 shrink-0 text-gray-500" />
+          <div v-if="event.location" class="flex items-center text-xs md:text-sm text-gray-800">
+            <MapPinIcon class="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 shrink-0 text-gray-500" />
             {{ event.location }}
           </div>
         </div>
@@ -227,21 +224,21 @@ const submitNewItem = () => {
           v-if="event.submissionLink"
           :href="event.submissionLink"
           target="_blank"
-          class="flex items-center gap-2 text-sm font-medium text-[var(--color-primary)] hover:underline bg-[var(--color-primary)]/5 p-3 rounded-lg border border-[var(--color-primary)]/20 transition-colors"
+          class="flex items-center gap-2 text-xs md:text-sm font-medium text-[var(--color-primary)] hover:underline bg-[var(--color-primary)]/5 p-2.5 md:p-3 rounded-lg border border-[var(--color-primary)]/20 transition-colors"
         >
           <LinkIcon class="w-4 h-4 shrink-0" />
           Accéder au lien du rendu
         </a>
 
-        <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-600 border border-gray-100">
+        <div class="bg-gray-50 rounded-lg p-3 md:p-4 text-xs md:text-sm text-gray-600 border border-gray-100 whitespace-pre-wrap">
           {{ event.description || 'Aucune description pour cet événement.' }}
         </div>
 
-        <div class="mt-8 bg-gray-50/50 border border-gray-100 rounded-xl overflow-hidden">
+        <div class="mt-6 md:mt-8 bg-gray-50/50 border border-gray-100 rounded-xl overflow-hidden">
           <div class="flex p-1 bg-gray-100/80 rounded-t-xl">
             <button
               @click="switchTab('commentaires')"
-              class="flex-1 py-1.5 text-sm font-medium rounded-md transition-all cursor-pointer"
+              class="flex-1 py-1.5 text-xs md:text-sm font-medium rounded-md transition-all cursor-pointer"
               :class="
                 activeTab === 'commentaires'
                   ? 'bg-white text-[var(--color-primary)] shadow-sm'
@@ -252,18 +249,18 @@ const submitNewItem = () => {
             </button>
             <button
               @click="switchTab('notes')"
-              class="flex-1 py-1.5 text-sm font-medium rounded-md transition-all cursor-pointer"
+              class="flex-1 py-1.5 text-xs md:text-sm font-medium rounded-md transition-all cursor-pointer"
               :class="
                 activeTab === 'notes'
                   ? 'bg-white text-[var(--color-primary)] shadow-sm'
                   : 'text-gray-500 hover:text-gray-700'
               "
             >
-              Notes personnelles
+              Notes perso.
             </button>
           </div>
 
-          <div class="p-4 bg-gray-50">
+          <div class="p-3 md:p-4 bg-gray-50">
             <div v-if="activeTab === 'commentaires'">
               <p
                 v-if="currentEventComments.length === 0"
@@ -299,12 +296,12 @@ const submitNewItem = () => {
 
             <div
               v-if="isAdding"
-              class="mt-2 bg-white p-3 rounded-lg border border-gray-200 shadow-sm animate-fade-in-up"
+              class="mt-2 bg-white p-2 md:p-3 rounded-lg border border-gray-200 shadow-sm animate-fade-in-up"
             >
               <textarea
                 v-model="newItemContent"
                 rows="3"
-                class="w-full text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent resize-none p-2 outline-none transition-all"
+                class="w-full text-xs md:text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent resize-none p-2 outline-none transition-all"
                 :placeholder="
                   activeTab === 'commentaires'
                     ? 'Saisissez votre commentaire...'
@@ -332,7 +329,7 @@ const submitNewItem = () => {
             <button
               v-else
               @click="isAdding = true"
-              class="mt-2 flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border-2 border-dashed border-gray-300 text-sm font-medium text-gray-500 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)]/5 transition-all cursor-pointer"
+              class="mt-2 flex items-center justify-center gap-2 w-full py-2 md:py-2.5 rounded-lg border-2 border-dashed border-gray-300 text-xs md:text-sm font-medium text-gray-500 hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)]/5 transition-all cursor-pointer"
             >
               <PlusIcon class="w-4 h-4" />
               {{ activeTab === 'commentaires' ? 'Ajouter un commentaire' : 'Ajouter une note' }}
@@ -342,12 +339,12 @@ const submitNewItem = () => {
       </div>
 
       <div
-        class="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 p-4 border-t border-gray-100 bg-white"
+        class="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 p-3 md:p-4 border-t border-gray-100 bg-white"
       >
         <button
           v-if="isDevoir"
           @click="emit('toggle-complete', event.id, !event.isCompleted)"
-          class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm transition-colors cursor-pointer"
+          class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-3 py-2 md:px-4 rounded-md font-medium text-xs md:text-sm transition-colors cursor-pointer"
           :class="
             event.isCompleted
               ? 'bg-gray-200 text-gray-700'
@@ -360,7 +357,7 @@ const submitNewItem = () => {
 
         <button
           @click="emit('edit', event)"
-          class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md border border-gray-200 font-medium text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+          class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-3 py-2 md:px-4 rounded-md border border-gray-200 font-medium text-xs md:text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
         >
           <PencilIcon class="w-4 h-4" />
           Modifier
@@ -368,7 +365,7 @@ const submitNewItem = () => {
 
         <button
           @click="emit('delete', event.id)"
-          class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm text-[var(--color-red)] bg-red-50 hover:bg-red-100 transition-colors cursor-pointer"
+          class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-3 py-2 md:px-4 rounded-md font-medium text-xs md:text-sm text-[var(--color-red)] bg-red-50 hover:bg-red-100 transition-colors cursor-pointer"
         >
           <TrashIcon class="w-4 h-4" />
           Supprimer

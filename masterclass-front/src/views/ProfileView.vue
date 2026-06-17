@@ -82,7 +82,7 @@ const handlePasswordChange = (payload: { current: string, new: string }) => {
 
         <div>
           <p class="text-xs font-medium text-[var(--color-primary)]">Description</p>
-          <p class="text-gray-800 text-sm mt-0.5 leading-relaxed">
+          <p class="text-gray-800 text-sm mt-0.5 leading-relaxed whitespace-pre-wrap">
             {{ userProfile.description || 'Aucune description.' }}
           </p>
         </div>

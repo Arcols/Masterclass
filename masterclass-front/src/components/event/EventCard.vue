@@ -85,7 +85,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
           <span
             class="font-bold text-[var(--color-black)] w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
             :class="[
-              isList ? 'text-lg' : 'md:text-[13px] text-[9px]',
+              isList ? 'text-base md:text-lg' : 'md:text-[13px] text-[9px]',
               { 'line-through text-gray-400': event.isCompleted },
             ]"
           >
@@ -115,7 +115,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
         <span
           class="flex font-bold text-[var(--color-black)] whitespace-normal break-words md:truncate md:whitespace-nowrap"
           :class="[
-            isList ? 'text-lg' : 'md:text-[13px] text-[9px]',
+            isList ? 'text-base md:text-lg' : 'md:text-[13px] text-[9px]',
             { 'line-through text-gray-600': event.isCompleted },
           ]"
         >
@@ -151,7 +151,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
     <div class="hidden md:flex justify-between items-center mt-auto" :class="isList ? 'pt-4' : 'pt-2'">
       <div
         class="hidden md:flex items-center text-gray-500 truncate pr-2"
-        :class="isList ? 'text-sm' : 'text-[11px]'"
+        :class="isList ? 'text-xs md:text-sm' : 'text-[11px]'"
       >
         <ClockIcon class="shrink-0 mr-1.5" :class="isList ? 'w-4 h-4' : 'w-3 h-3'" />
 
@@ -163,7 +163,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
 
       <span
         class="hidden md:block bg-gray-100 text-[var(--color-black)] px-2 py-0.5 rounded-full font-medium shrink-0"
-        :class="isList ? 'text-xs' : 'text-[9px]'"
+        :class="isList ? 'text-[10px] md:text-xs' : 'text-[9px]'"
       >
         {{ event.group }}
       </span>
