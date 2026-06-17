@@ -6,7 +6,10 @@ INSERT INTO `User` (USE_id, USE_firstname, USE_lastname, USE_mail, USE_descripti
 INSERT INTO `Group` (GRO_id, GRO_name) VALUES
                                            ('G1', 'Administrateurs'),
                                            ('G2', 'Professeurs'),
-                                           ('G3', 'Étudiants');
+                                           ('G3', 'Étudiants'),
+                                           ('FIL A1', 'FIL A1'),
+                                           ('ANG G1', 'ANG G1'),
+                                           ('ANG G2', 'ANG G2');
 
 INSERT INTO User_Group (USE_id, GRO_id) VALUES
                                             ('U1', 'G1'),
