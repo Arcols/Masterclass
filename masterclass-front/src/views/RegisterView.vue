@@ -6,6 +6,14 @@ import GroupBadge from '@/components/GroupBadge.vue'
 import mockGroups from '@/mocks/groups.json'
 import Header from '@/components/Header.vue'
 import { registerUser } from '@/services/userService'
+import { onMounted } from 'vue'
+import { useAuth } from '@/utils/checkingAuth'
+
+const { requireAuth } = useAuth()
+
+onMounted(async () => {
+  await requireAuth() // ✅ redirige vers /login si token invalide
+})
 
 const router = useRouter()
 

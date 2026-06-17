@@ -1,14 +1,18 @@
 package fr.fil.masterclass_back.controller;
 
+import fr.fil.masterclass_back.dto.LoginRequest;
 import fr.fil.masterclass_back.dto.RegisterRequest;
 import fr.fil.masterclass_back.model.Group;
 import fr.fil.masterclass_back.model.User;
 import fr.fil.masterclass_back.repository.GroupRepository;
+import fr.fil.masterclass_back.service.JwtService;
 import fr.fil.masterclass_back.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +27,12 @@ public class UserController {
 
     private final GroupRepository groupRepository;
 
-    public UserController(UserService userService, GroupRepository groupRepository) {
+    private final JwtService jwtService;
+
+    public UserController(UserService userService, GroupRepository groupRepository, JwtService jwtService) {
         this.userService = userService;
         this.groupRepository = groupRepository;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -91,4 +98,27 @@ public class UserController {
         return ResponseEntity.ok("Compte confirmé ! Vous pouvez vous connecter.");
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            User user = userService.connection(request.getMail(), request.getPassword());
+            String token = jwtService.generateToken(user);
+            return ResponseEntity.ok(Map.of("token", token, "userId", user.getUseId()));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/tokenvalidity")
+    public ResponseEntity<?> me(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Token manquant");
+        }
+        String token = authHeader.substring(7);
+        if (!jwtService.isTokenValid(token)) {
+            return ResponseEntity.status(401).body("Token invalide ou expiré");
+        }
+        return ResponseEntity.ok("Token valide");
+    }
 }
