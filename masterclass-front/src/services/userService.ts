@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api/users'
+const API_BASE = 'http://localhost:8080/api'
 
 export interface RegisterPayload {
   firstname: string
@@ -11,7 +11,7 @@ export interface RegisterPayload {
 }
 
 export async function registerUser(payload: RegisterPayload): Promise<string> {
-  const res = await fetch(`${API_BASE}/register`, {
+  const res = await fetch(`${API_BASE}/users/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -20,6 +20,16 @@ export async function registerUser(payload: RegisterPayload): Promise<string> {
   const text = await res.text()
   if (!res.ok) throw new Error(text)
   return text
+}
+
+export async function getUserById(id: string): Promise<string> {
+  const res = await fetch(`${API_BASE}/users/${id}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
+  return await res.text();
 }
 
 export async function login(email: string, password: string): Promise<string> {
