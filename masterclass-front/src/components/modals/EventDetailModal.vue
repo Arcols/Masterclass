@@ -21,7 +21,7 @@ import type { EventData } from '../event/EventCard.vue'
 // Imports des mocks
 import allComments from '@/mocks/comments.json'
 import allNotes from '@/mocks/notes.json'
-import CommentItem from '@/components/CommentItem.vue'
+import CommentItem from '@/components/event/CommentItem.vue'
 
 const props = defineProps<{
   event: EventData
