@@ -23,7 +23,4 @@ public class Group {
 
     @Column(name = "GRO_name", length = 50)
     private String groName;
-
-    @ManyToMany(mappedBy = "groups")
-    private List<User> users;
 }
