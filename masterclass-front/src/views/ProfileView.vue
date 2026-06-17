@@ -5,6 +5,31 @@ import Header from '@/components/Header.vue'
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue'
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
+import { getUserById } from '@/services/userService.ts'
+
+interface UserProfileData {
+  firstName?: string
+  lastName?: string
+  email?: string
+  description?: string
+  groups?: string[]
+}
+
+interface BackendUserResponse {
+  useFirstname: string
+  useLastname: string
+  useMail: string
+  useDescription: string
+  groups: { groId: string }[]
+}
+
+const userProfile = ref<UserProfileData>({})
+const userForm = ref<UserProfileData>({})
+const availableGroups = ref<string[]>([])
+const isEditing = ref(false)
+const showPasswordModal = ref(false)
+import { onMounted } from 'vue'
+import { useAuth } from '@/utils/checkingAuth'
 import { getUserById, updateUserById } from '@/services/userService.ts'
 
 interface UserProfileData {
@@ -28,7 +53,6 @@ const userForm = ref<UserProfileData>({})
 const availableGroups = ref<string[]>([])
 const isEditing = ref(false)
 const showPasswordModal = ref(false)
-
 onMounted(async () => {
   const userId = 'U1' // TODO : À dynamiser plus tard
   try {
@@ -50,8 +74,9 @@ onMounted(async () => {
     console.warn('Erreur de récupération du profil :', error)
   }
 
-  userForm.value = { ...userProfile.value }
-})
+// --- GESTION DE L'ÉTAT DU PROFIL ---
+const isEditing = ref(false)
+const userForm = ref({ ...userProfile.value })
 
 const startEditing = () => {
   userForm.value = { ...userProfile.value }
@@ -62,8 +87,8 @@ const cancelEditing = () => {
   isEditing.value = false
 }
 
-const saveProfile = async () => {
-  if (!userForm.value.groups || userForm.value.groups.length === 0) {
+const saveProfile = () => {
+  if (userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.')
     return
   }
@@ -89,6 +114,9 @@ const saveProfile = async () => {
     alert('Une erreur est survenue lors de la mise à jour du profil.')
   }
 }
+
+// --- GESTION DU MOT DE PASSE ---
+const showPasswordModal = ref(false)
 
 const handlePasswordChange = (payload: { current: string; new: string }) => {
   console.log('Demande de changement de mot de passe avec :', payload)
