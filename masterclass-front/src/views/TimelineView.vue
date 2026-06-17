@@ -7,6 +7,7 @@ import FilterModal from '@/components/modals/FilterModal.vue';
 import { FunnelIcon } from '@heroicons/vue/24/outline';
 import mockEvents from '@/mocks/events.json';
 import { useFilters } from '@/composables/useFilters';
+import GlobalFilterAlert from '@/components/GlobalFilterAlert.vue';
 
 // Récupération des filtres de la session
 const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters();
@@ -66,6 +67,9 @@ const handleDelete = (id: string) => {
       :show-profile="true"
       subtitle="FIL A1 2028"
     />
+
+    <!-- bandeau d'alerte global -->
+    <GlobalFilterAlert />
 
     <main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
       <div class="max-w-3xl mx-auto w-full">

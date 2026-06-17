@@ -8,8 +8,8 @@ import EventDetailModal from '@/components/modals/EventDetailModal.vue'
 import type { EventData } from '@/components/event/EventCard.vue'
 import { makeOnAddEvent, makeOnRequestAdd, makeHandleUpdateStatus, makeHandleDelete, makeHandleEdit } from '@/utils/appHandlers'
 import TodoListPanel from '@/components/TodoListPanel.vue'
+import GlobalFilterAlert from '@/components/GlobalFilterAlert.vue'
 
-const router = useRouter()
 const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
 
 const onAddEvent = makeOnAddEvent(addEventRef)
@@ -39,6 +39,9 @@ const handleEdit = (event: EventData) => {
       subtitle="FIL A1 2028"
       @add-event="onAddEvent"
     />
+
+    <!-- bandeau d'alerte global -->
+    <GlobalFilterAlert />
 
     <main class="flex-1 flex gap-4 md:p-2 lg:p-4 min-h-0 overflow-hidden">
       <PlanningBoard
