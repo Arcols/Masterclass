@@ -49,28 +49,30 @@ const selectedGroupValues = computed<string[]>({
       class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
       rows="3"
     />
-
-    <label class="block text-sm font-medium text-gray-700 mb-1">Groupe de l'événement <span class="text-[var(--color-red)]">*</span></label>
-    <div :class="['mb-4', props.showGroupError ? 'ring-2 ring-[var(--color-red)]/30 rounded-md p-1' : '']">
-      <MultiSelectDropdown
-        class="w-full pb-4"
-        v-model="selectedGroupValues"
-        :options="groupDropdownOptions"
-        @update:modelValue="selectedGroupValues = $event"
-      >
-        <template #selected="{ remove }">
-          <GroupBadge
-            v-for="g in selectedGroupValues"
-            :key="g"
-            :group="g"
-          />
-          <span v-if="!group" class="text-sm text-gray-400">Sélectionner un groupe</span>
-        </template>
-        <template #option="{ option }">
-          <GroupBadge :group="option.id" />
-        </template>
-      </MultiSelectDropdown>
-      <p v-if="props.showGroupError" class="text-sm text-[var(--color-red)] mt-1">Veuillez sélectionner au moins un groupe.</p>
+    <div class="flex gap-2">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Groupe <span class="text-[var(--color-red)]">*</span></label>
+      <div :class="[props.showGroupError ? 'ring-2 ring-[var(--color-red)]/30 rounded-md p-1' : '']">
+        <MultiSelectDropdown
+          class="w-full pb-4"
+          v-model="selectedGroupValues"
+          :options="groupDropdownOptions"
+          :show-chevron="false"
+          @update:modelValue="selectedGroupValues = $event"
+        >
+          <template #selected="{ remove }">
+            <GroupBadge
+              v-for="g in selectedGroupValues"
+              :key="g"
+              :group="g"
+            />
+            <span v-if="!group" class="text-sm text-gray-400">Sélectionner un groupe</span>
+          </template>
+          <template #option="{ option }">
+            <GroupBadge :group="option.id" />
+          </template>
+        </MultiSelectDropdown>
+        <p v-if="props.showGroupError" class="text-sm text-[var(--color-red)] mt-1">Veuillez sélectionner au moins un groupe.</p>
+      </div>
     </div>
   </div>
 </template>

@@ -108,12 +108,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="mb-4">
+    <div class="relative">
       <label class="block text-sm font-medium text-gray-700 mb-1">Heure de rendu <span class="text-[var(--color-red)]">*</span></label>
       <select
         :value="dueTime"
         @change="$emit('update:dueTime', ($event.target as HTMLSelectElement).value)"
-        class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
+        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
         required
       >
         <option v-for="t in timeOptions" :key="t" :value="t">{{ t }}</option>
@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
       <label class="block text-sm font-medium text-gray-700 mb-1">Date <span class="text-[var(--color-red)]">*</span></label>
       <button
         type="button"
-        class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg text-left flex items-center justify-between gap-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
+        class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-left flex items-center justify-between gap-3 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
         @click="toggleDatePicker()"
       >
         <span class="text-gray-900">
