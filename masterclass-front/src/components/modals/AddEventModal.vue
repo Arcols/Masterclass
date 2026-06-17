@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { getClasses } from '@/services/classesService.ts'
 import { createEvent,updateEvent } from '@/services/eventService.ts'
 import type { Classe } from '@/types/classes.ts'
@@ -9,6 +9,7 @@ import EventBasicFields from '@/components/modals/addEventModal/EventBasicFields
 import EventSubjectField from '@/components/modals/addEventModal/EventSubjectField.vue'
 import EventDateLocationFields from '@/components/modals/addEventModal/EventDateLocationFields.vue'
 import EventTimeFields from './addEventModal/EventTimeFields.vue'
+import EventDevoirDateLink from './addEventModal/EventDevoirDateLink.vue'
 
 const emit = defineEmits<{
   'event-saved': []
@@ -34,12 +35,14 @@ const eventIdToEdit = ref<number | string | undefined>(undefined)
 const title = ref<string>('')
 const description = ref<string>('')
 const group = ref<string>('')
+const groupError = ref<boolean>(false)
 const subject = ref<string>('')
 const location = ref<string>('')
 const date = ref<string>(getTodayDate())
 const startTime = ref<string>('08:00')
 const endTime = ref<string>('09:00')
 const dueTime = ref<string>('08:00')
+const submissionLink = ref<string>('')
 
 const typeLabels: Record<EventType, string> = {
   devoir: 'Devoir',
@@ -82,6 +85,7 @@ function resetForm(): void {
   title.value = ''
   description.value = ''
   group.value = ''
+  groupError.value = false
   subject.value = classes.value[0]?.value ?? ''
   location.value = ''
   date.value = getTodayDate()
@@ -90,6 +94,7 @@ function resetForm(): void {
   dueTime.value = '08:00'
   isEditMode.value = false
   eventIdToEdit.value = undefined
+  submissionLink.value = ''
 }
 
 function closeEventPopUp(): void {
@@ -112,39 +117,48 @@ function populateFormForEdit(eventToEdit: EventPayload) {
   title.value = eventToEdit.title
   description.value = eventToEdit.description
   group.value = eventToEdit.group ?? ''
+  groupError.value = false
   subject.value = eventToEdit.subject ?? ''
   location.value = eventToEdit.location
   date.value = eventToEdit.date
   startTime.value = eventToEdit.startTime
   endTime.value = eventToEdit.endTime
   dueTime.value = eventToEdit.dueTime
+  submissionLink.value = eventToEdit.submissionLink ?? ''
 }
 
 function addEventPopup(eventToEdit?: EventPayload): void {
-   resetForm()
+  resetForm()
 
-   if (eventToEdit) {
+  if (eventToEdit) {
      // If payload contains an id, open in edit mode, otherwise prefill for creation
-     if (eventToEdit.id !== undefined && eventToEdit.id !== null) {
-       populateFormForEdit(eventToEdit);
-     } else {
+    if (eventToEdit.id !== undefined && eventToEdit.id !== null) {
+      populateFormForEdit(eventToEdit);
+    } else {
        // Prefill fields without switching to edit mode
-       selectedType.value = eventToEdit.type ?? selectedType.value
-       title.value = eventToEdit.title ?? ''
-       description.value = eventToEdit.description ?? ''
+      selectedType.value = eventToEdit.type ?? selectedType.value
+      title.value = eventToEdit.title ?? ''
+      description.value = eventToEdit.description ?? ''
       group.value = eventToEdit.group ?? group.value
-       subject.value = eventToEdit.subject ?? subject.value
-       location.value = eventToEdit.location ?? ''
-       date.value = eventToEdit.date ?? date.value
-       startTime.value = eventToEdit.startTime ?? startTime.value
-       endTime.value = eventToEdit.endTime ?? endTime.value
-       dueTime.value = eventToEdit.dueTime ?? dueTime.value
-     }
-   }
+      subject.value = eventToEdit.subject ?? subject.value
+      location.value = eventToEdit.location ?? ''
+      date.value = eventToEdit.date ?? date.value
+      startTime.value = eventToEdit.startTime ?? startTime.value
+      endTime.value = eventToEdit.endTime ?? endTime.value
+      dueTime.value = eventToEdit.dueTime ?? dueTime.value
+      submissionLink.value = eventToEdit.submissionLink ?? submissionLink.value
+    }
+  }
 
-   isDialogVisible.value = true
-   dialogRef.value?.showModal()
- }
+  isDialogVisible.value = true
+  dialogRef.value?.showModal()
+}
+
+watch(group, (val) => {
+  if (isFieldValid(val)) {
+    groupError.value = false
+  }
+})
 
 defineExpose({ addEventPopup })
 
@@ -153,15 +167,19 @@ async function submit(): Promise<void> {
   const end = Number(endTime.value.slice(0, 2)) * 60 + Number(endTime.value.slice(3, 5));
   if (
     !isFieldValid(title.value) ||
-    !isFieldValid(location.value) ||
+    (!isDevoir.value && !isFieldValid(location.value)) ||
     !isFieldValid(date.value) ||
     !isFieldValid(startTime.value) ||
     !isFieldValid(endTime.value) ||
+    !isFieldValid(group.value) ||
     (isExamen.value && !isFieldValid(subject.value)) ||
     (isDevoir.value && !isFieldValid(subject.value)) ||
     (isDevoir.value && !isFieldValid(dueTime.value)) ||
     end <= start
   ) {
+    if (!isFieldValid(group.value)) {
+      groupError.value = true
+    }
     return
   }
 
@@ -177,6 +195,7 @@ async function submit(): Promise<void> {
     startTime: startTime.value,
     endTime: endTime.value,
     dueTime: dueTime.value,
+    submissionLink: isDevoir.value ? submissionLink.value : undefined,
   }
 
   try {
@@ -223,19 +242,19 @@ function isFieldValid(value: unknown): boolean {
         <form @submit.prevent="submit">
           <EventTypeSelector v-model="selectedType" :locked="isEditMode" />
 
-          <EventBasicFields v-model:title="title" v-model:description="description" v-model:group="group" />
+          <EventBasicFields v-model:title="title" v-model:description="description" v-model:group="group" :show-group-error="groupError" />
 
           <EventSubjectField v-if="isExamen || isDevoir" v-model:subject="subject" :classes="classes" />
 
-          <EventDateLocationFields v-model:location="location" v-model:date="date" v-model:isDevoir="isDevoir" />
-
-          <EventTimeFields v-if="isDevoir" v-model:dueTime="dueTime" />
+          <EventDateLocationFields v-if="!isDevoir" v-model:location="location" v-model:date="date" v-model:isDevoir="isDevoir" />
           
-          <EventTimeFields v-else v-model:startTime="startTime" v-model:endTime="endTime" />
+          <EventTimeFields v-if="!isDevoir" v-model:startTime="startTime" v-model:endTime="endTime" />
+
+          <EventDevoirDateLink v-if="isDevoir" v-model:submissionLink="submissionLink" v-model:date="date" v-model:dueTime="dueTime" v-model:isDevoir="isDevoir" />
           
           <button
             type="submit"
-            class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90"
+            class="w-full mt-4 py-3 rounded-lg text-white font-medium hover:brightness-90 cursor-pointer"
             style="background: var(--color-primary)"
           >
             Ajouter au planning

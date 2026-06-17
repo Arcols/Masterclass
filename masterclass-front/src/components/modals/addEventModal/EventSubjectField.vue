@@ -13,7 +13,7 @@ defineEmits<{
 </script>
 
 <template>
-  <label class="block text-sm font-medium text-gray-700 mb-1">Matière *</label>
+  <label class="block text-sm font-medium text-gray-700 mb-1">Matière <span class="text-[var(--color-red)]">*</span></label>
   <div class="relative">
     <select
       :value="subject"

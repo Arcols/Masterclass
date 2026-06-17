@@ -17,16 +17,18 @@ import {
 import { fr } from 'date-fns/locale/fr'
 
 const props = defineProps<{
-  location: string
+  submissionLink?: string
   date: string
   isDevoir: boolean
+  dueTime?: string
 }>()
 
 const emit = defineEmits<{
-  'update:location': [value: string]
+  'update:submissionLink': [value: string]
   'update:date': [value: string]
   'update:startTime': [value: string]
   'update:endTime': [value: string]
+  'update:dueTime': [value: string]
 }>()
 
 const datePickerOpen = ref(false)
@@ -43,6 +45,10 @@ const calendarDays = computed(() => {
 })
 
 const weekdayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+
+const timeOptions = Array.from({ length: 48 }, (_, i) =>
+  `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 === 0 ? '00' : '30'}`
+)
 
 function parseDateOrToday(value: string): Date {
   if (!value) return new Date()
@@ -102,16 +108,21 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Lieu <span class="text-[var(--color-red)]">*</span></label>
-      <input
-        type="text"
-        :value="location"
-        @input="$emit('update:location', ($event.target as HTMLInputElement).value)"
-        placeholder="Ex: Chez Clovis"
-        class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Heure de rendu <span class="text-[var(--color-red)]">*</span></label>
+      <select
+        :value="dueTime"
+        @change="$emit('update:dueTime', ($event.target as HTMLSelectElement).value)"
+        class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
         required
-      />
+      >
+        <option v-for="t in timeOptions" :key="t" :value="t">{{ t }}</option>
+      </select>
+      <span class="pointer-events-none absolute right-3 top-[42px] text-gray-500">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </span>
     </div>
 
     <div class="relative" ref="datePickerRef">
@@ -168,6 +179,17 @@ onBeforeUnmount(() => {
           </button>
         </div>
       </div>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Lien du rendu</label>
+      <input
+        type="text"
+        :value="submissionLink"
+        @input="$emit('update:submissionLink', ($event.target as HTMLInputElement).value)"
+        placeholder="Ex: https://moodle/cours-maths"
+        class="w-full mb-4 px-4 py-3 bg-white border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
+      />
     </div>
   </div>
 </template>

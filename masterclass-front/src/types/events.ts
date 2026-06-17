@@ -14,5 +14,6 @@ export interface EventPayload {
   startTime: string; // Format: HH:mm
   endTime: string; // Format: HH:mm
   dueTime: string; // Format: HH:mm, optional for 'devoir' and 'examen'
+  submissionLink?: string; // Optional: for 'devoir' type
 }
 
