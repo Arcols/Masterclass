@@ -2,7 +2,9 @@
 import { ref, onMounted } from 'vue'
 import { PencilIcon } from '@heroicons/vue/24/outline'
 import Header from '@/components/Header.vue'
+import mockGroups from '@/mocks/groups.json'
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue'
+import mockUser from '@/mocks/users.json'
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
 import { getUserById, updateUserById } from '@/services/userService.ts'
@@ -60,9 +62,8 @@ const cancelEditing = () => {
   isEditing.value = false
 }
 
-const saveProfile = async () => {
-  // Vérification de l'existence avant de lire la longueur
-  if (!userForm.value.groups || userForm.value.groups.length === 0) {
+const saveProfile = () => {
+  if (userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.')
     return
   }
