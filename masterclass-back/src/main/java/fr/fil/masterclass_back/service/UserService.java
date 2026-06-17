@@ -12,9 +12,12 @@ public class UserService {
 
     private final EmailService emailService;
 
-    public UserService(UserRepository userRepository,EmailService emailService) {
+    private final PasswordService passwordService;
+
+    public UserService(UserRepository userRepository, EmailService emailService, PasswordService passwordService) {
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.passwordService = passwordService;
     }
 
     private final Map<String, User> pendingUsers = new HashMap<>();
@@ -23,6 +26,10 @@ public class UserService {
         if (userRepository.existsByUseMail(user.getUseMail())) {
             throw new RuntimeException("Email déjà utilisé");
         }
+
+        // Hash le mot de passe
+        String hashedPassword = passwordService.hash(user.getUsePassword());
+        user.setUsePassword(hashedPassword);
 
         // Génère un token de confirmation
         String token = UUID.randomUUID().toString();
