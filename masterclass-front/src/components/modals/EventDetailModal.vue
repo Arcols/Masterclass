@@ -12,7 +12,7 @@ import {
   CheckIcon,
   LinkIcon,
   PlusIcon,
-  StarIcon as StarOutline, // 👈 Import de l'étoile vide
+  StarIcon as StarOutline,
 } from '@heroicons/vue/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/vue/24/solid'
 import EventBadge from '../event/EventBadge.vue'

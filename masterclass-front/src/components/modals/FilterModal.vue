@@ -56,9 +56,10 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeydown));
     class="fixed inset-0 z-[999] flex items-center justify-center bg-[var(--color-black)]/40 backdrop-blur-sm p-4"
     @click.self="emit('close')"
   >
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden flex flex-col animate-fade-in-up p-0 m-0 border-none relative">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col animate-fade-in-up p-0 m-0 border-none relative">
 
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+      <!-- HEADER FIXE -->
+      <div class="shrink-0 flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h2 class="text-lg font-bold text-[var(--color-black)]">Filtres</h2>
         <button
           @click="emit('close')"
@@ -68,7 +69,8 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeydown));
         </button>
       </div>
 
-      <div class="p-6 overflow-y-auto max-h-[70vh] flex flex-col gap-6">
+      <!-- CONTENU SCROLLABLE -->
+      <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
 
         <!-- Types d'événements -->
         <div>
@@ -131,7 +133,8 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeydown));
         </div>
       </div>
 
-      <div class="p-4 border-t border-gray-100 bg-gray-50 flex justify-end shrink-0">
+      <!-- 4. FOOTER FIXE -->
+      <div class="shrink-0 p-4 border-t border-gray-100 bg-gray-50 flex justify-end">
         <button
           @click="emit('close')"
           class="px-5 py-2.5 bg-[var(--color-primary)] text-white rounded-md text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
@@ -139,6 +142,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeydown));
           Afficher les résultats
         </button>
       </div>
+
     </div>
   </div>
 </template>
