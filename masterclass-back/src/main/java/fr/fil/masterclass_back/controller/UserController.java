@@ -1,11 +1,8 @@
 package fr.fil.masterclass_back.controller;
 
 import fr.fil.masterclass_back.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import fr.fil.masterclass_back.model.User;
 
 @RestController
@@ -19,8 +16,20 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id) {
-        return userService.getUserById(id)
+    public ResponseEntity<User> GetUserById(@PathVariable String id) {
+        return userService.GetUserById(id)
+                .map(user -> ResponseEntity.ok().body(user))
+                .orElse(ResponseEntity.notFound().build()); // 404 si introuvable
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> UpdateUserById(@PathVariable String id, @RequestBody User userDetails) {
+
+        if (userDetails.getUseId() != null && !userDetails.getUseId().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return userService.UpdateUserById(id, userDetails)
                 .map(user -> ResponseEntity.ok().body(user))
                 .orElse(ResponseEntity.notFound().build());
     }
