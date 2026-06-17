@@ -165,8 +165,8 @@ const submitNewItem = () => {
             class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
             :title="event.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
           >
-            <StarSolid v-if="event.isFavorite" class="w-6 h-6 text-yellow-400 drop-shadow-sm" />
-            <StarOutline v-else class="w-6 h-6 text-gray-400 hover:text-gray-600" />
+            <StarSolid v-if="event.isFavorite" class="w-6 h-6 text-[var(--color-event-favorite-selected)] drop-shadow-sm" />
+            <StarOutline v-else class="w-6 h-6 text-[var(--color-event-favorite-unselected)] hover:text-gray-600" />
           </button>
 
           <!-- Bouton Fermer -->

@@ -80,7 +80,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
           <!-- Étoile cachée sur mobile -->
           <StarSolid
             v-if="event.isFavorite"
-            class="hidden md:block w-4 h-4 text-yellow-400 shrink-0"
+            class="hidden md:block w-4 h-4 text-[var(--color-event-favorite-selected)] shrink-0"
           />
           <span
             class="font-bold text-[var(--color-black)] w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
@@ -110,7 +110,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
         <!-- Étoile cachée sur mobile (hidden md:block) -->
         <StarSolid
           v-if="event.isFavorite"
-          class="hidden md:block w-4 h-4 text-yellow-400 shrink-0"
+          class="hidden md:block w-4 h-4 text-[var(--color-event-favorite-selected)] shrink-0"
         />
         <span
           class="flex font-bold text-[var(--color-black)] whitespace-normal break-words md:truncate md:whitespace-nowrap"
