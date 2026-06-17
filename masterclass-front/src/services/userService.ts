@@ -32,6 +32,25 @@ export async function getUserById(id: string): Promise<string> {
   return await res.text();
 }
 
+export interface UpdateUserPayload {
+  useFirstname?: string
+  useLastname?: string
+  useMail?: string
+  useDescription?: string
+  groups?: { groId: string }[]
+}
+
+export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
+  const res = await fetch(`${API_BASE}/users/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
+  return await res.text()
+}
+
 export async function login(email: string, password: string): Promise<string> {
   const response = await fetch(`${API_BASE}/login`, {
     method: 'POST',
