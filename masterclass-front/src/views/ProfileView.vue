@@ -7,7 +7,7 @@ import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue'
 import mockUser from '@/mocks/users.json'
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
-import { getUserById } from '@/services/userService.ts'
+import { getUserById, updateUserById } from '@/services/userService.ts'
 
 interface UserProfileData {
   firstName?: string
@@ -36,7 +36,7 @@ import { useAuth } from '@/utils/checkingAuth'
 const { requireAuth } = useAuth()
 
 onMounted(async () => {
-  const userId = 'U1'
+  const userId = 'U1' // TODO : À dynamiser plus tard
   try {
     const rawData = await getUserById(userId)
     if (rawData) {
@@ -68,14 +68,32 @@ const cancelEditing = () => {
   isEditing.value = false;
 };
 
-const saveProfile = () => {
+const saveProfile = async () => {
   if (!userForm.value.groups || userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.')
     return
   }
-  userProfile.value = { ...userForm.value }
-  isEditing.value = false
-  console.log('Profil sauvegardé :', userProfile.value)
+
+  try {
+    const userId = 'U1' // TODO : À dynamiser plus tard
+
+    const payload = {
+      useFirstname: userForm.value.firstName,
+      useLastname: userForm.value.lastName,
+      useMail: userForm.value.email,
+      useDescription: userForm.value.description,
+      groups: userForm.value.groups.map((g) => ({ groId: g })),
+    }
+
+    await updateUserById(userId, payload)
+
+    userProfile.value = { ...userForm.value }
+    isEditing.value = false
+    console.log('Profil sauvegardé en base de données avec succès.')
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde :', error)
+    alert('Une erreur est survenue lors de la mise à jour du profil.')
+  }
 }
 
 const handlePasswordChange = (payload: { current: string, new: string }) => {
