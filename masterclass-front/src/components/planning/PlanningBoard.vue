@@ -6,6 +6,7 @@ import mockEvents from '@/mocks/events.json'
 import type { EventData } from '@/components/event/EventCard.vue'
 import type { EventType } from '@/types/event.ts'
 import FilterModal from '@/components/modals/FilterModal.vue'
+import { useFilters } from '@/composables/useFilters'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -24,21 +25,15 @@ const updateRowHeight = () => {
 }
 
 // ── GESTION DES FILTRES ──
-const selectedTypes = ref<EventType[]>([])
-const selectedGroups = ref<string[]>([])
-const showFavoritesOnly = ref(false)
+// On récupère l'état global et persistant
+const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters()
+
 const isFilterModalOpen = ref(false)
 
 // Calcul du nombre de filtres actifs
 const activeFilterCount = computed(() => {
   return selectedTypes.value.length + selectedGroups.value.length + (showFavoritesOnly.value ? 1 : 0)
 })
-
-const resetFilters = () => {
-  selectedTypes.value = []
-  selectedGroups.value = []
-  showFavoritesOnly.value = false
-}
 
 // Génère dynamiquement la liste de tous les groupes existants dans les données
 const availableGroups = computed(() => {
@@ -237,6 +232,7 @@ const props = defineProps<{
       :selected-types="selectedTypes"
       :selected-groups="selectedGroups"
       :available-groups="availableGroups"
+      :show-favorites-only="showFavoritesOnly"
       @update:selected-types="selectedTypes = $event"
       @update:selected-groups="selectedGroups = $event"
       @update:show-favorites-only="showFavoritesOnly = $event"
