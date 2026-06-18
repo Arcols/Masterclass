@@ -54,4 +54,8 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "USE_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "GRO_id", nullable = false)
+    private Group group;
 }
