@@ -147,9 +147,16 @@ const modalTitle = computed(() => {
 
 // ── GESTION DES ONGLETS ──
 const activeTab = ref<'commentaires' | 'notes'>('commentaires')
+
+// On rend les données importées réactives pour pouvoir y ajouter de nouveaux éléments
+const localComments = ref([...allComments])
+const localNotes = ref([...allNotes])
+
+// Variables pour le formulaire d'ajout
 const isAdding = ref(false)
 const newItemContent = ref('')
 
+// Fonction pour changer d'onglet (réinitialise l'état d'ajout)
 const switchTab = (tab: 'commentaires' | 'notes') => {
   activeTab.value = tab
   isAdding.value = false
