@@ -66,9 +66,7 @@ onMounted(async () => {
 
   currentUserId.value = getUserIdFromToken()
 
-  // Pour tester, on garde l'id simulé "E2" pour l'instant
-  const simulatedEventId = "E2"
-  const data = await fetchEventDetails(simulatedEventId)
+  const data = await fetchEventDetails(props.eventId)
 
   if (data) {
     // On peuple fullEvent avec toutes les données de l'API
@@ -112,8 +110,7 @@ onMounted(async () => {
 const handleToggleComplete = async () => {
   if (!currentUserId.value) return
 
-  //const newStatus = await toggleEventCompletion(props.eventId, currentUserId.value)
-  const newStatus = await toggleEventCompletion("E2", currentUserId.value) // On garde l'id simulé "E2" pour l'instant
+  const newStatus = await toggleEventCompletion(props.eventId, currentUserId.value)
 
   if (newStatus !== null) {
     // On met à jour l'interface locale de la modale

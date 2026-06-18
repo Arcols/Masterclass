@@ -1,4 +1,3 @@
-// src/services/eventService.ts
 import type { EventData } from '@/components/event/EventCard.vue'
 
 const API_BASE_EVENTS = `${import.meta.env.VITE_API_BASE_URL}/api/event`

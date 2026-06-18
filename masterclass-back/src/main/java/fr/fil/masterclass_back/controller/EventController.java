@@ -2,6 +2,8 @@ package fr.fil.masterclass_back.controller;
 
 import java.util.Map;
 import java.util.List;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 import fr.fil.masterclass_back.dto.*;
 import fr.fil.masterclass_back.model.*;
 import fr.fil.masterclass_back.service.*;
@@ -94,5 +96,38 @@ public class EventController {
         boolean isNowCompleted = eventService.toggleCompletion(eventId, userId);
 
         return ResponseEntity.ok(isNowCompleted);
+    }
+
+    @GetMapping("/week")
+    public ResponseEntity<?> getEventsForWeek(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            HttpServletRequest request
+    ) {
+        try {
+            // Extraction du token depuis le header "Authorization"
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token manquant ou mal formaté");
+            }
+
+            String token = authHeader.substring(7);
+
+            // Validation du token
+            if (!jwtService.isTokenValid(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token invalide ou expiré");
+            }
+
+            // Récupération de l'ID utilisateur
+            String userId = jwtService.extractUserId(token);
+
+            // Appel au service
+            List<EventSummaryDTO> events = eventService.getEventsForWeek(startDate, endDate, userId);
+
+            return ResponseEntity.ok(events);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur : " + e.getMessage());
+        }
     }
 }

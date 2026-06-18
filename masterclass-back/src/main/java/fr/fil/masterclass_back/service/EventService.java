@@ -143,6 +143,16 @@ public class EventService {
                 .toList();
     }
 
+    public List<EventSummaryDTO> getEventsForWeek(LocalDate startDate, LocalDate endDate, String userId) {
+        // Récupération des événements depuis la BDD
+        List<Event> events = eventRepository.findEventsForUserWeek(startDate, endDate, userId);
+
+        // Conversion en DTO
+        return events.stream()
+                .map(EventSummaryDTO::from)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public boolean toggleCompletion(String eventId, String userId) {
         if (eventCompletionRepository.existsByUserIdAndEventId(userId, eventId)) {
