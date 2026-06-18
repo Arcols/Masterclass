@@ -25,10 +25,10 @@ onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
 
   const userId = getUserIdFromToken()
-
   if (!userId) {
     console.warn('Aucun utilisateur connecté')
   }
+
   try {
     const rawData = await getUserById(userId)
     if (rawData) {
@@ -89,8 +89,8 @@ const saveProfile = async () => {
   }
 }
 
-const handlePasswordChange = (payload: { current: string; new: string }) => {
-  console.log('Demande de changement de mot de passe avec :', payload)
+const handlePasswordChange = (payload: { current: string, new: string }) => {
+  console.log("Demande de changement de mot de passe avec :", payload);
   // Ici, tu appelleras ton API plus tard.
   alert('Mot de passe mis à jour avec succès !')
   showPasswordModal.value = false
