@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import AddEventModal from '@/components/modals/AddEventModal.vue'
 import PlanningBoard from '@/components/planning/PlanningBoard.vue'
@@ -16,14 +15,14 @@ import {
 import TodoListPanel from '@/components/TodoListPanel.vue'
 import { onMounted } from 'vue'
 import { useAuth } from '@/utils/checkingAuth'
+import GlobalFilterAlert from '@/components/GlobalFilterAlert.vue'
 
 const { requireAuth } = useAuth()
 
 onMounted(async () => {
-  await requireAuth() // ✅ redirige vers /login si token invalide
+  await requireAuth() // redirige vers /login si token invalide
 })
 
-const router = useRouter()
 const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
 
 const onAddEvent = makeOnAddEvent(addEventRef)
@@ -31,7 +30,6 @@ const onRequestAdd = makeOnRequestAdd(addEventRef)
 
 const selectedEvent = ref<EventData | null>(null)
 
-// ── NOUVEL ÉTAT POUR LE PANNEAU DE DROITE ──
 const isTodoListOpen = ref(true) // Ouvert par défaut sur grand écran
 
 const handleUpdateStatus = makeHandleUpdateStatus(selectedEvent)
@@ -47,11 +45,15 @@ const handleEdit = (event: EventData) => {
   <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden relative">
     <Header
       class="z-100 bg-[var(--color-background)] shadow-sm shrink-0"
-      :show-actions="true"
+      :show-add-event-button="true"
       :show-profile="true"
+      :show-navigation="true"
       subtitle="FIL A1 2028"
       @add-event="onAddEvent"
     />
+
+    <!-- bandeau d'alerte global -->
+    <GlobalFilterAlert />
 
     <main class="flex-1 flex gap-4 md:p-2 lg:p-4 min-h-0 overflow-hidden">
       <PlanningBoard

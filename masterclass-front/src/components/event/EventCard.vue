@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline'
+import { StarIcon as StarSolid } from '@heroicons/vue/24/solid'
 import EventBadge from './EventBadge.vue'
 
 export interface EventData {
@@ -16,6 +17,7 @@ export interface EventData {
   location?: string;
   group: string;
   isCompleted: boolean;
+  isFavorite?: boolean;
 }
 
 const props = withDefaults(
@@ -59,7 +61,8 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
 
     <div class="flex justify-between items-start md:gap-2">
       <div class="flex flex-col items-start gap-1 min-w-0">
-        <!-- Affichage des devoirs -->
+
+        <!-- Affichage de la matière (s'il y en a une) -->
         <span
           v-if="event.subject"
           class="hidden md:block font-semibold text-gray-500 w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
@@ -67,16 +70,29 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
         >
           {{ event.subject }}
         </span>
-        <span
+
+        <!-- Affichage du TITRE (s'il n'y a PAS de matière) -->
+        <div
           v-else
-          class="font-bold text-[var(--color-black)] w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
-          :class="[
-            isList ? 'text-lg' : 'md:text-[13px] text-[9px]',
-            { 'line-through text-gray-400': event.isCompleted },
-          ]"
+          class="flex w-full"
+          :class="isList ? 'flex-row items-start md:items-center gap-1' : 'flex-col md:flex-row items-start md:items-center gap-0.5 md:gap-1.5'"
         >
-          {{ event.title }}
-        </span>
+          <!-- Étoile cachée sur mobile -->
+          <StarSolid
+            v-if="event.isFavorite"
+            class="hidden md:block w-4 h-4 text-[var(--color-event-favorite-selected)] shrink-0"
+          />
+          <span
+            class="font-bold text-[var(--color-black)] w-full whitespace-normal break-words md:truncate md:whitespace-nowrap"
+            :class="[
+              isList ? 'text-base md:text-lg' : 'md:text-[13px] text-[9px]',
+              { 'line-through text-gray-400': event.isCompleted },
+            ]"
+          >
+            {{ event.title }}
+          </span>
+        </div>
+
       </div>
 
       <EventBadge :type="event.type" class="hidden md:block md:shrink-0" />
@@ -84,16 +100,28 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
 
     <!-- Affichage des détails de l'événement -->
     <div class="flex justify-between items-center md:mt-1">
-      <span
+
+      <!-- Affichage du TITRE (s'il Y A un sujet) -->
+      <div
         v-if="event.subject"
-        class="flex font-bold text-[var(--color-black)] whitespace-normal break-words md:truncate md:whitespace-nowrap pr-2"
-        :class="[
-          isList ? 'text-lg' : 'md:text-[13px] text-[9px]',
-          { 'line-through text-gray-600': event.isCompleted },
-        ]"
+        class="flex min-w-0 pr-2"
+        :class="isList ? 'flex-row items-center gap-1' : 'flex-col md:flex-row items-start md:items-center gap-0.5 md:gap-1.5'"
       >
-        {{ event.title }}
-      </span>
+        <!-- Étoile cachée sur mobile (hidden md:block) -->
+        <StarSolid
+          v-if="event.isFavorite"
+          class="hidden md:block w-4 h-4 text-[var(--color-event-favorite-selected)] shrink-0"
+        />
+        <span
+          class="flex font-bold text-[var(--color-black)] whitespace-normal break-words md:truncate md:whitespace-nowrap"
+          :class="[
+            isList ? 'text-base md:text-lg' : 'md:text-[13px] text-[9px]',
+            { 'line-through text-gray-600': event.isCompleted },
+          ]"
+        >
+          {{ event.title }}
+        </span>
+      </div>
 
       <div
         v-else-if="!isList && event.location"
@@ -120,10 +148,10 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       />
     </div>
 
-    <div class="flex justify-between items-center mt-auto" :class="isList ? 'pt-4' : 'pt-2'">
+    <div class="hidden md:flex justify-between items-center mt-auto" :class="isList ? 'pt-4' : 'pt-2'">
       <div
         class="hidden md:flex items-center text-gray-500 truncate pr-2"
-        :class="isList ? 'text-sm' : 'text-[11px]'"
+        :class="isList ? 'text-xs md:text-sm' : 'text-[11px]'"
       >
         <ClockIcon class="shrink-0 mr-1.5" :class="isList ? 'w-4 h-4' : 'w-3 h-3'" />
 
@@ -135,7 +163,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
 
       <span
         class="hidden md:block bg-gray-100 text-[var(--color-black)] px-2 py-0.5 rounded-full font-medium shrink-0"
-        :class="isList ? 'text-xs' : 'text-[9px]'"
+        :class="isList ? 'text-[10px] md:text-xs' : 'text-[9px]'"
       >
         {{ event.group }}
       </span>

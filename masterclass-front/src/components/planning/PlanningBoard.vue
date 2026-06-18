@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon, ViewColumnsIcon } from '@heroicons/vue/24/outline'
+import { ChevronLeftIcon, ChevronRightIcon, FunnelIcon } from '@heroicons/vue/24/outline'
 import PlanningColumn from './PlanningColumn.vue'
 import mockEvents from '@/mocks/events.json'
 import type { EventData } from '@/components/event/EventCard.vue'
-import type { EventType } from '@/types/event.ts'
-import FiltersEvents from '@/components/FiltersEvents.vue'
+import FilterModal from '@/components/modals/FilterModal.vue'
+import { useFilters } from '@/composables/useFilters'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -24,8 +24,15 @@ const updateRowHeight = () => {
 }
 
 // ── GESTION DES FILTRES ──
-const selectedTypes = ref<EventType[]>([])
-const selectedGroups = ref<string[]>([])
+// On récupère l'état global et persistant
+const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters()
+
+const isFilterModalOpen = ref(false)
+
+// Calcul du nombre de filtres actifs
+const activeFilterCount = computed(() => {
+  return selectedTypes.value.length + selectedGroups.value.length + (showFavoritesOnly.value ? 1 : 0)
+})
 
 // Génère dynamiquement la liste de tous les groupes existants dans les données
 const availableGroups = computed(() => {
@@ -39,14 +46,15 @@ const getEventsForDay = (fullDateStr: string) => {
     const isSameDate = e.date === fullDateStr;
     const isTypeMatched = selectedTypes.value.length === 0 || selectedTypes.value.includes(e.type);
     const isGroupMatched = selectedGroups.value.length === 0 || selectedGroups.value.includes(e.group);
+    const isFavoriteMatched = !showFavoritesOnly.value || e.isFavorite;
 
-    return isSameDate && isTypeMatched && isGroupMatched;
+    return isSameDate && isTypeMatched && isGroupMatched && isFavoriteMatched;
   })
 }
 
 // ── GESTION DES DATES ──
-const currentDate = ref(new Date()) // Gère la semaine affichée (Navigation)
-const now = ref(new Date()) // Gère l'instant T (Ligne rouge et "Aujourd'hui")
+const currentDate = ref(new Date())
+const now = ref(new Date())
 let timer: ReturnType<typeof setInterval> | null = null
 
 onMounted(() => {
@@ -60,16 +68,13 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateRowHeight)
-
   if (timer) clearInterval(timer)
 })
 
-// Génération dynamique des jours de la semaine courante
 const weekDays = computed(() => {
   const current = new Date(currentDate.value)
-  const dayIndex = current.getDay() // 0 = Dim, 1 = Lun...
+  const dayIndex = current.getDay()
 
-  // Calcul de la distance par rapport au lundi
   const distanceToMonday = dayIndex === 0 ? -6 : 1 - dayIndex
 
   const monday = new Date(current)
@@ -89,13 +94,11 @@ const weekDays = computed(() => {
     const nextDay = new Date(monday)
     nextDay.setDate(monday.getDate() + index)
 
-    // Format YYYY-MM-DD pour filtrer les événements
     const yyyy = nextDay.getFullYear()
     const mm = String(nextDay.getMonth() + 1).padStart(2, '0')
     const dd = String(nextDay.getDate()).padStart(2, '0')
     const fullDateString = `${yyyy}-${mm}-${dd}`
 
-    // Vérifie si la colonne correspond à "Aujourd'hui"
     const isToday =
       nextDay.getDate() === now.value.getDate() &&
       nextDay.getMonth() === now.value.getMonth() &&
@@ -112,7 +115,6 @@ const weekDays = computed(() => {
   })
 })
 
-// ── NAVIGATION & UTILITAIRES ──
 const currentMonthYear = computed(() => {
   return currentDate.value.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
 })
@@ -140,7 +142,6 @@ const emit = defineEmits<{
   (e: 'toggle-sidebar'): void;
 }>();
 
-// prop pour savoir si la sidebar est déjà ouverte ou non
 const props = defineProps<{
   isSidebarOpen?: boolean;
 }>();
@@ -152,36 +153,95 @@ const props = defineProps<{
     class="flex flex-col h-full bg-white md:rounded-xl border border-gray-200 overflow-hidden shadow-sm"
   >
     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-50 shrink-0">
-      <h2 class="text-lg font-bold text-[var(--color-black)] capitalize">{{ currentMonthYear }}</h2>
-      <div class="flex items-center gap-1">
-        <button
-          @click="prevWeek"
-          class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600"
-        >
-          <ChevronLeftIcon class="w-5 h-5" />
-        </button>
-        <button
-          @click="nextWeek"
-          class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600"
-        >
-          <ChevronRightIcon class="w-5 h-5" />
-        </button>
+      <h2 class="text-lg font-bold text-[var(--color-black)] capitalize hidden sm:block">{{ currentMonthYear }}</h2>
 
-        <button
-          @click="emit('toggle-sidebar')"
-          class="hidden lg:flex items-center justify-center p-2 border border-gray-200 rounded-md transition-colors cursor-pointer"
-          :class="isSidebarOpen ? 'bg-gray-100 text-[var(--color-primary)]' : 'bg-white text-gray-500 hover:bg-gray-50'"
-          title="Afficher/Masquer la Timeline des devoirs"
-        >
-          <ViewColumnsIcon class="w-5 h-5" />
-        </button>
+      <!-- Affichage simplifié sur mobile si besoin -->
+      <h2 class="text-base font-bold text-[var(--color-black)] capitalize sm:hidden">
+        {{ currentDate.toLocaleDateString('fr-FR', { month: 'short' }) }}
+      </h2>
+
+      <!-- ZONE DES BOUTONS D'ACTION (Filtres + Navigation) -->
+      <div class="flex items-center gap-2 sm:gap-4">
+
+        <!-- Bloc Filtres -->
+        <div class="flex items-center gap-1.5">
+          <button
+            @click="isFilterModalOpen = true"
+            class="relative flex items-center gap-2 px-3 py-1.5 bg-[var(--color-primary)] text-white rounded-md text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            <FunnelIcon class="w-4 h-4" />
+            <span class="hidden md:inline">Filtres</span>
+
+            <!-- Badge Notification -->
+            <span
+              v-if="activeFilterCount > 0"
+              class="absolute -top-2 -right-2 flex items-center justify-center min-w-[20px] h-5 px-1 text-[11px] font-bold text-white bg-[var(--color-red)] rounded-full border-2 border-white shadow-sm"
+            >
+              {{ activeFilterCount }}
+            </span>
+          </button>
+
+          <!-- Bouton Reset Rapide (Visible uniquement si des filtres sont actifs) -->
+          <button
+            v-if="activeFilterCount > 0"
+            @click="resetFilters"
+            class="flex items-center justify-center p-1.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] rounded-md hover:bg-[var(--color-primary)]/10 transition-colors cursor-pointer"
+            title="Effacer les filtres"
+          >
+            <!-- SVG personnalisé "Entonnoir Barré" -->
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="w-px h-6 bg-gray-200 hidden sm:block"></div>
+
+        <!-- Bloc Navigation Semaines & Sidebar -->
+        <div class="flex items-center gap-1">
+          <button
+            @click="prevWeek"
+            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600"
+          >
+            <ChevronLeftIcon class="w-5 h-5" />
+          </button>
+          <button
+            @click="nextWeek"
+            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600"
+          >
+            <ChevronRightIcon class="w-5 h-5" />
+          </button>
+
+          <button
+            @click="emit('toggle-sidebar')"
+            class="hidden lg:flex items-center justify-center p-2 ml-1 border border-gray-200 rounded-md transition-colors cursor-pointer"
+            :class="isSidebarOpen ? 'bg-gray-100 text-[var(--color-primary)]' : 'bg-white text-gray-500 hover:bg-gray-50'"
+            title="Afficher/Masquer la Timeline des devoirs"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" id="Layout-Sidebar--Streamline-Tabler" height="24" width="24">
+              <desc>
+                Layout Sidebar Streamline Icon: https://streamlinehq.com
+              </desc>
+              <path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2H6a2 2 0 0 1 -2 -2z" stroke-width="2"></path>
+              <path d="m9 4 0 16" stroke-width="2"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
 
-    <FiltersEvents
-      v-model:selected-types="selectedTypes"
-      v-model:selected-groups="selectedGroups"
+    <!-- Modale de filtres -->
+    <FilterModal
+      v-if="isFilterModalOpen"
+      :selected-types="selectedTypes"
+      :selected-groups="selectedGroups"
       :available-groups="availableGroups"
+      :show-favorites-only="showFavoritesOnly"
+      @update:selected-types="selectedTypes = $event"
+      @update:selected-groups="selectedGroups = $event"
+      @update:show-favorites-only="showFavoritesOnly = $event"
+      @close="isFilterModalOpen = false"
     />
 
     <div class="flex-1 overflow-auto relative flex flex-col">

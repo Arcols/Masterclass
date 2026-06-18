@@ -4,6 +4,8 @@
   --color-primary: #00786f;
   --color-red: #ef4444;
   --color-black: #111111;
+  --color-event-favorite-selected: #fcc800;
+  --color-event-favorite-unselected: #99a1af;
 
   /* Couleurs pour les évènements s'ils sont faits ou pas */
   --color-event-not-done-bg: #ffffff;
@@ -21,9 +23,6 @@
   --color-groupe-border: #54e4e4;
 
   /* Couleurs pour les TAGS (Types d'événements - Style Neutre/Bordé) */
-  --color-tag-devoir-txt: var(--color-tag-devoir);
-  --color-tag-devoir-bg: transparent;
-  --color-tag-devoir-border: var(--color-tag-devoir);
   --color-tag-devoir-txt: var(--color-tag-devoir);
   --color-tag-devoir-bg: transparent;
   --color-tag-devoir-border: var(--color-tag-devoir);
