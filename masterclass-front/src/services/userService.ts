@@ -68,7 +68,7 @@ export async function updateUserById(id: string, payload: UpdateUserPayload): Pr
   })
 
   if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
-  return await res.text()
+  return await res.text();
 }
 
 export interface UpdateUserPayload {
