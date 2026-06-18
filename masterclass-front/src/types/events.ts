@@ -7,10 +7,12 @@ export interface EventPayload {
   type: EventType;
   title: string;
   description: string;
+  group?: string;
   subject?: string;
   location: string;
   date: string; // Format: YYYY-MM-DD
   startTime: string; // Format: HH:mm
   endTime: string; // Format: HH:mm
+  submissionLink?: string; // Optional: for 'devoir' type
 }
 
