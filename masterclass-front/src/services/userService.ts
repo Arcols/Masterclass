@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api'
+const API_BASE_USERS = 'http://localhost:8080/api/users'
 
 export interface RegisterPayload {
   firstname: string
@@ -11,7 +11,7 @@ export interface RegisterPayload {
 }
 
 export async function registerUser(payload: RegisterPayload): Promise<string> {
-  const res = await fetch(`${API_BASE}/users/register`, {
+  const res = await fetch(`${API_BASE_USERS}/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -33,7 +33,7 @@ export async function getUserById(id: string): Promise<string> {
     headers['Authorization'] = `Bearer ${token}`
   }
 
-  const res = await fetch(`${API_BASE}/users/${id}`, {
+  const res = await fetch(`${API_BASE_USERS}/${id}`, {
     method: 'GET',
     headers,
   })
@@ -61,7 +61,7 @@ export async function updateUserById(id: string, payload: UpdateUserPayload): Pr
     headers['Authorization'] = `Bearer ${token}`
   }
 
-  const res = await fetch(`${API_BASE}/users/${id}`, {
+  const res = await fetch(`${API_BASE_USERS}/${id}`, {
     method: 'PUT',
     headers,
     body: JSON.stringify(payload),
@@ -72,7 +72,7 @@ export async function updateUserById(id: string, payload: UpdateUserPayload): Pr
 }
 
 export async function login(email: string, password: string): Promise<string> {
-  const response = await fetch(`${API_BASE}/users/login`, {
+  const response = await fetch(`${API_BASE_USERS}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ mail: email, password }),
@@ -88,7 +88,7 @@ export async function login(email: string, password: string): Promise<string> {
 }
 
 export async function forgotPassword(mail: string): Promise<void> {
-  const response = await fetch(`${API_BASE}/forgot-password`, {
+  const response = await fetch(`${API_BASE_USERS}/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ mail }),
@@ -104,7 +104,7 @@ export async function resetPassword(
   newPassword: string,
   confirmPassword: string,
 ): Promise<void> {
-  const response = await fetch(`${API_BASE}/reset-password`, {
+  const response = await fetch(`${API_BASE_USERS}/reset-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, newPassword, confirmPassword }),
