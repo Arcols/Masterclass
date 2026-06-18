@@ -35,3 +35,23 @@ export async function updateEvent(id: number | string, payload: EventPayload): P
   console.log('Event updated successfully:', updatedEvent);
   return updatedEvent;
 }
+
+export const getEventsByUserAndDates = async (
+  userId: string,
+  startDate: string,
+  endDate: string,
+) => {
+  const token = localStorage.getItem('token')
+  const response = await fetch(
+    `http://localhost:8080/api/events/planning?userId=${userId}&startDate=${startDate}&endDate=${endDate}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    },
+  )
+  if (!response.ok) throw new Error('Erreur lors de la récupération des événements')
+  return await response.json()
+}
