@@ -2,6 +2,7 @@ package fr.fil.masterclass_back.service;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,15 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
+    @Value("${app.backend.url}")
+    private String backendUrl;
+
     public void sendConfirmationEmail(String toEmail, String token) {
         try {
-            String confirmLink = "http://localhost:8080/api/users/confirm?token=" + token;
+            String confirmLink = backendUrl + "/api/users/confirm?token=" + token;
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -46,6 +53,46 @@ public class EmailService {
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de l'envoi du mail", e);
+        }
+    }
+
+    public void sendResetPasswordEmail(String toEmail, String token) {
+        try {
+            String resetLink = frontendUrl + "/reset-password?token=" + token;
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toEmail);
+            helper.setSubject("Réinitialisation de votre mot de passe");
+            helper.setText("""
+                <html>
+                <body>
+                    <h2>Mot de passe oublié ?</h2>
+                    <p>Cliquez sur le bouton ci-dessous pour choisir un nouveau mot de passe :</p>
+                    <a href="%s" style="
+                        background-color: #00786f;
+                        color: white;
+                        padding: 12px 24px;
+                        text-decoration: none;
+                        border-radius: 6px;
+                        display: inline-block;
+                    ">
+                        Réinitialiser mon mot de passe
+                    </a>
+                    <p style="color: #999; font-size: 12px; margin-top: 16px;">
+                        Ce lien expire dans 30 minutes. Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.
+                    </p>
+                    <p style="color: #999; font-size: 12px;">
+                        Ou copiez ce lien : <a href="%s">%s</a>
+                    </p>
+                </body>
+                </html>
+            """.formatted(resetLink, resetLink, resetLink), true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de l'envoi du mail de réinitialisation", e);
         }
     }
 }

@@ -37,3 +37,31 @@ export async function login(email: string, password: string): Promise<string> {
   localStorage.setItem('token', data.token)
   return data.token
 }
+
+export async function forgotPassword(mail: string): Promise<void> {
+  const response = await fetch(`${API_BASE}/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mail }),
+  })
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || 'Erreur lors de la demande')
+  }
+}
+
+export async function resetPassword(
+  token: string,
+  newPassword: string,
+  confirmPassword: string,
+): Promise<void> {
+  const response = await fetch(`${API_BASE}/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, newPassword, confirmPassword }),
+  })
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText || 'Erreur lors de la réinitialisation')
+  }
+}
