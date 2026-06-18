@@ -1,27 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { PencilIcon } from '@heroicons/vue/24/outline'
 import Header from '@/components/Header.vue'
-import mockGroups from '@/mocks/groups.json'
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue'
-import mockUser from '@/mocks/users.json'
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
-import { onMounted } from 'vue'
-import { useAuth } from '@/utils/checkingAuth'
-
+import { getUserById, updateUserById } from '@/services/userService.ts'
+import mockGroups from '@/mocks/groups.json'
+import type { UserProfileData, BackendUserResponse } from '@/types/user'
+import { useAuth } from '@/utils/checkingAuth.ts'
 const { requireAuth } = useAuth()
+
+const userProfile = ref<UserProfileData>({})
+const userForm = ref<UserProfileData>({})
+const availableGroups = ref<string[]>(
+  mockGroups.map((g: string | { id?: string }) => (typeof g === 'string' ? g : g.id || '')),
+)
+const isEditing = ref(false)
+const showPasswordModal = ref(false)
+
+const getUserIdFromToken = () => {
+  const token = localStorage.getItem('token')
+  if (!token) return null
+  try {
+    const payloadBase64 = token.split('.')[1]
+    const decodedPayload = JSON.parse(atob(payloadBase64))
+    return decodedPayload.sub
+  } catch (error) {
+    console.error('Erreur de décodage du token', error)
+    return null
+  }
+}
 
 onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
+
+  const userId = getUserIdFromToken()
+
+  if (!userId) {
+    console.warn('Aucun utilisateur connecté')
+  }
+  try {
+    const rawData = await getUserById(userId)
+    if (rawData) {
+      const data = JSON.parse(rawData) as BackendUserResponse
+
+      userProfile.value = {
+        firstName: data.useFirstname,
+        lastName: data.useLastname,
+        email: data.useMail,
+        description: data.useDescription,
+        groups: data.groups ? data.groups.map((g) => g.groId) : [],
+      }
+    } else {
+      throw new Error("Réponse de l'API vide")
+    }
+  } catch (error) {
+    console.warn('Erreur de récupération du profil :', error)
+  }
 })
-
-const userProfile = ref({ ...mockUser })
-const availableGroups = mockGroups as string[]
-
-// --- GESTION DE L'ÉTAT DU PROFIL ---
-const isEditing = ref(false)
-const userForm = ref({ ...userProfile.value })
 
 const startEditing = () => {
   userForm.value = { ...userProfile.value }
@@ -32,18 +69,35 @@ const cancelEditing = () => {
   isEditing.value = false
 }
 
-const saveProfile = () => {
-  if (userForm.value.groups.length === 0) {
+const saveProfile = async () => {
+  // Vérification de l'existence avant de lire la longueur
+  if (!userForm.value.groups || userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.')
     return
   }
-  userProfile.value = { ...userForm.value }
-  isEditing.value = false
-  console.log('Profil sauvegardé :', userProfile.value)
-}
 
-// --- GESTION DU MOT DE PASSE ---
-const showPasswordModal = ref(false)
+  try {
+    const userId = getUserIdFromToken()
+
+    const payload = {
+      useFirstname: userForm.value.firstName,
+      useLastname: userForm.value.lastName,
+      useMail: userForm.value.email,
+      useDescription: userForm.value.description,
+      // Utilisation d'une valeur de repli (fallback) pour rassurer TypeScript
+      groups: (userForm.value.groups || []).map((g) => ({ groId: g })),
+    }
+
+    await updateUserById(userId, payload)
+
+    userProfile.value = { ...userForm.value }
+    isEditing.value = false
+    console.log('Profil sauvegardé en base de données avec succès.')
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde :', error)
+    alert('Une erreur est survenue lors de la mise à jour du profil.')
+  }
+}
 
 const handlePasswordChange = (payload: { current: string; new: string }) => {
   console.log('Demande de changement de mot de passe avec :', payload)

@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api/users'
+const API_BASE_USERS = 'http://localhost:8080/api/users'
 
 export interface RegisterPayload {
   firstname: string
@@ -11,7 +11,7 @@ export interface RegisterPayload {
 }
 
 export async function registerUser(payload: RegisterPayload): Promise<string> {
-  const res = await fetch(`${API_BASE}/register`, {
+  const res = await fetch(`${API_BASE_USERS}/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -22,8 +22,57 @@ export async function registerUser(payload: RegisterPayload): Promise<string> {
   return text
 }
 
+export async function getUserById(id: string): Promise<string> {
+  const token = localStorage.getItem('token')
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+
+  const res = await fetch(`${API_BASE_USERS}/${id}`, {
+    method: 'GET',
+    headers,
+  })
+
+  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
+  return await res.text()
+}
+
+export interface UpdateUserPayload {
+  useFirstname?: string
+  useLastname?: string
+  useMail?: string
+  useDescription?: string
+  groups?: { groId: string }[]
+}
+
+export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
+  const token = localStorage.getItem('token')
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+
+  const res = await fetch(`${API_BASE_USERS}/${id}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(payload),
+  })
+
+  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
+  return await res.text()
+}
+
 export async function login(email: string, password: string): Promise<string> {
-  const response = await fetch(`${API_BASE}/login`, {
+  const response = await fetch(`${API_BASE_USERS}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ mail: email, password }),
@@ -39,7 +88,7 @@ export async function login(email: string, password: string): Promise<string> {
 }
 
 export async function forgotPassword(mail: string): Promise<void> {
-  const response = await fetch(`${API_BASE}/forgot-password`, {
+  const response = await fetch(`${API_BASE_USERS}/forgot-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ mail }),
@@ -55,7 +104,7 @@ export async function resetPassword(
   newPassword: string,
   confirmPassword: string,
 ): Promise<void> {
-  const response = await fetch(`${API_BASE}/reset-password`, {
+  const response = await fetch(`${API_BASE_USERS}/reset-password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, newPassword, confirmPassword }),
