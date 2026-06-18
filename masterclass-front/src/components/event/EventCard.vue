@@ -24,6 +24,7 @@ const props = withDefaults(
   defineProps<{
     event: EventData
     layout?: 'list' | 'calendar'
+    compact?: boolean
   }>(),
   { layout: 'list' },
 )
@@ -35,6 +36,7 @@ const emit = defineEmits<{
 
 const isList = computed(() => props.layout === 'list')
 const isDevoir = computed(() => props.event.type === 'devoir')
+const isCompact = computed(() => props.layout === 'calendar' && props.compact === true)
 
 const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)`)
 </script>
@@ -59,7 +61,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       :style="{ backgroundColor: leftBarColor }"
     ></div>
 
-    <div class="flex justify-between items-start md:gap-2">
+      <div class="flex justify-between items-start md:gap-2" :class="isCompact ? 'gap-1' : ''">
       <div class="flex flex-col items-start gap-1 min-w-0">
 
         <!-- Affichage de la matière (s'il y en a une) -->
@@ -95,15 +97,15 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
 
       </div>
 
-      <EventBadge :type="event.type" class="hidden md:block md:shrink-0" />
+        <EventBadge v-if="!isCompact" :type="event.type" class="hidden md:block md:shrink-0" />
     </div>
 
     <!-- Affichage des détails de l'événement -->
-    <div class="flex justify-between items-center md:mt-1">
+    <div class="flex justify-between items-center md:mt-1" :class="isCompact ? 'mt-0' : ''">
 
       <!-- Affichage du TITRE (s'il Y A un sujet) -->
       <div
-        v-if="event.subject"
+        v-if="event.subject && !isCompact"
         class="flex min-w-0 pr-2"
         :class="isList ? 'flex-row items-center gap-1' : 'flex-col md:flex-row items-start md:items-center gap-0.5 md:gap-1.5'"
       >
@@ -124,7 +126,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       </div>
 
       <div
-        v-else-if="!isList && event.location"
+        v-else-if="!isList && event.location && !isCompact"
         class="flex items-center text-gray-500 text-[11px]"
       >
         <MapPinIcon class="hidden md:block w-3 h-3 mr-1" />
@@ -132,7 +134,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       </div>
 
       <input
-        v-if="isDevoir"
+        v-if="isDevoir && !isCompact"
         class="hidden md:block"
         type="checkbox"
         :class="[
@@ -148,7 +150,7 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       />
     </div>
 
-    <div class="hidden md:flex justify-between items-center mt-auto" :class="isList ? 'pt-4' : 'pt-2'">
+    <div class="hidden md:flex justify-between items-center mt-auto" :class="[isList ? 'pt-4' : 'pt-2', isCompact ? 'hidden' : '']">
       <div
         class="hidden md:flex items-center text-gray-500 truncate pr-2"
         :class="isList ? 'text-xs md:text-sm' : 'text-[11px]'"

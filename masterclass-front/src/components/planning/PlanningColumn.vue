@@ -49,6 +49,14 @@ const getEventStyle = (event: EventData) => {
   return { top: `${topPx}px`, height: `${heightPx}px` };
 };
 
+const isCompactEvent = (event: EventData) => {
+  const [startH = 0, startM = 0] = event.startTime.split(':').map(Number)
+  const [endH = 0, endM = 0] = event.endTime.split(':').map(Number)
+  const startMinutes = startH * 60 + startM
+  const endMinutes = endH * 60 + endM
+  return endMinutes - startMinutes <= 30
+}
+
 // ── LOGIQUE DE LA LIGNE ROUGE EN TEMPS RÉEL ──
 const now = ref(new Date());
 let timer: ReturnType<typeof setInterval> | null = null;
@@ -95,6 +103,7 @@ const currentTimeTop = computed(() => {
       <EventCard
         :event="event"
         layout="calendar"
+        :compact="isCompactEvent(event)"
         @toggle-complete="(id, val) => emit('toggle-complete', id, val)"
         @open-details="(evt) => emit('open-details', evt)"
       />
