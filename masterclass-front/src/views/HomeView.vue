@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import AddEventModal from '@/components/modals/AddEventModal.vue'
 import PlanningBoard from '@/components/planning/PlanningBoard.vue'
@@ -16,6 +15,7 @@ import {
 import TodoListPanel from '@/components/TodoListPanel.vue'
 import { onMounted } from 'vue'
 import { useAuth } from '@/utils/checkingAuth'
+import GlobalFilterAlert from '@/components/GlobalFilterAlert.vue'
 
 const { requireAuth } = useAuth()
 
@@ -30,7 +30,6 @@ const onRequestAdd = makeOnRequestAdd(addEventRef)
 
 const selectedEvent = ref<EventData | null>(null)
 
-// ── NOUVEL ÉTAT POUR LE PANNEAU DE DROITE ──
 const isTodoListOpen = ref(true) // Ouvert par défaut sur grand écran
 
 const handleUpdateStatus = makeHandleUpdateStatus(selectedEvent)

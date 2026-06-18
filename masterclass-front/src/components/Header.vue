@@ -5,8 +5,7 @@ import {
   UserIcon,
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
-  ClockIcon,
-  ViewColumnsIcon
+  ClockIcon
 } from '@heroicons/vue/24/outline';
 
 const props = withDefaults(
@@ -104,7 +103,14 @@ const goToTimeline = () => {
         title="Timeline"
         @click="goToTimeline"
       >
-        <ViewColumnsIcon class="w-[22px] h-[22px]" stroke-width="2.2" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 6h9" />
+          <path d="M11 12h9" />
+          <path d="M11 18h9" />
+          <path d="M3 6l2 2 4-4" />
+          <rect x="3" y="10" width="4" height="4" rx="1" />
+          <rect x="3" y="16" width="4" height="4" rx="1" />
+        </svg>
       </button>
 
       <button
@@ -136,7 +142,14 @@ const goToTimeline = () => {
             @click="goToTimeline"
             class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors cursor-pointer"
           >
-            <ViewColumnsIcon class="w-5 h-5 text-gray-500" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#6a7282" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 6h9" />
+              <path d="M11 12h9" />
+              <path d="M11 18h9" />
+              <path d="M3 6l2 2 4-4" />
+              <rect x="3" y="10" width="4" height="4" rx="1" />
+              <rect x="3" y="16" width="4" height="4" rx="1" />
+            </svg>
             Timeline devoirs/examens
           </button>
           <button

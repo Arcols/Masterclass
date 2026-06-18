@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
 import GroupBadge from '@/components/GroupBadge.vue'
 import mockGroups from '@/mocks/groups.json'
 import Header from '@/components/Header.vue'
 import { registerUser } from '@/services/userService'
-
-const router = useRouter()
 
 const firstname = ref('')
 const lastname = ref('')

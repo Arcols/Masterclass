@@ -9,7 +9,7 @@ import { useAuth } from '@/utils/checkingAuth'
 const { requireAuth } = useAuth()
 
 onMounted(async () => {
-  await requireAuth() // ✅ redirige vers /login si token invalide
+  await requireAuth() // redirige vers /login si token invalide
 })
 
 const router = useRouter()

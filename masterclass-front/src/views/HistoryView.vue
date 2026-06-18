@@ -6,7 +6,6 @@ import EventCard, { type EventData } from '@/components/event/EventCard.vue'
 import EventDetailModal from '@/components/modals/EventDetailModal.vue'
 import mockEvents from '@/mocks/events.json'
 import type { EventType } from '@/types/event.ts'
-import FiltersEvents from '@/components/FiltersEvents.vue'
 import { onMounted } from 'vue'
 import { useAuth } from '@/utils/checkingAuth'
 

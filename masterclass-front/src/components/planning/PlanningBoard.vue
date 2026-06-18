@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon, ViewColumnsIcon, FunnelIcon } from '@heroicons/vue/24/outline'
+import { ChevronLeftIcon, ChevronRightIcon, FunnelIcon } from '@heroicons/vue/24/outline'
 import PlanningColumn from './PlanningColumn.vue'
 import mockEvents from '@/mocks/events.json'
 import type { EventData } from '@/components/event/EventCard.vue'
-import type { EventType } from '@/types/event.ts'
 import FilterModal from '@/components/modals/FilterModal.vue'
 import { useFilters } from '@/composables/useFilters'
 
@@ -190,7 +189,7 @@ const props = defineProps<{
             title="Effacer les filtres"
           >
             <!-- SVG personnalisé "Entonnoir Barré" -->
-            <svg class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
             </svg>
@@ -220,7 +219,13 @@ const props = defineProps<{
             :class="isSidebarOpen ? 'bg-gray-100 text-[var(--color-primary)]' : 'bg-white text-gray-500 hover:bg-gray-50'"
             title="Afficher/Masquer la Timeline des devoirs"
           >
-            <ViewColumnsIcon class="w-5 h-5" stroke-width="2" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" id="Layout-Sidebar--Streamline-Tabler" height="24" width="24">
+              <desc>
+                Layout Sidebar Streamline Icon: https://streamlinehq.com
+              </desc>
+              <path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2H6a2 2 0 0 1 -2 -2z" stroke-width="2"></path>
+              <path d="m9 4 0 16" stroke-width="2"></path>
+            </svg>
           </button>
         </div>
       </div>

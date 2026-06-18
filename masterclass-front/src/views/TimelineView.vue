@@ -19,7 +19,7 @@ onMounted(async () => {
 
 // Récupération des filtres de la session
 const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters();
-  
+
 // On utilise les mêmes données que le panneau de bureau
 const localEvents = ref<EventData[]>([...mockEvents] as EventData[])
 
@@ -112,7 +112,7 @@ const handleDelete = (id: string) => {
               class="flex items-center justify-center p-2 md:p-1.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] rounded-md hover:bg-[var(--color-primary)]/10 transition-colors cursor-pointer"
               title="Effacer les filtres"
             >
-              <svg class="w-4 h-4 md:w-[18px] md:h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
               </svg>
