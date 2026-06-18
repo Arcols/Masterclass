@@ -57,8 +57,9 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
   <div class="w-full min-h-screen flex flex-col bg-white relative">
     <Header
       class="z-50 bg-white border-b border-gray-100 shrink-0"
-      :show-actions="false"
+      :show-add-event-button="false"
       :show-profile="true"
+      :show-navigation="true"
       subtitle="FIL A1 2028"
     />
 

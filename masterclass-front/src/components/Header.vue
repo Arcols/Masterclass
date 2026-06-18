@@ -10,13 +10,15 @@ import {
 
 const props = withDefaults(
   defineProps<{
-    showActions?: boolean;
+    showAddEventButton?: boolean;
     showProfile?: boolean;
+    showNavigation?: boolean;
     subtitle?: string;
   }>(),
   {
-    showActions: false,
+    showAddEventButton: false,
     showProfile: true,
+    showNavigation: true,
     subtitle: '',
   }
 );
@@ -86,7 +88,7 @@ const goToTimeline = () => {
     <div class="flex items-center gap-2.5 md:gap-5">
 
       <button
-        v-if="showActions"
+        v-if="showAddEventButton"
         type="button"
         class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-primary)] text-white text-sm font-semibold cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-[#006059]"
         @click="emit('add-event')"
@@ -98,6 +100,7 @@ const goToTimeline = () => {
       </button>
 
       <button
+        v-if="showNavigation"
         type="button"
         class="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent cursor-pointer transition-colors duration-150 hover:bg-[#00786f]/10"
         title="Timeline"
@@ -114,6 +117,7 @@ const goToTimeline = () => {
       </button>
 
       <button
+        v-if="showNavigation"
         type="button"
         class="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent cursor-pointer transition-colors duration-150 hover:bg-[#00786f]/10"
         title="Historique"
@@ -124,7 +128,7 @@ const goToTimeline = () => {
         </svg>
       </button>
 
-      <div class="relative md:hidden">
+      <div v-if="showNavigation" class="relative md:hidden">
         <button
           @click="toggleBurgerMenu"
           class="p-1.5 text-gray-600 hover:text-[var(--color-primary)] hover:bg-gray-100 rounded-md transition-colors cursor-pointer"

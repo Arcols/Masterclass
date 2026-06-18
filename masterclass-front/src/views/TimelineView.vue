@@ -70,8 +70,9 @@ const handleDelete = (id: string) => {
   <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden relative">
     <Header
       class="relative z-[999] bg-[var(--color-background)] shadow-sm shrink-0"
-      :show-actions="false"
+      :show-add-event-button="false"
       :show-profile="true"
+      :show-navigation="true"
       subtitle="FIL A1 2028"
     />
 

@@ -45,8 +45,9 @@ const handleEdit = (event: EventData) => {
   <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden relative">
     <Header
       class="z-100 bg-[var(--color-background)] shadow-sm shrink-0"
-      :show-actions="true"
+      :show-add-event-button="true"
       :show-profile="true"
+      :show-navigation="true"
       subtitle="FIL A1 2028"
       @add-event="onAddEvent"
     />

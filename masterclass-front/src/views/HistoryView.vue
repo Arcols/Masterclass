@@ -91,7 +91,6 @@ const handleEdit = (event: EventData) => {
 
     <Header
       class="z-50 bg-[var(--color-background)] border-b border-gray-100 shadow-sm shrink-0"
-      :show-actions="false"
       :show-profile="true"
       subtitle="FIL A1 2028"
     />
