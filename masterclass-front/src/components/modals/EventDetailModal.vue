@@ -41,12 +41,10 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 // ── APPEL API ET DONNÉES RÉACTIVES ──
-const { fetchEventDetails, isLoading } = useEventDetails()
+const { fetchEventDetails, addComment, addNote, isLoading } = useEventDetails()
 const { getUserIdFromToken } = useAuthToken()
 
-// C'est notre objet événement central (rempli par l'API)
 const fullEvent = ref<any>(null)
-
 const localComments = ref<any[]>([])
 const localNotes = ref<any[]>([])
 const currentUserId = ref<string | null>(null)
@@ -67,8 +65,9 @@ onMounted(async () => {
 
   currentUserId.value = getUserIdFromToken()
 
-  //const data = await fetchEventDetails(props.eventId)
-  const data = await fetchEventDetails("E2") // <-- Pour tester avec l'événement E1 en dur
+  // Pour tester, on garde l'id simulé "E2" pour l'instant
+  const simulatedEventId = "E2"
+  const data = await fetchEventDetails(simulatedEventId)
 
   if (data) {
     // On peuple fullEvent avec toutes les données de l'API
@@ -85,8 +84,8 @@ onMounted(async () => {
       location: data.location,
       submissionLink: data.submissionLink,
       group: data.groupName,
-      isCompleted: false, // À brancher avec le backend plus tard
-      isFavorite: false   // À brancher avec le backend plus tard
+      isCompleted: false,
+      isFavorite: false
     }
 
     localComments.value = data.comments ? data.comments.map((c: any) => ({
@@ -153,37 +152,45 @@ const switchTab = (tab: 'commentaires' | 'notes') => {
 const currentEventComments = computed(() => localComments.value)
 const currentEventNotes = computed(() => localNotes.value)
 
-const submitNewItem = () => {
-  if (!newItemContent.value.trim()) return
+const submitNewItem = async () => {
+  const content = newItemContent.value.trim()
+  if (!content || !currentUserId.value) return
 
-  const now = new Date()
-  const day = String(now.getDate()).padStart(2, '0')
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const year = now.getFullYear()
-  const hours = String(now.getHours()).padStart(2, '0')
-  const minutes = String(now.getMinutes()).padStart(2, '0')
-  const datetime = `${day}/${month}/${year} à ${hours}:${minutes}`
+  const isComment = activeTab.value === 'commentaires'
+  const simulatedEventId = "E2" // <-- Assure-toi de garder la même simulation qu'au chargement !
 
-  if (activeTab.value === 'commentaires') {
-    localComments.value.push({
-      id: `c_${Date.now()}`,
-      eventId: props.eventId,
-      author: 'Moi',
-      datetime,
-      content: newItemContent.value.trim(),
-    })
-  } else {
-    localNotes.value.push({
-      id: `n_${Date.now()}`,
-      eventId: props.eventId,
-      author: 'Moi',
-      datetime,
-      content: newItemContent.value.trim(),
-    })
+  try {
+    let savedItem;
+
+    // On appelle le backend via notre composable
+    if (isComment) {
+      savedItem = await addComment(simulatedEventId, currentUserId.value, content)
+    } else {
+      savedItem = await addNote(simulatedEventId, currentUserId.value, content)
+    }
+
+    // On formate le retour de l'API pour notre interface
+    const formattedItem = {
+      id: savedItem.id,
+      eventId: simulatedEventId,
+      author: isComment ? savedItem.authorName : 'Moi',
+      datetime: formatBackendDate(savedItem.date),
+      content: savedItem.content
+    }
+
+    // On l'ajoute visuellement à la liste locale
+    if (isComment) {
+      localComments.value.push(formattedItem)
+    } else {
+      localNotes.value.push(formattedItem)
+    }
+
+    // On réinitialise l'interface
+    newItemContent.value = ''
+    isAdding.value = false
+  } catch (error) {
+    alert("Une erreur est survenue lors de l'envoi.")
   }
-
-  newItemContent.value = ''
-  isAdding.value = false
 }
 </script>
 

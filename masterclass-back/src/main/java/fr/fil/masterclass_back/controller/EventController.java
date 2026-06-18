@@ -1,6 +1,9 @@
 package fr.fil.masterclass_back.controller;
 
+import java.util.Map;
 import fr.fil.masterclass_back.dto.EventDetailDTO;
+import fr.fil.masterclass_back.dto.NoteDTO;
+import fr.fil.masterclass_back.dto.CommentDTO;
 import fr.fil.masterclass_back.service.EventService;
 import fr.fil.masterclass_back.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,5 +56,27 @@ public class EventController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur inattendue est survenue");
         }
+    }
+
+    @PostMapping("/{eventId}/comments")
+    public ResponseEntity<CommentDTO> addComment(
+            @PathVariable String eventId,
+            @RequestBody Map<String, String> payload) {
+
+        String userId = payload.get("userId");
+        String content = payload.get("content");
+
+        return ResponseEntity.ok(eventService.addComment(eventId, userId, content));
+    }
+
+    @PostMapping("/{eventId}/notes")
+    public ResponseEntity<NoteDTO> addNote(
+            @PathVariable String eventId,
+            @RequestBody Map<String, String> payload) {
+
+        String userId = payload.get("userId");
+        String content = payload.get("content");
+
+        return ResponseEntity.ok(eventService.addNote(eventId, userId, content));
     }
 }

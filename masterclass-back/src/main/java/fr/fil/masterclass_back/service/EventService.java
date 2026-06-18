@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final NoteRepository noteRepository;
 
-    public EventService(EventRepository eventRepository, CommentRepository commentRepository, NoteRepository noteRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, CommentRepository commentRepository, NoteRepository noteRepository) {
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.noteRepository = noteRepository;
     }
@@ -68,6 +70,53 @@ public class EventService {
             return nDto;
         }).collect(Collectors.toList()));
 
+        return dto;
+    }
+
+    public CommentDTO addComment(String eventId, String userId, String content) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Événement introuvable"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        Comment comment = new Comment();
+        // On génère un ID unique pour le commentaire
+        comment.setComId(java.util.UUID.randomUUID().toString());
+        comment.setComContent(content);
+        comment.setComDate(java.time.LocalDateTime.now());
+        comment.setEvent(event);
+        comment.setUser(user);
+
+        commentRepository.save(comment);
+
+        // On retourne le DTO pour que le front l'affiche directement
+        CommentDTO dto = new CommentDTO();
+        dto.setId(comment.getComId());
+        dto.setContent(comment.getComContent());
+        dto.setDate(comment.getComDate());
+        dto.setAuthorName(user.getUseFirstname() + " " + user.getUseLastname());
+        return dto;
+    }
+
+    public NoteDTO addNote(String eventId, String userId, String content) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Événement introuvable"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        Note note = new Note();
+        note.setNotId(java.util.UUID.randomUUID().toString());
+        note.setNotContent(content);
+        note.setNotDate(java.time.LocalDateTime.now());
+        note.setEvent(event);
+        note.setUser(user);
+
+        noteRepository.save(note);
+
+        NoteDTO dto = new NoteDTO();
+        dto.setId(note.getNotId());
+        dto.setContent(note.getNotContent());
+        dto.setDate(note.getNotDate());
         return dto;
     }
 }

@@ -30,29 +30,28 @@ export function useEventDetails() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
+  // Fonction utilitaire interne pour récupérer le token
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('token')
+    return {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   const fetchEventDetails = async (eventId: string): Promise<EventDetailDTO | null> => {
     isLoading.value = true
     error.value = null
 
     try {
-      // Récupération du token JWT (à adapter selon ta gestion d'auth)
-      const token = localStorage.getItem('token')
-
       const response = await fetch(`http://localhost:8080/api/events/${eventId}`, {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+        headers: getAuthHeaders()
       })
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des détails')
-      }
+      if (!response.ok) throw new Error('Erreur lors de la récupération des détails')
 
-      const data = await response.json()
-      return data
-
+      return await response.json()
     } catch (err: any) {
       error.value = err.message
       return null
@@ -61,9 +60,41 @@ export function useEventDetails() {
     }
   }
 
+  const addComment = async (eventId: string, userId: string, content: string) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/events/${eventId}/comments`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ userId, content })
+      })
+      if (!response.ok) throw new Error('Erreur lors de l\'ajout du commentaire')
+      return await response.json()
+    } catch (err: any) {
+      console.error(err)
+      throw err
+    }
+  }
+
+  const addNote = async (eventId: string, userId: string, content: string) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/events/${eventId}/notes`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ userId, content })
+      })
+      if (!response.ok) throw new Error('Erreur lors de l\'ajout de la note')
+      return await response.json()
+    } catch (err: any) {
+      console.error(err)
+      throw err
+    }
+  }
+
   return {
     isLoading,
     error,
-    fetchEventDetails
+    fetchEventDetails,
+    addComment,
+    addNote
   }
 }
