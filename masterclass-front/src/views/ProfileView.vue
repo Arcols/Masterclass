@@ -6,6 +6,7 @@ import ChangePasswordModal from '@/components/modals/ChangePasswordModal.vue'
 import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
 import { getUserById, updateUserById } from '@/services/userService.ts'
+import mockGroups from '@/mocks/groups.json'
 
 interface UserProfileData {
   firstName?: string
@@ -25,14 +26,33 @@ interface BackendUserResponse {
 
 const userProfile = ref<UserProfileData>({})
 const userForm = ref<UserProfileData>({})
-const availableGroups = ref<string[]>([])
+const availableGroups = ref<string[]>(
+  mockGroups.map((g: string | { id?: string }) => (typeof g === 'string' ? g : g.id || '')),
+)
 const isEditing = ref(false)
 const showPasswordModal = ref(false)
+
+const getUserIdFromToken = () => {
+  const token = localStorage.getItem('token')
+  if (!token) return null
+  try {
+    const payloadBase64 = token.split('.')[1]
+    const decodedPayload = JSON.parse(atob(payloadBase64))
+    return decodedPayload.sub
+  } catch (error) {
+    console.error('Erreur de décodage du token', error)
+    return null
+  }
+}
 
 onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
 
-  const userId = 'U1'
+  const userId = getUserIdFromToken()
+
+  if (!userId) {
+    console.warn('Aucun utilisateur connecté')
+  }
   try {
     const rawData = await getUserById(userId)
     if (rawData) {
@@ -70,7 +90,7 @@ const saveProfile = async () => {
   }
 
   try {
-    const userId = 'U1' // TODO : À dynamiser plus tard
+    const userId = getUserIdFromToken()
 
     const payload = {
       useFirstname: userForm.value.firstName,
