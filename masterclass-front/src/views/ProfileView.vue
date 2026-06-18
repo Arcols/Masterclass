@@ -10,7 +10,9 @@ import mockGroups from '@/mocks/groups.json'
 import type { UserProfileData, BackendUserResponse } from '@/types/user'
 import { useAuth } from '@/utils/checkingAuth.ts'
 const { requireAuth } = useAuth()
+import { useAuthToken } from '@/composables/useAuthToken'
 
+const { getUserIdFromToken } = useAuthToken()
 const userProfile = ref<UserProfileData>({})
 const userForm = ref<UserProfileData>({})
 const availableGroups = ref<string[]>(
@@ -18,19 +20,6 @@ const availableGroups = ref<string[]>(
 )
 const isEditing = ref(false)
 const showPasswordModal = ref(false)
-
-const getUserIdFromToken = () => {
-  const token = localStorage.getItem('token')
-  if (!token) return null
-  try {
-    const payloadBase64 = token.split('.')[1]
-    const decodedPayload = JSON.parse(atob(payloadBase64))
-    return decodedPayload.sub
-  } catch (error) {
-    console.error('Erreur de décodage du token', error)
-    return null
-  }
-}
 
 onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
