@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<Event> findByUser_IdAndEveDateBetween(String userId, LocalDate startDate, LocalDate endDate);
+    List<Event> findByUser_UseIdAndEveDateBetween(String userId, LocalDate startDate, LocalDate endDate);
 }

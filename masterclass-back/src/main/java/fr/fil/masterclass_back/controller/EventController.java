@@ -25,6 +25,7 @@ public class EventController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
+        // On appelle le nom simple défini dans le service
         List<Event> events = eventService.findEventsByUserAndDates(userId, startDate, endDate);
         return ResponseEntity.ok(events);
     }

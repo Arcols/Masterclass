@@ -17,6 +17,6 @@ public class EventService {
     }
 
     public List<Event> findEventsByUserAndDates(String userId, LocalDate startDate, LocalDate endDate) {
-        return eventRepository.findByUserIdAndDateBetween(userId, startDate, endDate);
+        return eventRepository.findByUser_UseIdAndEveDateBetween(userId, startDate, endDate);
     }
 }
