@@ -5,19 +5,20 @@ import {
   UserIcon,
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
-  ClockIcon,
-  ViewColumnsIcon
+  ClockIcon
 } from '@heroicons/vue/24/outline';
 
 const props = withDefaults(
   defineProps<{
-    showActions?: boolean;
+    showAddEventButton?: boolean;
     showProfile?: boolean;
+    showNavigation?: boolean;
     subtitle?: string;
   }>(),
   {
-    showActions: false,
+    showAddEventButton: false,
     showProfile: true,
+    showNavigation: true,
     subtitle: '',
   }
 );
@@ -87,7 +88,7 @@ const goToTimeline = () => {
     <div class="flex items-center gap-2.5 md:gap-5">
 
       <button
-        v-if="showActions"
+        v-if="showAddEventButton"
         type="button"
         class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[var(--color-primary)] text-white text-sm font-semibold cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-[#006059]"
         @click="emit('add-event')"
@@ -99,15 +100,24 @@ const goToTimeline = () => {
       </button>
 
       <button
+        v-if="showNavigation"
         type="button"
         class="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent cursor-pointer transition-colors duration-150 hover:bg-[#00786f]/10"
         title="Timeline"
         @click="goToTimeline"
       >
-        <ViewColumnsIcon class="w-[22px] h-[22px]" stroke-width="2.2" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 6h9" />
+          <path d="M11 12h9" />
+          <path d="M11 18h9" />
+          <path d="M3 6l2 2 4-4" />
+          <rect x="3" y="10" width="4" height="4" rx="1" />
+          <rect x="3" y="16" width="4" height="4" rx="1" />
+        </svg>
       </button>
 
       <button
+        v-if="showNavigation"
         type="button"
         class="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent cursor-pointer transition-colors duration-150 hover:bg-[#00786f]/10"
         title="Historique"
@@ -118,7 +128,7 @@ const goToTimeline = () => {
         </svg>
       </button>
 
-      <div class="relative md:hidden">
+      <div v-if="showNavigation" class="relative md:hidden">
         <button
           @click="toggleBurgerMenu"
           class="p-1.5 text-gray-600 hover:text-[var(--color-primary)] hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
@@ -136,7 +146,14 @@ const goToTimeline = () => {
             @click="goToTimeline"
             class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition-colors cursor-pointer"
           >
-            <ViewColumnsIcon class="w-5 h-5 text-gray-500" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#6a7282" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 6h9" />
+              <path d="M11 12h9" />
+              <path d="M11 18h9" />
+              <path d="M3 6l2 2 4-4" />
+              <rect x="3" y="10" width="4" height="4" rx="1" />
+              <rect x="3" y="16" width="4" height="4" rx="1" />
+            </svg>
             Timeline devoirs/examens
           </button>
           <button

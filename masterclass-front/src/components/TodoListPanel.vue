@@ -3,18 +3,29 @@ import { ref, computed } from 'vue';
 import { CheckCircleIcon, ChevronDownIcon } from '@heroicons/vue/24/outline';
 import EventCard, { type EventData } from '@/components/event/EventCard.vue';
 import mockEvents from '@/mocks/events.json';
+import { useFilters } from '@/composables/useFilters';
 
 const emit = defineEmits<{
   (e: 'open-details', event: EventData): void;
 }>();
 
-// Plus besoin de la variable isOpen ici !
+const { selectedTypes, selectedGroups, showFavoritesOnly } = useFilters();
 
 const localEvents = ref<EventData[]>([...mockEvents] as EventData[]);
 
 const upcomingTasks = computed(() => {
   return localEvents.value
+    // Règle 1 : timeline des devoirs/examens
     .filter(e => e.type === 'devoir' || e.type === 'examen')
+    // Règle 2 : application des filtres globaux de la session
+    .filter(e => {
+      // Si un type est sélectionné (ex: "sport"), mais qu'on est dans la timeline "devoir", ça filtrera tout si ça ne correspond pas
+      const isTypeMatched = selectedTypes.value.length === 0 || selectedTypes.value.includes(e.type);
+      const isGroupMatched = selectedGroups.value.length === 0 || selectedGroups.value.includes(e.group);
+      const isFavoriteMatched = !showFavoritesOnly.value || e.isFavorite;
+
+      return isTypeMatched && isGroupMatched && isFavoriteMatched;
+    })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 });
 

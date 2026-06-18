@@ -47,6 +47,8 @@ const getUserIdFromToken = () => {
 
 onMounted(async () => {
   const userId = getUserIdFromToken()
+  await requireAuth() // redirige vers /login si token invalide
+})
 
   if (!userId) {
     console.warn('Aucun utilisateur connecté')
@@ -122,8 +124,9 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
   <div class="w-full min-h-screen flex flex-col bg-white relative">
     <Header
       class="z-50 bg-white border-b border-gray-100 shrink-0"
-      :show-actions="false"
+      :show-add-event-button="false"
       :show-profile="true"
+      :show-navigation="true"
       subtitle="FIL A1 2028"
     />
 
@@ -152,7 +155,7 @@ const handlePasswordChange = (payload: { current: string; new: string }) => {
 
         <div>
           <p class="text-xs font-medium text-[var(--color-primary)]">Description</p>
-          <p class="text-gray-800 text-sm mt-0.5 leading-relaxed">
+          <p class="text-gray-800 text-sm mt-0.5 leading-relaxed whitespace-pre-wrap">
             {{ userProfile.description || 'Aucune description.' }}
           </p>
         </div>

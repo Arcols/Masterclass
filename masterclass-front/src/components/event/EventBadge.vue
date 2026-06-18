@@ -31,7 +31,7 @@ const badgeConfig = computed(() => {
 <template>
   <span
     v-if="badgeConfig"
-    class="hidden md:inline-flex items-center gap-1 px-1 py-0.3 rounded text-[8px] md:text-[10px] font-bold tracking-wide border shrink-0 uppercase"
+    class="md:inline-flex items-center gap-1 px-1 py-0.3 rounded text-[8px] md:text-[10px] font-bold tracking-wide border shrink-0 uppercase"
     :class="badgeConfig.class"
   >
     {{ badgeConfig.label }}

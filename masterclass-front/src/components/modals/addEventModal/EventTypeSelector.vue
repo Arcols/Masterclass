@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import type { EventType } from '@/types/events.ts'
+import type { EventTypeOption } from '@/types/event.ts'
 
-type TypeOption = {
-  value: EventType
-  label: string
-}
-
-const typeOptions: TypeOption[] = [
-  { value: 'devoir', label: 'Devoir' },
-  { value: 'examen', label: 'Examen' },
-  { value: 'activite', label: 'Activité' },
-  { value: 'sport', label: 'Sport' },
+const typeOptions: EventTypeOption[] = [
+  { id: 'devoir', label: 'Devoir' },
+  { id: 'examen', label: 'Examen' },
+  { id: 'activite', label: 'Activité' },
+  { id: 'sport', label: 'Sport' },
 ]
 
 withDefaults(
@@ -33,15 +29,15 @@ defineEmits<{
     <div class="w-full mb-6 bg-gray-100 rounded-lg p-1 flex gap-2">
       <button
         v-for="option in typeOptions"
-        :key="option.value"
+        :key="option.id"
         type="button"
         class="flex-1 h-10 rounded-lg text-sm font-medium transition-shadow px-4"
         :class="[
-          modelValue === option.value ? 'bg-white !text-[var(--color-primary)]' : 'text-gray-600',
-          locked && modelValue !== option.value ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
+          modelValue === option.id ? 'bg-white !text-[var(--color-primary)]' : 'text-gray-600',
+          locked && modelValue !== option.id ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
         ]"
-        :disabled="locked && modelValue !== option.value"
-        @click="!locked && $emit('update:modelValue', option.value)"
+        :disabled="locked && modelValue !== option.id"
+        @click="!locked && $emit('update:modelValue', option.id)"
       >
         {{ option.label }}
       </button>

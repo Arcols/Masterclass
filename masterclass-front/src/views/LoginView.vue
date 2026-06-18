@@ -9,7 +9,7 @@ import { useAuth } from '@/utils/checkingAuth'
 const { requireAuth } = useAuth()
 
 onMounted(async () => {
-  await requireAuth() // ✅ redirige vers /login si token invalide
+  await requireAuth() // redirige vers /login si token invalide
 })
 
 const router = useRouter()
@@ -32,8 +32,9 @@ const handleLogin = async () => {
     <!-- Header (juste partie gauche) -->
     <Header
       class="z-20 bg-[var(--color-background)] shadow-sm shrink-0"
-      :show-actions="false"
+      :show-add-event-button="false"
       :show-profile="false"
+      :show-navigation="false"
       subtitle="FIL A1 2028"
     />
 

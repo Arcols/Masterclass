@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
 import GroupBadge from '@/components/GroupBadge.vue'
 import mockGroups from '@/mocks/groups.json'
 import Header from '@/components/Header.vue'
 import { registerUser } from '@/services/userService'
-
-const router = useRouter()
 
 const firstname = ref('')
 const lastname = ref('')
@@ -59,8 +56,9 @@ const handleRegister = async () => {
   <div class="w-full min-h-screen flex flex-col bg-white">
     <Header
       class="z-20 bg-[var(--color-background)] shadow-sm shrink-0"
-      :show-actions="false"
+      :show-add-event-button="false"
       :show-profile="false"
+      :show-navigation="false"
       subtitle="FIL A1 2028"
     />
 
