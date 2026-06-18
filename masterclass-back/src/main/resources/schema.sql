@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Event(
                       EVE_endhour TIME,
                       EVE_description TEXT,
                       EVE_location VARCHAR(50),
-                      EVE_submissionLink VARCHAR(50),
+                      EVE_submissionLink TEXT,
                       SUB_id VARCHAR(50),
                       USE_id VARCHAR(50) NOT NULL,
                       GRO_id VARCHAR(50) NOT NULL,

@@ -1,11 +1,6 @@
 package fr.fil.masterclass_back.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +18,9 @@ public class Event {
     @Column(name = "EVE_id", length = 50)
     private String eveId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "EVE_type", length = 50)
-    private String eveType;
+    private EventType eveType;
 
     @Column(name = "EVE_title", length = 50)
     private String eveTitle;
