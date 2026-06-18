@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { ChevronDownIcon, FunnelIcon } from '@heroicons/vue/24/outline';
-import Header from '@/components/Header.vue';
-import EventCard, { type EventData } from '@/components/event/EventCard.vue';
-import EventDetailModal from '@/components/modals/EventDetailModal.vue';
-import FilterModal from '@/components/modals/FilterModal.vue';
-import mockEvents from '@/mocks/events.json';
-import type { EventType } from '@/types/event.ts';
+import { ref, computed } from 'vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import Header from '@/components/Header.vue'
+import EventCard, { type EventData } from '@/components/event/EventCard.vue'
+import EventDetailModal from '@/components/modals/EventDetailModal.vue'
+import mockEvents from '@/mocks/events.json'
+import type { EventType } from '@/types/event.ts'
+import FiltersEvents from '@/components/FiltersEvents.vue'
+import { onMounted } from 'vue'
+import { useAuth } from '@/utils/checkingAuth'
+
+const { requireAuth } = useAuth()
+
+onMounted(async () => {
+  await requireAuth() // redirige vers /login si token invalide
+})
 
 // ── DONNÉES ──
-const allEvents = ref<EventData[]>(mockEvents as EventData[]);
+const allEvents = ref<EventData[]>(mockEvents as EventData[])
 
 // ── FILTRES (ÉTAT LOCAL, ISOLÉ DE L'ACCUEIL) ──
 const selectedTypes = ref<EventType[]>([]);
@@ -28,9 +36,9 @@ const resetFilters = () => {
 };
 
 const availableGroups = computed(() => {
-  const groups = allEvents.value.map(e => e.group);
-  return [...new Set(groups)];
-});
+  const groups = allEvents.value.map((e) => e.group)
+  return [...new Set(groups)]
+})
 
 const filteredEvents = computed(() => {
   let filtered = allEvents.value.filter(e => {
@@ -42,41 +50,41 @@ const filteredEvents = computed(() => {
   });
 
   // Tri par date décroissante (du plus récent au plus ancien)
-  return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-});
+  return filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+})
 
 // ── PAGINATION (VOIR PLUS) ──
-const itemsPerPage = 5;
-const visibleCount = ref(itemsPerPage);
+const itemsPerPage = 5
+const visibleCount = ref(itemsPerPage)
 
 const displayedEvents = computed(() => {
-  return filteredEvents.value.slice(0, visibleCount.value);
-});
+  return filteredEvents.value.slice(0, visibleCount.value)
+})
 
 const loadMore = () => {
-  visibleCount.value += itemsPerPage;
-};
+  visibleCount.value += itemsPerPage
+}
 
 // ── MODALE DÉTAILS & ACTIONS ──
 const selectedEvent = ref<EventData | null>(null);
 
 const handleUpdateStatus = (id: string, newValue: boolean) => {
-  const target = allEvents.value.find(e => e.id === id);
-  if (target) target.isCompleted = newValue;
+  const target = allEvents.value.find((e) => e.id === id)
+  if (target) target.isCompleted = newValue
   if (selectedEvent.value && selectedEvent.value.id === id) {
-    selectedEvent.value.isCompleted = newValue;
+    selectedEvent.value.isCompleted = newValue
   }
-};
+}
 
 const handleDelete = (id: string) => {
-  allEvents.value = allEvents.value.filter(e => e.id !== id);
-  selectedEvent.value = null;
-};
+  allEvents.value = allEvents.value.filter((e) => e.id !== id)
+  selectedEvent.value = null
+}
 
 const handleEdit = (event: EventData) => {
-  console.log('Éditer', event);
-  selectedEvent.value = null;
-};
+  console.log('Éditer', event)
+  selectedEvent.value = null
+}
 </script>
 
 <template>

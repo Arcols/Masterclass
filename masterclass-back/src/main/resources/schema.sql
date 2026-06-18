@@ -6,29 +6,29 @@ DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `Group`;
 DROP TABLE IF EXISTS `Subject`;
 
-CREATE TABLE `User`(
+CREATE TABLE IF NOT EXISTS  `User`(
                        USE_id VARCHAR(50),
                        USE_firstname VARCHAR(50),
                        USE_lastname VARCHAR(50),
                        USE_mail VARCHAR(50),
                        USE_description VARCHAR(50),
-                       USE_password VARCHAR(50),
+                       USE_password VARCHAR(255),
                        PRIMARY KEY(USE_id)
 );
 
-CREATE TABLE `Group`(
+CREATE TABLE IF NOT EXISTS `Group`(
                         GRO_id VARCHAR(50),
                         GRO_name VARCHAR(50),
                         PRIMARY KEY(GRO_id)
 );
 
-CREATE TABLE Subject(
+CREATE TABLE IF NOT EXISTS Subject(
                         SUB_id VARCHAR(50),
                         SUB_name VARCHAR(50),
                         PRIMARY KEY(SUB_id)
 );
 
-CREATE TABLE Event(
+CREATE TABLE IF NOT EXISTS Event(
                       EVE_id VARCHAR(50),
                       EVE_type VARCHAR(50),
                       EVE_title VARCHAR(50),
@@ -45,7 +45,7 @@ CREATE TABLE Event(
                       FOREIGN KEY(USE_id) REFERENCES `User`(USE_id)
 );
 
-CREATE TABLE Note(
+CREATE TABLE IF NOT EXISTS Note(
                      NOT_id VARCHAR(50),
                      NOT_content TEXT,
                      NOT_date TIMESTAMP,
@@ -56,7 +56,7 @@ CREATE TABLE Note(
                      FOREIGN KEY(USE_id) REFERENCES `User`(USE_id)
 );
 
-CREATE TABLE Comment(
+CREATE TABLE IF NOT EXISTS Comment(
                         COM_id VARCHAR(50),
                         COM_content TEXT,
                         COM_date TIMESTAMP,
@@ -67,7 +67,7 @@ CREATE TABLE Comment(
                         FOREIGN KEY(USE_id) REFERENCES `User`(USE_id)
 );
 
-CREATE TABLE User_Group(
+CREATE TABLE IF NOT EXISTS User_Group(
                            USE_id VARCHAR(50),
                            GRO_id VARCHAR(50),
                            PRIMARY KEY(USE_id, GRO_id),

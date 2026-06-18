@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import Header from '@/components/Header.vue';
-import EventCard, { type EventData } from '@/components/event/EventCard.vue';
-import EventDetailModal from '@/components/modals/EventDetailModal.vue';
+import { ref, computed } from 'vue'
+import Header from '@/components/Header.vue'
+import EventCard, { type EventData } from '@/components/event/EventCard.vue'
+import EventDetailModal from '@/components/modals/EventDetailModal.vue'
+import mockEvents from '@/mocks/events.json'
+import { onMounted } from 'vue'
+import { useAuth } from '@/utils/checkingAuth'
 import FilterModal from '@/components/modals/FilterModal.vue';
 import { FunnelIcon } from '@heroicons/vue/24/outline';
-import mockEvents from '@/mocks/events.json';
 import { useFilters } from '@/composables/useFilters';
 import GlobalFilterAlert from '@/components/GlobalFilterAlert.vue';
 
+const { requireAuth } = useAuth()
+
+onMounted(async () => {
+  await requireAuth() // redirige vers /login si token invalide
+})
+
 // Récupération des filtres de la session
 const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters();
-
+  
 // On utilise les mêmes données que le panneau de bureau
-const localEvents = ref<EventData[]>([...mockEvents] as EventData[]);
+const localEvents = ref<EventData[]>([...mockEvents] as EventData[])
 
 // Gestion de l'état de la modale de filtre
 const isFilterModalOpen = ref(false);
@@ -45,22 +53,21 @@ const upcomingTasks = computed(() => {
 });
 
 // État pour la modale de détails
-const selectedEvent = ref<EventData | null>(null);
+const selectedEvent = ref<EventData | null>(null)
 
 const handleUpdateStatus = (id: string, newValue: boolean) => {
-  const task = localEvents.value.find(e => e.id === id);
-  if (task) task.isCompleted = newValue;
-};
+  const task = localEvents.value.find((e) => e.id === id)
+  if (task) task.isCompleted = newValue
+}
 
 const handleDelete = (id: string) => {
-  localEvents.value = localEvents.value.filter(e => e.id !== id);
-  selectedEvent.value = null;
-};
+  localEvents.value = localEvents.value.filter((e) => e.id !== id)
+  selectedEvent.value = null
+}
 </script>
 
 <template>
   <div class="w-full h-screen flex flex-col bg-[var(--color-background)] overflow-hidden relative">
-
     <Header
       class="relative z-[999] bg-[var(--color-background)] shadow-sm shrink-0"
       :show-actions="false"
@@ -123,7 +130,10 @@ const handleDelete = (id: string) => {
             @toggle-complete="handleUpdateStatus"
           />
 
-          <div v-if="upcomingTasks.length === 0" class="text-center text-gray-500 py-12 bg-white rounded-xl border border-gray-100">
+          <div
+            v-if="upcomingTasks.length === 0"
+            class="text-center text-gray-500 py-12 bg-white rounded-xl border border-gray-100"
+          >
             Aucun devoir ou examen à venir. Profites-en pour te reposer !
           </div>
         </div>
