@@ -69,7 +69,7 @@ const handleEdit = (event: EventData) => {
 
     <EventDetailModal
       v-if="selectedEvent"
-      :event="selectedEvent"
+      :event-id="selectedEvent.id"
       @close="selectedEvent = null"
       @toggle-complete="handleUpdateStatus"
       @delete="handleDelete"
