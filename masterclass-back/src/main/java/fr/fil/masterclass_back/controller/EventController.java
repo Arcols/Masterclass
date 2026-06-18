@@ -1,6 +1,7 @@
 package fr.fil.masterclass_back.controller;
 
 import java.util.Map;
+import java.util.List;
 import fr.fil.masterclass_back.dto.*;
 import fr.fil.masterclass_back.model.*;
 import fr.fil.masterclass_back.service.*;
@@ -67,12 +68,6 @@ public class EventController {
         return ResponseEntity.ok(eventService.addComment(eventId, userId, content));
     }
 
-    @GetMapping("/todolist")
-    public ResponseEntity<List<EventSummaryDTO>> getTodoList() {
-
-        return ResponseEntity.ok(eventService.getTodoList());
-    }
-
     @PostMapping("/{eventId}/notes")
     public ResponseEntity<NoteDTO> addNote(
             @PathVariable String eventId,
@@ -82,5 +77,22 @@ public class EventController {
         String content = payload.get("content");
 
         return ResponseEntity.ok(eventService.addNote(eventId, userId, content));
+    }
+
+    @GetMapping("/todolist")
+    public ResponseEntity<List<EventSummaryDTO>> getTodoList() {
+
+        return ResponseEntity.ok(eventService.getTodoList());
+    }
+
+    @PostMapping("/{eventId}/toggle-completion")
+    public ResponseEntity<Boolean> toggleCompletion(
+            @PathVariable String eventId,
+            @RequestBody Map<String, String> payload) {
+
+        String userId = payload.get("userId");
+        boolean isNowCompleted = eventService.toggleCompletion(eventId, userId);
+
+        return ResponseEntity.ok(isNowCompleted);
     }
 }

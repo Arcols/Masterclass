@@ -4,11 +4,12 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import fr.fil.masterclass_back.model.EventType;
 
 @Data
 public class EventDetailDTO {
     private String id;
-    private String type;
+    private EventType type;
     private String title;
     private LocalDate date;
     private LocalTime startTime;
@@ -19,6 +20,7 @@ public class EventDetailDTO {
     private String subjectName;
     private String groupName;
     private UserDTO creator;
+    private boolean completed;
 
     private List<CommentDTO> comments;
     private List<NoteDTO> personalNotes;

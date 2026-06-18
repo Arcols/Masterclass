@@ -13,6 +13,7 @@ export interface EventDetailDTO {
   submissionLink: string
   subjectName: string
   groupName: string
+  completed: boolean
   creator: {
     id: string
     name: string
@@ -94,11 +95,28 @@ export function useEventDetails() {
     }
   }
 
+  const toggleEventCompletion = async (eventId: string, userId: string): Promise<boolean | null> => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/events/${eventId}/toggle-completion`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ userId })
+      })
+      if (!response.ok) throw new Error('Erreur lors du changement de statut')
+
+      return await response.json() // Va renvoyer `true` ou `false`
+    } catch (err: any) {
+      console.error(err)
+      return null
+    }
+  }
+
   return {
     isLoading,
     error,
     fetchEventDetails,
     addComment,
-    addNote
+    addNote,
+    toggleEventCompletion
   }
 }

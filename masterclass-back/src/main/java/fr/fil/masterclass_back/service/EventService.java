@@ -6,6 +6,8 @@ import fr.fil.masterclass_back.repository.*;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 
 @Service
 public class EventService {
@@ -14,12 +16,14 @@ public class EventService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final NoteRepository noteRepository;
+    private final EventCompletionRepository eventCompletionRepository;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository, CommentRepository commentRepository, NoteRepository noteRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, CommentRepository commentRepository, NoteRepository noteRepository, EventCompletionRepository eventCompletionRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.noteRepository = noteRepository;
+        this.eventCompletionRepository = eventCompletionRepository;
     }
 
     public EventDetailDTO getEventDetails(String eventId, String currentUserId) {
@@ -38,6 +42,9 @@ public class EventService {
         dto.setDescription(event.getEveDescription());
         dto.setLocation(event.getEveLocation());
         dto.setSubmissionLink(event.getEveSubmissionLink());
+
+        boolean completed = eventCompletionRepository.existsByUserIdAndEventId(currentUserId, eventId);
+        dto.setCompleted(completed);
 
         // Mapping du créateur avec le UserDTO
         UserDTO creatorDto = new UserDTO();
@@ -104,16 +111,6 @@ public class EventService {
         return dto;
     }
 
-    public List<EventSummaryDTO> getTodoList() {
-        List<Event> events = eventRepository.findFutureByTypes(
-                List.of(EventType.DEVOIR, EventType.EXAMEN), LocalDate.now()
-        );
-
-        return events.stream()
-                .map(EventSummaryDTO::from)
-                .toList();
-    }
-
     public NoteDTO addNote(String eventId, String userId, String content) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Événement introuvable"));
@@ -134,5 +131,32 @@ public class EventService {
         dto.setContent(note.getNotContent());
         dto.setDate(note.getNotDate());
         return dto;
+    }
+
+    public List<EventSummaryDTO> getTodoList() {
+        List<Event> events = eventRepository.findFutureByTypes(
+                List.of(EventType.DEVOIR, EventType.EXAMEN), LocalDate.now()
+        );
+
+        return events.stream()
+                .map(EventSummaryDTO::from)
+                .toList();
+    }
+
+    @Transactional
+    public boolean toggleCompletion(String eventId, String userId) {
+        if (eventCompletionRepository.existsByUserIdAndEventId(userId, eventId)) {
+            // Si c'est déjà fait, on le décoche (on supprime la ligne)
+            eventCompletionRepository.deleteByUserIdAndEventId(userId, eventId);
+            return false;
+        } else {
+            // Sinon, on le marque comme fait (on crée la ligne)
+            EventCompletion completion = new EventCompletion();
+            completion.setId(java.util.UUID.randomUUID().toString());
+            completion.setUserId(userId);
+            completion.setEventId(eventId);
+            eventCompletionRepository.save(completion);
+            return true;
+        }
     }
 }

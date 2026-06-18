@@ -42,7 +42,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 // ── APPEL API ET DONNÉES RÉACTIVES ──
-const { fetchEventDetails, addComment, addNote, isLoading } = useEventDetails()
+const { fetchEventDetails, addComment, addNote, toggleEventCompletion, isLoading } = useEventDetails()
 const { getUserIdFromToken } = useAuthToken()
 
 const fullEvent = ref<any>(null)
@@ -86,7 +86,7 @@ onMounted(async () => {
       submissionLink: data.submissionLink,
       group: data.groupName,
       creator: data.creator,
-      isCompleted: false,
+      isCompleted: data.completed,
       isFavorite: false
     }
 
@@ -107,6 +107,23 @@ onMounted(async () => {
     })) : []
   }
 })
+
+// FONCTION POUR GÉRER LE CLIC SUR LE BOUTON
+const handleToggleComplete = async () => {
+  if (!currentUserId.value) return
+
+  //const newStatus = await toggleEventCompletion(props.eventId, currentUserId.value)
+  const newStatus = await toggleEventCompletion("E2", currentUserId.value) // On garde l'id simulé "E2" pour l'instant
+
+  if (newStatus !== null) {
+    // On met à jour l'interface locale de la modale
+    fullEvent.value.isCompleted = newStatus
+
+    // On prévient le composant Parent (PlanningBoard) pour qu'il mette à jour
+    // la petite carte sans avoir besoin de recharger toute la page !
+    emit('toggle-complete', props.eventId, newStatus)
+  }
+}
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
@@ -147,10 +164,6 @@ const modalTitle = computed(() => {
 
 // ── GESTION DES ONGLETS ──
 const activeTab = ref<'commentaires' | 'notes'>('commentaires')
-
-// On rend les données importées réactives pour pouvoir y ajouter de nouveaux éléments
-const localComments = ref([...allComments])
-const localNotes = ref([...allNotes])
 
 // Variables pour le formulaire d'ajout
 const isAdding = ref(false)
@@ -420,7 +433,7 @@ const submitNewItem = async () => {
         >
           <button
             v-if="isDevoir"
-            @click="emit('toggle-complete', fullEvent.id, !fullEvent.isCompleted)"
+            @click="handleToggleComplete"
             class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-3 py-2 md:px-4 rounded-md font-medium text-xs md:text-sm transition-colors cursor-pointer"
             :class="
               fullEvent.isCompleted

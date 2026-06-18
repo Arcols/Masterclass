@@ -50,27 +50,6 @@ export interface UpdateUserPayload {
   groups?: { groId: string }[]
 }
 
-export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
-  const token = localStorage.getItem('token')
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
-
-  const res = await fetch(`${API_BASE_USERS}/${id}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify(payload),
-  })
-
-  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
-  return await res.text();
-}
-
 export interface UpdateUserPayload {
   useFirstname?: string
   useLastname?: string
@@ -80,26 +59,7 @@ export interface UpdateUserPayload {
 }
 
 export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
-  const res = await fetch(`${API_BASE}/users/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-
-  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
-  return await res.text()
-}
-
-export interface UpdateUserPayload {
-  useFirstname?: string
-  useLastname?: string
-  useMail?: string
-  useDescription?: string
-  groups?: { groId: string }[]
-}
-
-export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
-  const res = await fetch(`${API_BASE}/users/${id}`, {
+  const res = await fetch(`${API_BASE_USERS}/users/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
