@@ -22,7 +22,7 @@ INSERT IGNORE INTO Subject (SUB_id, SUB_name) VALUES
                                            ('S2', 'Informatique'),
                                            ('S3', 'Gestion de projet');
 
-INSERT IGNORE INTO Event (EVE_id, EVE_type, EVE_title, EVE_date, EVE_starthour, EVE_endhour, EVE_description, EVE_localisation, EVE_lien, SUB_id, USE_id) VALUES
+INSERT IGNORE INTO Event (EVE_id, EVE_type, EVE_title, EVE_date, EVE_starthour, EVE_endhour, EVE_description, EVE_location, EVE_submissionLink, SUB_id, USE_id) VALUES
                                                                                                                                                        ('E1', 'Cours', 'Introduction à PostgreSQL', '2024-06-20', '09:00:00', '11:00:00', 'Bases de données relationnelles', 'Salle 101', 'http://visio.link/pg', 'S2', 'U2'),
                                                                                                                                                        ('E2', 'Examen', 'Partiel de Maths', '2024-06-25', '14:00:00', '16:00:00', 'Algèbre linéaire', 'Amphi B', NULL, 'S1', 'U2');
 

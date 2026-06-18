@@ -41,11 +41,11 @@ public class Event {
     @Column(name = "EVE_description", columnDefinition = "TEXT")
     private String eveDescription;
 
-    @Column(name = "EVE_localisation", length = 50)
-    private String eveLocalisation;
+    @Column(name = "EVE_location", length = 50)
+    private String eveLocation;
 
-    @Column(name = "EVE_lien", length = 50)
-    private String eveLien;
+    @Column(name = "EVE_submissionLink", length = 50)
+    private String eveSubmissionLink;
 
     @ManyToOne
     @JoinColumn(name = "SUB_id")
