@@ -7,22 +7,9 @@ import GroupBadge from '@/components/GroupBadge.vue'
 import MultiSelectDropdown from '@/components/MultiSelectDropdown.vue'
 import { getUserById, updateUserById } from '@/services/userService.ts'
 import mockGroups from '@/mocks/groups.json'
-
-interface UserProfileData {
-  firstName?: string
-  lastName?: string
-  email?: string
-  description?: string
-  groups?: string[]
-}
-
-interface BackendUserResponse {
-  useFirstname: string
-  useLastname: string
-  useMail: string
-  useDescription: string
-  groups: { groId: string }[]
-}
+import type { UserProfileData, BackendUserResponse } from '@/types/user'
+import { useAuth } from '@/utils/checkingAuth.ts'
+const { requireAuth } = useAuth()
 
 const userProfile = ref<UserProfileData>({})
 const userForm = ref<UserProfileData>({})
@@ -46,9 +33,9 @@ const getUserIdFromToken = () => {
 }
 
 onMounted(async () => {
-  const userId = getUserIdFromToken()
   await requireAuth() // redirige vers /login si token invalide
-})
+
+  const userId = getUserIdFromToken()
 
   if (!userId) {
     console.warn('Aucun utilisateur connecté')
