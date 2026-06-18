@@ -50,7 +50,8 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
     @keydown.space.prevent="emit('open-details', event)"
     class="relative flex h-full flex-col rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
     :class="[
-      isList ? 'py-3 md:py-4 pr-4 pl-5' : 'md:p-2 md:pl-3 p-1 pl-2',
+      isList ? 'py-3 md:py-4 pr-4 pl-5' : 'md:p-1 md:pl-3 p-1 pl-2',
+      isCompact ? 'p-1 pl-2' : '',
       event.isCompleted
         ? 'bg-[var(--color-event-done-bg)] opacity-65'
         : 'bg-[var(--color-event-not-done-bg)]',
@@ -61,8 +62,8 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
       :style="{ backgroundColor: leftBarColor }"
     ></div>
 
-      <div class="flex justify-between items-start md:gap-2" :class="isCompact ? 'gap-1' : ''">
-      <div class="flex flex-col items-start gap-1 min-w-0">
+    <div class="flex justify-between items-start md:gap-2" :class="isCompact ? 'gap-1' : ''">
+      <div v-if="!isCompact" class="flex flex-col items-start gap-1 min-w-0">
 
         <!-- Affichage de la matière (s'il y en a une) -->
         <span
@@ -89,35 +90,33 @@ const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)
             :class="[
               isList ? 'text-base md:text-lg' : 'md:text-[13px] text-[9px]',
               { 'line-through text-gray-400': event.isCompleted },
+              isCompact ? 'text-[6px]' : '',
             ]"
           >
             {{ event.title }}
           </span>
         </div>
-
       </div>
-
-        <EventBadge v-if="!isCompact" :type="event.type" class="hidden md:block md:shrink-0" />
+      <EventBadge v-if="!isCompact" :type="event.type" class="hidden md:block md:shrink-0" />
     </div>
-
     <!-- Affichage des détails de l'événement -->
     <div class="flex justify-between items-center md:mt-1" :class="isCompact ? 'mt-0' : ''">
-
       <!-- Affichage du TITRE (s'il Y A un sujet) -->
       <div
-        v-if="event.subject && !isCompact"
+        v-if="event.subject"
         class="flex min-w-0 pr-2"
         :class="isList ? 'flex-row items-center gap-1' : 'flex-col md:flex-row items-start md:items-center gap-0.5 md:gap-1.5'"
       >
         <!-- Étoile cachée sur mobile (hidden md:block) -->
         <StarSolid
-          v-if="event.isFavorite"
+          v-if="event.isFavorite && !isCompact"
           class="hidden md:block w-4 h-4 text-[var(--color-event-favorite-selected)] shrink-0"
         />
         <span
           class="flex font-bold text-[var(--color-black)] whitespace-normal break-words md:truncate md:whitespace-nowrap"
           :class="[
-            isList ? 'text-base md:text-lg' : 'md:text-[13px] text-[9px]',
+            isCompact ? 'md:text-[6px]' : '',
+            isList ? 'text-base md:text-lg' : 'md:text-[12px] text-[9px]',
             { 'line-through text-gray-600': event.isCompleted },
           ]"
         >
