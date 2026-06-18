@@ -40,9 +40,11 @@ CREATE TABLE IF NOT EXISTS Event(
                       EVE_submissionLink VARCHAR(50),
                       SUB_id VARCHAR(50),
                       USE_id VARCHAR(50) NOT NULL,
+                      GRO_id VARCHAR(50) NOT NULL,
                       PRIMARY KEY(EVE_id),
                       FOREIGN KEY(SUB_id) REFERENCES Subject(SUB_id),
-                      FOREIGN KEY(USE_id) REFERENCES `User`(USE_id)
+                      FOREIGN KEY(USE_id) REFERENCES `User`(USE_id),
+                      FOREIGN KEY(GRO_id) REFERENCES `Group`(GRO_id)
 );
 
 CREATE TABLE IF NOT EXISTS Note(
