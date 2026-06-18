@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { useTimeOptions } from '@/composables/useTimeOptions'
+
 const props = defineProps<{
   startTime?: string
   endTime?: string
 }>()
 
-const timeOptions = Array.from({ length: 48 }, (_, i) =>
-  `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 === 0 ? '00' : '30'}`
-)
+const timeOptions = useTimeOptions()
 </script>
 <template>
   <div class="mb-4">
