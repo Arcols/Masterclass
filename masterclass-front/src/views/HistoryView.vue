@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import { ChevronDownIcon, FunnelIcon } from '@heroicons/vue/24/outline'
 import Header from '@/components/Header.vue'
 import EventCard, { type EventData } from '@/components/event/EventCard.vue'
 import EventDetailModal from '@/components/modals/EventDetailModal.vue'
@@ -8,6 +8,7 @@ import mockEvents from '@/mocks/events.json'
 import type { EventType } from '@/types/event.ts'
 import { onMounted } from 'vue'
 import { useAuth } from '@/utils/checkingAuth'
+import FilterModal from '@/components/modals/FilterModal.vue'
 
 const { requireAuth } = useAuth()
 
