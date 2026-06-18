@@ -60,8 +60,9 @@ const cancelEditing = () => {
   isEditing.value = false
 }
 
-const saveProfile = () => {
-  if (userForm.value.groups.length === 0) {
+const saveProfile = async () => {
+  // Vérification de l'existence avant de lire la longueur
+  if (!userForm.value.groups || userForm.value.groups.length === 0) {
     alert('Veuillez sélectionner au moins un groupe.')
     return
   }
