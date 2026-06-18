@@ -90,7 +90,7 @@
     "description": "Présentation individuelle sur un sujet d'actualité en anglais.",
     "date": "2026-06-17",
     "startTime": "09:00",
-    "endTime": "10:15",
+    "endTime": "09:30",
     "location": "J147",
     "group": "ANG G1",
     "isCompleted": false,
@@ -108,18 +108,45 @@
     "group": "FIL A1",
     "isCompleted": false,
     "isFavorite": true
-  },{
+  },
+  {
     "id": "9",
     "type": "examen",
     "title": "DS Graphes",
     "subject": "Mathématiques",
     "description": "Devoir surveillé sur les graphes et leurs applications.",
     "date": "2026-06-19",
-    "startTime": "10:00",
-    "endTime": "12:00",
+    "startTime": "08:00",
+    "endTime": "10:00",
     "location": "J147",
     "group": "FIL A1",
     "isCompleted": false,
   "isFavorite": false
+  },
+  {
+    "id": "11",
+    "type": "sport",
+    "title": "ZPSA",
+    "description": "Point d'avancement et répartition des tâches pour le projet final du semestre.",
+    "date": "2026-06-19",
+    "startTime": "09:00",
+    "endTime": "11:00",
+    "location": "Salle de réunion",
+    "group": "FIL A1",
+    "isCompleted": false,
+    "isFavorite": true
+  },
+  {
+    "id": "10",
+    "type": "activite",
+    "title": "Réunion projet de groupe",
+    "description": "Point d'avancement et répartition des tâches pour le projet final du semestre.",
+    "date": "2026-06-19",
+    "startTime": "09:00",
+    "endTime": "13:00",
+    "location": "Salle de réunion",
+    "group": "FIL A1",
+    "isCompleted": false,
+    "isFavorite": true
   }
 ]
