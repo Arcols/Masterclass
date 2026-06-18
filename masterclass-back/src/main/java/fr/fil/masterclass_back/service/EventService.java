@@ -1,6 +1,7 @@
 package fr.fil.masterclass_back.service;
 
 import fr.fil.masterclass_back.model.Event;
+import fr.fil.masterclass_back.model.EventType;
 import fr.fil.masterclass_back.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class EventService {
 
     public List<Event> getTodoList() {
         return eventRepository.findFutureByTypes(
-                List.of("devoir", "examen"), LocalDate.now()
+                List.of(EventType.DEVOIR.getValue(), EventType.EXAMEN.getValue()), LocalDate.now()
         );
     }
 
