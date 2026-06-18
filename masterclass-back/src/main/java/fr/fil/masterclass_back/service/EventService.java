@@ -1,5 +1,6 @@
 package fr.fil.masterclass_back.service;
 
+import fr.fil.masterclass_back.dto.EventSummaryDTO;
 import fr.fil.masterclass_back.model.Event;
 import fr.fil.masterclass_back.model.EventType;
 import fr.fil.masterclass_back.repository.EventRepository;
@@ -17,10 +18,14 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public List<Event> getTodoList() {
-        return eventRepository.findFutureByTypes(
-                List.of(EventType.DEVOIR.getValue(), EventType.EXAMEN.getValue()), LocalDate.now()
+    public List<EventSummaryDTO> getTodoList() {
+        List<Event> events = eventRepository.findFutureByTypes(
+                List.of(EventType.DEVOIR, EventType.EXAMEN), LocalDate.now()
         );
+
+        return events.stream()
+                .map(EventSummaryDTO::from)
+                .toList();
     }
 
 }

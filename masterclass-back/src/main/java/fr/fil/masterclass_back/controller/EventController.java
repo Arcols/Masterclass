@@ -1,5 +1,6 @@
 package fr.fil.masterclass_back.controller;
 
+import fr.fil.masterclass_back.dto.EventSummaryDTO;
 import fr.fil.masterclass_back.model.Event;
 import fr.fil.masterclass_back.service.EventService;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class EventController {
     }
 
     @GetMapping("/todolist")
-    public ResponseEntity<List<Event>> getTodoList() {
+    public ResponseEntity<List<EventSummaryDTO>> getTodoList() {
 
         return ResponseEntity.ok(eventService.getTodoList());
     }

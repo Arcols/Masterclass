@@ -43,7 +43,7 @@ INSERT INTO Event
 VALUES
 
     ('E1','devoir','Devoir Analyse',
-     '2026-06-10','08:00:00','09:00:00',
+     '2026-06-22','08:00:00','09:00:00',
      'Faire les exercices 1 à 5 du chapitre sur les intégrales et réviser le cours sur les dérivées.',
      'J147',NULL,'S8','4a357732-ad63-4e78-9bd6-8af6333c41fc',
      'FIL A1'),
@@ -65,12 +65,14 @@ VALUES
     ('E4','sport','Tournoi BDE',
      '2026-06-13','17:00:00','23:59:00',
      'Tournoi inter-promos de volley-ball et futsal. Ramener une tenue de sport et une bouteille d''eau.',
-     'Gymnase',NULL,NULL,'4a357732-ad63-4e78-9bd6-8af6333c41fc'),
+     'Gymnase',NULL,NULL,'4a357732-ad63-4e78-9bd6-8af6333c41fc',
+     'FIL A1'),
 
     ('E5','devoir','Projet final - Mathématiques',
      '2026-06-15','11:00:00','12:00:00',
      'Finaliser et rendre le projet de synthèse sur les intégrales et leurs applications.',
-     'J147',NULL,'S8','4a357732-ad63-4e78-9bd6-8af6333c41fc'),
+     'J147',NULL,'S8','4a357732-ad63-4e78-9bd6-8af6333c41fc',
+     'FIL A1'),
 
     ('E6','devoir','Partiel Informatique',
      '2026-06-16','15:00:00','16:00:00',
@@ -104,7 +106,7 @@ VALUES
 
     ('N1',
      'Penser à imprimer la feuille d''exercices avant le cours.',
-     '2026-06-08 10:00:00',
+     '2026-06-22 10:00:00',
      'E1','4a357732-ad63-4e78-9bd6-8af6333c41fc');
 
 
@@ -116,12 +118,12 @@ VALUES
 
     ('C2',
      'Merci Damien ! Est-ce que quelqu''un sait si la calculatrice est autorisée ?',
-     '2026-06-09 18:30:00',
+     '2026-06-22 18:30:00',
      'E1','4a357732-ad63-4e78-9bd6-8af6333c41fc'),
 
     ('C3',
      'Bonjour à tous, oui la calculatrice type collège est autorisée.',
-     '2026-06-10 08:15:00',
+     '2026-06-22 08:15:00',
      'E1','4a357732-ad63-4e78-9bd6-8af6333c41fc'),
 
     ('C4',
@@ -133,3 +135,8 @@ VALUES
      'Le partiel portera uniquement sur SQL ou aussi sur NoSQL ?',
      '2026-06-15 10:00:00',
      'E6','4a357732-ad63-4e78-9bd6-8af6333c41fc');
+
+UPDATE Event SET EVE_type = 'DEVOIR' WHERE EVE_type = 'devoir';
+UPDATE Event SET EVE_type = 'EXAMEN' WHERE EVE_type = 'examen';
+UPDATE Event SET EVE_type = 'ACTIVITE' WHERE EVE_type = 'activite';
+UPDATE Event SET EVE_type = 'SPORT' WHERE EVE_type = 'sport';
