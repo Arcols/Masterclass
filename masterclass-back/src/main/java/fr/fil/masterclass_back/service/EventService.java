@@ -104,6 +104,16 @@ public class EventService {
         return dto;
     }
 
+    public List<EventSummaryDTO> getTodoList() {
+        List<Event> events = eventRepository.findFutureByTypes(
+                List.of(EventType.DEVOIR, EventType.EXAMEN), LocalDate.now()
+        );
+
+        return events.stream()
+                .map(EventSummaryDTO::from)
+                .toList();
+    }
+
     public NoteDTO addNote(String eventId, String userId, String content) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Événement introuvable"));

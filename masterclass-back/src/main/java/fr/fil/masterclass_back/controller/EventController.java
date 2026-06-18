@@ -1,11 +1,9 @@
 package fr.fil.masterclass_back.controller;
 
 import java.util.Map;
-import fr.fil.masterclass_back.dto.EventDetailDTO;
-import fr.fil.masterclass_back.dto.NoteDTO;
-import fr.fil.masterclass_back.dto.CommentDTO;
-import fr.fil.masterclass_back.service.EventService;
-import fr.fil.masterclass_back.service.JwtService;
+import fr.fil.masterclass_back.dto.*;
+import fr.fil.masterclass_back.model.*;
+import fr.fil.masterclass_back.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +65,12 @@ public class EventController {
         String content = payload.get("content");
 
         return ResponseEntity.ok(eventService.addComment(eventId, userId, content));
+    }
+
+    @GetMapping("/todolist")
+    public ResponseEntity<List<EventSummaryDTO>> getTodoList() {
+
+        return ResponseEntity.ok(eventService.getTodoList());
     }
 
     @PostMapping("/{eventId}/notes")

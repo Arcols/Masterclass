@@ -2,6 +2,7 @@ package fr.fil.masterclass_back.dto;
 
 import fr.fil.masterclass_back.model.Event;
 import fr.fil.masterclass_back.model.EventType;
+import fr.fil.masterclass_back.model.Group;
 import fr.fil.masterclass_back.model.Subject;
 import lombok.Data;
 
@@ -17,9 +18,10 @@ public class EventSummaryDTO {
     private LocalTime eveStarthour;
     private LocalTime eveEndhour;
     private String eveDescription;
-    private String eveLocalisation;
-    private String eveLien;
+    private String eveLocation;
+    private String eveSubmissionLink;
     private Subject subject;
+    private Group group;
 
     public static EventSummaryDTO from(Event e) {
         EventSummaryDTO dto = new EventSummaryDTO();
@@ -30,9 +32,10 @@ public class EventSummaryDTO {
         dto.eveStarthour = e.getEveStarthour();
         dto.eveEndhour = e.getEveEndhour();
         dto.eveDescription = e.getEveDescription();
-        dto.eveLocalisation = e.getEveLocalisation();
-        dto.eveLien = e.getEveLien();
+        dto.eveLocation = e.getEveLocation();
+        dto.eveSubmissionLink = e.getEveSubmissionLink();
         dto.subject = e.getSubject();
+        dto.group = e.getGroup();
         return dto;
     }
 }
