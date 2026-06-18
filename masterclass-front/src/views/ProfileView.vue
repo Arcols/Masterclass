@@ -47,12 +47,14 @@ onMounted(async () => {
   } catch (error) {
     console.warn('Erreur de récupération du profil :', error)
   }
+
+  userForm.value = { ...userProfile.value }
 })
 
 const startEditing = () => {
-  userForm.value = { ...userProfile.value }
-  isEditing.value = true
-}
+  userForm.value = { ...userProfile.value };
+  isEditing.value = true;
+};
 
 const cancelEditing = () => {
   isEditing.value = false
