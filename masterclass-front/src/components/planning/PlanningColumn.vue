@@ -37,7 +37,18 @@ function handleDblClick(ev: MouseEvent):void {
   emit('request-add', { date: props.day.fullDateString, startTime: `${hh}:${mm}` })
 }
 
-const getEventStyle = (event: EventData) => {
+type LayoutEvent = EventData & {
+  laneIndex: number
+  laneCount: number
+  compact: boolean
+}
+
+const getEventMinutes = (time: string) => {
+  const [hours = 0, minutes = 0] = time.split(':').map(Number)
+  return hours * 60 + minutes
+}
+
+const getEventStyle = (event: LayoutEvent) => {
   const [startH = 0, startM = 0] = event.startTime.split(':').map(Number);
   let [endH = 0, endM = 0] = event.endTime.split(':').map(Number);
 
@@ -46,7 +57,16 @@ const getEventStyle = (event: EventData) => {
   const topPx = ((startH - props.startHour) + (startM / 60)) * props.rowHeight;
   const heightPx = ((endH - startH) + ((endM - startM) / 60)) * props.rowHeight;
 
-  return { top: `${topPx}px`, height: `${heightPx}px` };
+  const laneWidth = 100 / event.laneCount
+  const leftPx = event.laneIndex * laneWidth
+
+  return {
+    top: `${topPx}px`,
+    height: `${heightPx}px`,
+    left: `${leftPx}%`,
+    width: `${laneWidth}%`,
+    zIndex: `${10 + event.laneIndex}`,
+  };
 };
 
 const isCompactEvent = (event: EventData) => {
@@ -56,6 +76,75 @@ const isCompactEvent = (event: EventData) => {
   const endMinutes = endH * 60 + endM
   return endMinutes - startMinutes <= 30
 }
+
+const layoutEvents = computed<LayoutEvent[]>(() => {
+  const sortedEvents = [...props.events].sort((a, b) => {
+    const startDelta = getEventMinutes(a.startTime) - getEventMinutes(b.startTime)
+    if (startDelta !== 0) return startDelta
+    return getEventMinutes(a.endTime) - getEventMinutes(b.endTime)
+  })
+
+  const laidOut: LayoutEvent[] = []
+  let currentCluster: LayoutEvent[] = []
+  let clusterEnd = -1
+
+  const flushCluster = () => {
+    if (currentCluster.length === 0) return
+
+    const laneEnds: number[] = []
+    for (const event of currentCluster) {
+      const start = getEventMinutes(event.startTime)
+      const end = getEventMinutes(event.endTime)
+      let laneIndex = laneEnds.findIndex((laneEnd) => laneEnd <= start)
+
+      if (laneIndex === -1) {
+        laneIndex = laneEnds.length
+        laneEnds.push(end)
+      } else {
+        laneEnds[laneIndex] = end
+      }
+
+      laidOut.push({
+        ...event,
+        laneIndex,
+        laneCount: 0,
+        compact: isCompactEvent(event),
+      })
+    }
+
+    const laneCount = Math.max(1, laneEnds.length)
+    for (const event of laidOut.slice(-currentCluster.length)) {
+      event.laneCount = laneCount
+      event.compact = event.compact || laneCount > 1
+    }
+
+    currentCluster = []
+    clusterEnd = -1
+  }
+
+  for (const event of sortedEvents) {
+    const start = getEventMinutes(event.startTime)
+    const end = getEventMinutes(event.endTime)
+    if (currentCluster.length === 0) {
+      currentCluster.push({ ...event, laneIndex: 0, laneCount: 0, compact: isCompactEvent(event) })
+      clusterEnd = end
+      continue
+    }
+
+    if (start < clusterEnd) {
+      currentCluster.push({ ...event, laneIndex: 0, laneCount: 0, compact: isCompactEvent(event) })
+      clusterEnd = Math.max(clusterEnd, end)
+      continue
+    }
+
+    flushCluster()
+    currentCluster.push({ ...event, laneIndex: 0, laneCount: 0, compact: isCompactEvent(event) })
+    clusterEnd = end
+  }
+
+  flushCluster()
+  return laidOut
+})
 
 // ── LOGIQUE DE LA LIGNE ROUGE EN TEMPS RÉEL ──
 const now = ref(new Date());
@@ -95,15 +184,15 @@ const currentTimeTop = computed(() => {
     </div>
 
     <div
-      v-for="event in events"
+      v-for="event in layoutEvents"
       :key="event.id"
-      class="absolute left-0 w-full px-1 py-0.5 z-10 transition-transform hover:scale-[1.02] hover:z-30"
+      class="absolute px-0.5 py-0.5 transition-transform hover:scale-[1.01] hover:z-30"
       :style="getEventStyle(event)"
     >
       <EventCard
         :event="event"
         layout="calendar"
-        :compact="isCompactEvent(event)"
+        :compact="event.compact"
         @toggle-complete="(id, val) => emit('toggle-complete', id, val)"
         @open-details="(evt) => emit('open-details', evt)"
       />
