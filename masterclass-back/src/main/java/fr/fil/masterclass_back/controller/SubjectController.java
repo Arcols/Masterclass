@@ -1,7 +1,6 @@
 package fr.fil.masterclass_back.controller;
 
 import fr.fil.masterclass_back.service.SubjectService;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +14,4 @@ public class SubjectController {
         this.subjectService = subjectService;
     }
 
-    @GetMapping("/hello")
-    public String testHello() {
-        return subjectService.getHelloData();
-    }
 }
