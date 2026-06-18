@@ -13,6 +13,10 @@ export interface EventDetailDTO {
   submissionLink: string
   subjectName: string
   groupName: string
+  creator: {
+    id: string
+    name: string
+  }
   comments: Array<{
     id: string
     content: string

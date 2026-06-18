@@ -18,6 +18,7 @@ public class EventDetailDTO {
     private String submissionLink;
     private String subjectName;
     private String groupName;
+    private UserDTO creator;
 
     private List<CommentDTO> comments;
     private List<NoteDTO> personalNotes;

@@ -12,6 +12,7 @@ import {
   CheckIcon,
   LinkIcon,
   PlusIcon,
+  UserIcon,
   StarIcon as StarOutline,
 } from '@heroicons/vue/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/vue/24/solid'
@@ -84,6 +85,7 @@ onMounted(async () => {
       location: data.location,
       submissionLink: data.submissionLink,
       group: data.groupName,
+      creator: data.creator,
       isCompleted: false,
       isFavorite: false
     }
@@ -113,6 +115,11 @@ onUnmounted(() => {
 const isDevoir = computed(() => fullEvent.value?.type === 'devoir')
 const isExamen = computed(() => fullEvent.value?.type === 'examen')
 const isRedDate = computed(() => isDevoir.value || isExamen.value)
+
+// VÉRIFIER LE CRÉATEUR
+const isCreator = computed(() => {
+  return currentUserId.value && fullEvent.value?.creator?.id === currentUserId.value
+})
 
 // ── FORMATAGE DE LA DATE ──
 const formattedDate = computed(() => {
@@ -256,6 +263,11 @@ const submitNewItem = async () => {
                 {{ fullEvent.subject }}
               </span>
             </div>
+          </div>
+
+          <div v-if="fullEvent.creator" class="flex items-center text-xs md:text-sm text-gray-800">
+            <UserIcon class="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3 shrink-0 text-gray-500" />
+            Publié par : <span class="font-medium ml-1">{{ fullEvent.creator.name }}</span>
           </div>
 
           <hr class="border-gray-100" />
@@ -414,6 +426,7 @@ const submitNewItem = async () => {
           </button>
 
           <button
+            v-if="isCreator"
             @click="emit('edit', fullEvent)"
             class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-3 py-2 md:px-4 rounded-md border border-gray-200 font-medium text-xs md:text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
           >
@@ -422,6 +435,7 @@ const submitNewItem = async () => {
           </button>
 
           <button
+            v-if="isCreator"
             @click="emit('delete', fullEvent.id)"
             class="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-3 py-2 md:px-4 rounded-md font-medium text-xs md:text-sm text-[var(--color-red)] bg-red-50 hover:bg-red-100 transition-colors cursor-pointer"
           >

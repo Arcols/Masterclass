@@ -39,6 +39,12 @@ public class EventService {
         dto.setLocation(event.getEveLocation());
         dto.setSubmissionLink(event.getEveSubmissionLink());
 
+        // Mapping du créateur avec le UserDTO
+        UserDTO creatorDto = new UserDTO();
+        creatorDto.setId(event.getUser().getUseId());
+        creatorDto.setName(event.getUser().getUseFirstname() + " " + event.getUser().getUseLastname());
+        dto.setCreator(creatorDto);
+
         // Mapping de la matière
         if (event.getSubject() != null) {
             dto.setSubjectName(event.getSubject().getSubName());
