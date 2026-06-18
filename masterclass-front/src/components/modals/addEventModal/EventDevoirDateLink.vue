@@ -2,12 +2,13 @@
 import { ref } from 'vue'
 import { fr } from 'date-fns/locale/fr'
 import { useDatePicker } from '@/composables/useDatePicker'
+import { useTimeOptions } from '@/composables/useTimeOptions'
 
 const props = defineProps<{
   submissionLink?: string
   date: string
   isDevoir: boolean
-  dueTime?: string
+  endTime?: string
 }>()
 
 const emit = defineEmits<{
@@ -15,7 +16,6 @@ const emit = defineEmits<{
   'update:date': [value: string]
   'update:startTime': [value: string]
   'update:endTime': [value: string]
-  'update:dueTime': [value: string]
 }>()
 
 const {
@@ -35,8 +35,6 @@ const {
   isToday,
 } = useDatePicker(props.date)
 
-import { useTimeOptions } from '@/composables/useTimeOptions'
-
 const timeOptions = useTimeOptions()
 
 function handleSelect(day: Date) {
@@ -49,8 +47,8 @@ function handleSelect(day: Date) {
     <div class="relative">
       <label class="block text-sm font-medium text-gray-700 mb-1">Heure de rendu <span class="text-[var(--color-red)]">*</span></label>
       <select
-        :value="dueTime"
-        @change="$emit('update:dueTime', ($event.target as HTMLSelectElement).value)"
+        :value="endTime"
+        @change="$emit('update:endTime', ($event.target as HTMLSelectElement).value)"
         class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] shadow-sm"
         required
       >

@@ -41,7 +41,6 @@ const location = ref<string>('')
 const date = ref<string>(getTodayDate())
 const startTime = ref<string>('08:00')
 const endTime = ref<string>('09:00')
-const dueTime = ref<string>('08:00')
 const submissionLink = ref<string>('')
 
 const typeLabels: Record<EventType, string> = {
@@ -91,7 +90,6 @@ function resetForm(): void {
   date.value = getTodayDate()
   startTime.value = '08:00'
   endTime.value = '09:00'
-  dueTime.value = '08:00'
   isEditMode.value = false
   eventIdToEdit.value = undefined
   submissionLink.value = ''
@@ -123,7 +121,6 @@ function populateFormForEdit(eventToEdit: EventPayload) {
   date.value = eventToEdit.date
   startTime.value = eventToEdit.startTime
   endTime.value = eventToEdit.endTime
-  dueTime.value = eventToEdit.dueTime
   submissionLink.value = eventToEdit.submissionLink ?? ''
 }
 
@@ -145,7 +142,6 @@ function addEventPopup(eventToEdit?: EventPayload): void {
       date.value = eventToEdit.date ?? date.value
       startTime.value = eventToEdit.startTime ?? startTime.value
       endTime.value = eventToEdit.endTime ?? endTime.value
-      dueTime.value = eventToEdit.dueTime ?? dueTime.value
       submissionLink.value = eventToEdit.submissionLink ?? submissionLink.value
     }
   }
@@ -162,20 +158,30 @@ watch(group, (val) => {
 
 defineExpose({ addEventPopup })
 
+function getOneHourBefore(time: string): string {
+  const hours = Number(time.slice(0, 2))
+  const minutes = Number(time.slice(3, 5))
+  const totalMinutes = (hours * 60 + minutes - 60 + 24 * 60) % (24 * 60)
+  const computedHours = String(Math.floor(totalMinutes / 60)).padStart(2, '0')
+  const computedMinutes = String(totalMinutes % 60).padStart(2, '0')
+  return `${computedHours}:${computedMinutes}`
+}
+
 async function submit(): Promise<void> {
-  const start = Number(startTime.value.slice(0, 2)) * 60 + Number(startTime.value.slice(3, 5));
-  const end = Number(endTime.value.slice(0, 2)) * 60 + Number(endTime.value.slice(3, 5));
+  const effectiveStartTime = isDevoir.value ? getOneHourBefore(endTime.value) : startTime.value
+  const start = Number(effectiveStartTime.slice(0, 2)) * 60 + Number(effectiveStartTime.slice(3, 5))
+  const end = Number(endTime.value.slice(0, 2)) * 60 + Number(endTime.value.slice(3, 5))
   if (
     !isFieldValid(title.value) ||
     (!isDevoir.value && !isFieldValid(location.value)) ||
     !isFieldValid(date.value) ||
-    !isFieldValid(startTime.value) ||
+    (!isDevoir.value && !isFieldValid(startTime.value)) ||
     !isFieldValid(endTime.value) ||
     !isFieldValid(group.value) ||
     (isExamen.value && !isFieldValid(subject.value)) ||
     (isDevoir.value && !isFieldValid(subject.value)) ||
-    (isDevoir.value && !isFieldValid(dueTime.value)) ||
-    end <= start
+    (isDevoir.value && !isFieldValid(endTime.value)) ||
+    (!isDevoir.value && end <= start)
   ) {
     if (!isFieldValid(group.value)) {
       groupError.value = true
@@ -192,9 +198,8 @@ async function submit(): Promise<void> {
     subject: isDevoir.value ? subject.value : undefined,
     location: location.value,
     date: date.value,
-    startTime: startTime.value,
+    startTime: effectiveStartTime,
     endTime: endTime.value,
-    dueTime: dueTime.value,
     submissionLink: isDevoir.value ? submissionLink.value : undefined,
   }
 
@@ -250,7 +255,7 @@ function isFieldValid(value: unknown): boolean {
           
           <EventTimeFields v-if="!isDevoir" v-model:startTime="startTime" v-model:endTime="endTime" />
 
-          <EventDevoirDateLink v-if="isDevoir" v-model:submissionLink="submissionLink" v-model:date="date" v-model:dueTime="dueTime" v-model:isDevoir="isDevoir" />
+          <EventDevoirDateLink v-if="isDevoir" v-model:submissionLink="submissionLink" v-model:date="date" v-model:endTime="endTime" v-model:isDevoir="isDevoir" />
         </form>
 
         <div class="shrink-0 flex items-center gap-3 px-4 sm:px-6 py-4 border-t border-gray-100 bg-white">
