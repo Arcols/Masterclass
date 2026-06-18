@@ -11,7 +11,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    private record ResetTokenData(String mail, long expiryEpochMillis) {}
+
     private final UserRepository userRepository;
+
     private final GroupRepository groupRepository;
 
     private final EmailService emailService;
@@ -26,6 +30,8 @@ public class UserService {
     }
 
     private final Map<String, User> pendingUsers = new HashMap<>();
+
+    private final Map<String, ResetTokenData> resetTokens = new HashMap<>();
 
     public void registerUser(User user) {
         if (userRepository.existsByUseMail(user.getUseMail())) {
@@ -64,6 +70,34 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public void forgotPassword(String mail) {
+        userRepository.findByUseMail(mail).ifPresent(user -> {
+            String token = UUID.randomUUID().toString();
+            long expiry = System.currentTimeMillis() + 30 * 60 * 1000; // 30 minutes
+            resetTokens.put(token, new ResetTokenData(user.getUseMail(), expiry));
+            emailService.sendResetPasswordEmail(user.getUseMail(), token);
+        });
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        ResetTokenData data = resetTokens.get(token);
+        if (data == null) {
+            throw new RuntimeException("Lien invalide ou expiré");
+        }
+        if (System.currentTimeMillis() > data.expiryEpochMillis()) {
+            resetTokens.remove(token);
+            throw new RuntimeException("Lien expiré, veuillez refaire une demande");
+        }
+
+        User user = userRepository.findByUseMail(data.mail())
+                .orElseThrow(() -> new RuntimeException("Compte introuvable"));
+
+        user.setUsePassword(passwordService.hash(newPassword));
+        userRepository.save(user);
+
+        resetTokens.remove(token);
     }
 
     public Optional<User> GetUserById(String id) {

@@ -5,6 +5,8 @@ public class PublicRoutes {
             "/api/users/register",
             "/api/users/login",
             "/api/users/confirm",
-            "/api/users/tokenvalidity"
+            "/api/users/tokenvalidity",
+            "/api/users/forgot-password",
+            "/api/users/reset-password"
     };
 }

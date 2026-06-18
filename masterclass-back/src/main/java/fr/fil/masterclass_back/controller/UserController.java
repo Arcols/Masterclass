@@ -1,7 +1,9 @@
 package fr.fil.masterclass_back.controller;
 
+import fr.fil.masterclass_back.dto.ForgotPasswordRequest;
 import fr.fil.masterclass_back.dto.LoginRequest;
 import fr.fil.masterclass_back.dto.RegisterRequest;
+import fr.fil.masterclass_back.dto.ResetPasswordRequest;
 import fr.fil.masterclass_back.model.Group;
 import fr.fil.masterclass_back.model.User;
 import fr.fil.masterclass_back.repository.GroupRepository;
@@ -120,5 +122,30 @@ public class UserController {
             return ResponseEntity.status(401).body("Token invalide ou expiré");
         }
         return ResponseEntity.ok("Token valide");
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        userService.forgotPassword(request.getMail());
+        return ResponseEntity.ok("Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
+        try {
+            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                return ResponseEntity.badRequest().body("Les mots de passe ne correspondent pas");
+            }
+            if (request.getNewPassword().length() < 8) {
+                return ResponseEntity.badRequest().body("Le mot de passe doit faire au moins 8 caractères");
+            }
+            if (!request.getNewPassword().matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+                return ResponseEntity.badRequest().body("Le mot de passe doit contenir au moins un caractère spécial");
+            }
+            userService.resetPassword(request.getToken(), request.getNewPassword());
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -5,6 +5,8 @@ import RegisterView from '../views/RegisterView.vue'
 import HistoryView from '@/views/HistoryView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import TimelineView from '@/views/TimelineView.vue'
+import ForgotPassword from '@/views/Forgot Password/ForgotPasswordView.vue'
+import ResetPassword from '@/views/Forgot Password/ResetPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +40,16 @@ const router = createRouter({
       path: '/timeline',
       name: 'timeline',
       component: TimelineView,
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPassword,
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPassword,
     }
   ],
 })

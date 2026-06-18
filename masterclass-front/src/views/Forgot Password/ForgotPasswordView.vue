@@ -1,93 +1,81 @@
 <script setup lang="ts">
+import Header from '@/components/Header.vue'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { forgotPassword } from '@/services/userService'
 
-const router = useRouter()
 const email = ref('')
-const loading = ref(false)
-const error = ref('')
-const sent = ref(false)
+const message = ref('')
+const errorMessage = ref('')
+const isSubmitting = ref(false)
 
-// --- PLACEHOLDER BACK ---
-async function sendResetEmail(email: string): Promise<{ success: boolean; message?: string }> {
-  // TODO: POST /api/auth/forgot-password { email }
-  await new Promise(r => setTimeout(r, 1000))
-  if (!email.includes('@')) return { success: false, message: 'Email invalide' }
-  return { success: true }
-}
-
-/**
- * Le back envoie un mail avec un lien genre /reset-password?token=abc123.
- * Côté front tu n'as rien à faire de spécial, l'utilisateur clique sur le lien et arrive directement sur ResetPassword.vue
- * avec le token dans l'URL. C'est ce qu'on a déjà prévu avec route.query.token.
- */
-
-// ------------------------
-
-async function handleSubmit() {
-  error.value = ''
-  loading.value = true
-  const res = await sendResetEmail(email.value)
-  loading.value = false
-  if (res.success) sent.value = true
-  else error.value = res.message || 'Une erreur est survenue'
+const handleSubmit = async () => {
+  errorMessage.value = ''
+  message.value = ''
+  isSubmitting.value = true
+  try {
+    await forgotPassword(email.value)
+    message.value = 'Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.'
+  } catch (e: any) {
+    errorMessage.value = e.message ?? 'Une erreur est survenue'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
 <template>
-  <main class="min-h-screen flex items-center justify-center bg-[var(--color-background)] font-[var(--font-main)]">
-    <div class="flex flex-col items-center text-center w-80 gap-4">
+  <div class="w-full min-h-screen flex flex-col bg-white">
+    <Header
+      class="z-20 bg-[var(--color-background)] shadow-sm shrink-0"
+      :show-actions="false"
+      :show-profile="false"
+      subtitle="FIL A1 2028"
+    />
 
-      <template v-if="!sent">
-        <h1 class="text-2xl font-semibold text-[var(--color-black)] m-0">Mot de passe oublié</h1>
-        <p class="text-sm text-[var(--color-black)]/60 m-0 leading-relaxed">
-          Renseignez votre email, vous recevrez un lien de réinitialisation.
-        </p>
+    <div class="flex-1 flex flex-col items-center justify-center px-4 pb-20">
+      <h1 class="mb-10 text-5xl font-bold text-[var(--color-black)]">Mot de passe oublié</h1>
 
-        <div class="flex flex-col items-start w-full gap-1">
-          <label for="email" class="text-sm font-medium text-[var(--color-black)]">Email</label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            placeholder="••••••@imt-atlantique.net"
-            :disabled="loading"
-            class="w-full px-3 py-2 border border-black/20 rounded-lg text-sm outline-none focus:border-[var(--color-primary)] transition-colors duration-200 disabled:opacity-50 placeholder:text-black/30"
-          />
-        </div>
+      <div class="w-full max-w-md">
+        <form @submit.prevent="handleSubmit" class="space-y-5">
+          <p class="text-sm text-gray-600">
+            Entrez votre email, nous vous envoyons un lien pour réinitialiser votre mot de passe.
+          </p>
 
-        <p v-if="error" class="text-[var(--color-red)] text-sm m-0">{{ error }}</p>
+          <div class="flex flex-col text-left">
+            <label for="email" class="mb-1 text-sm font-medium text-gray-700">
+              Email<span class="text-[var(--color-red)]">*</span>
+            </label>
+            <input
+              v-model="email"
+              id="email"
+              type="email"
+              required
+              placeholder="Ex: yanis@en-showcase.fr"
+              class="rounded-md border border-gray-300 p-2.5 text-sm placeholder-gray-400 focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] focus:outline-none transition-shadow"
+            />
+          </div>
 
-        <button
-          :disabled="loading || !email"
-          @click="handleSubmit"
-          class="w-full py-2.5 bg-[var(--color-primary)] text-white rounded-lg text-sm font-medium cursor-pointer transition-opacity duration-200 disabled:opacity-40 disabled:cursor-not-allowed border-none"
-        >
-          {{ loading ? 'Envoi...' : 'Envoyer le lien' }}
-        </button>
+          <p v-if="message" class="text-sm text-green-600 text-center">{{ message }}</p>
+          <p v-if="errorMessage" class="text-sm text-red-500 text-center">{{ errorMessage }}</p>
 
-        <a
-          href="/login"
-          class="text-sm text-[var(--color-black)]/50 no-underline cursor-pointer transition-colors duration-200 hover:text-[var(--color-primary)]"
-        >
-        ← Retour à la connexion
-        </a>
-      </template>
+          <button
+            type="submit"
+            :disabled="isSubmitting"
+            class="w-full mt-2 rounded-md bg-[var(--color-primary)] px-5 py-2.5 text-white font-medium transition hover:opacity-90 disabled:opacity-50"
+          >
+            Envoyer le lien
+          </button>
 
-      <template v-else>
-        <span class="text-4xl">✉️</span>
-        <h1 class="text-2xl font-semibold text-[var(--color-black)] m-0">Email envoyé</h1>
-        <p class="text-sm text-[var(--color-black)]/60 m-0 leading-relaxed">
-          Un lien a été envoyé à <strong>{{ email }}</strong>. Vérifiez votre boîte mail.
-        </p>
-        <a
-          href="/login"
-          class="text-sm text-[var(--color-black)]/50 no-underline cursor-pointer transition-colors duration-200 hover:text-[var(--color-primary)]"
-        >
-        ← Retour à la connexion
-      </a>
-      </template>
-
+          <div class="text-center mt-5">
+            <router-link
+              to="/login"
+              class="text-sm text-[var(--color-black)] underline hover:text-gray-600 font-medium"
+            >
+              Retour à la connexion
+            </router-link>
+          </div>
+        </form>
+      </div>
     </div>
-  </main>
+  </div>
 </template>
