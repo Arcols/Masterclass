@@ -6,10 +6,10 @@ import fr.fil.masterclass_back.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
 
 @Service
 public class EventService {

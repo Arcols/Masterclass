@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ClockIcon, MapPinIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon } from '@heroicons/vue/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/vue/24/solid'
 import EventBadge from './EventBadge.vue'
 import { toggleEventCompletion } from '@/services/eventService'
@@ -40,6 +40,9 @@ const { getUserIdFromToken } = useAuthToken() // On récupère l'outil du token
 
 const isList = computed(() => props.layout === 'list')
 const isDevoir = computed(() => props.event.type === 'devoir')
+const isCompact = computed(() => props.layout === 'calendar' && props.compact === true)
+const showSubject = computed(() => !!props.event.subject && !isCompact.value)
+const showFooter = computed(() => !isCompact.value)
 
 const isCompact = computed(() => props.layout === 'calendar' && props.compact === true)
 const showSubject = computed(() => !!props.event.subject && !isCompact.value)
@@ -125,7 +128,6 @@ const handleCheckboxClick = async (eventArg: Event) => {
             {{ event.title }}
           </span>
         </div>
-
       </div>
 
       <EventBadge v-if="!isCompact" :type="event.type" class="hidden md:block md:shrink-0" />

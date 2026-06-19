@@ -48,7 +48,7 @@ function mapToEventData(e: EventSummaryResponse): EventData {
     location: e.eveLocation ?? undefined,
     group: e.group?.groName,
     isCompleted: e.completed,
-    isFavorite: false,
+    isFavorite: false, // pas encore fait dans le back
   }
 }
 
