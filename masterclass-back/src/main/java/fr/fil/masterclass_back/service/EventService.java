@@ -141,24 +141,36 @@ public class EventService {
         return dto;
     }
 
-    public List<EventSummaryDTO> getTodoList() {
+    public List<EventSummaryDTO> getTodoList(String userId) {
         List<Event> events = eventRepository.findFutureByTypes(
                 List.of(EventType.DEVOIR, EventType.EXAMEN), LocalDate.now()
         );
 
         return events.stream()
-                .map(EventSummaryDTO::from)
-                .toList();
+                .map(e -> {
+                    EventSummaryDTO dto = EventSummaryDTO.from(e);
+                    // On vérifie en base si l'utilisateur a complété l'événement
+                    boolean isCompleted = eventCompletionRepository.existsByUserIdAndEventId(userId, e.getEveId());
+                    dto.setCompleted(isCompleted);
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
     public List<EventSummaryDTO> getEventsForWeek(LocalDate startDate, LocalDate endDate, String userId) {
         // Récupération des événements depuis la BDD
         List<Event> events = eventRepository.findEventsForUserWeek(startDate, endDate, userId);
 
-        // Conversion en DTO
-        return events.stream()
-                .map(EventSummaryDTO::from)
-                .collect(Collectors.toList());
+        // Conversion en DTO + Ajout du statut "completed"
+        return events.stream().map(e -> {
+            EventSummaryDTO dto = EventSummaryDTO.from(e);
+
+            // On vérifie dans la BDD si cet utilisateur a fait ce devoir
+            boolean isCompleted = eventCompletionRepository.existsByUserIdAndEventId(userId, e.getEveId());
+            dto.setCompleted(isCompleted);
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Transactional

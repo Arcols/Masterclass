@@ -439,7 +439,7 @@ const submitNewItem = async () => {
             "
           >
             <CheckIcon v-if="!fullEvent.isCompleted" class="w-4 h-4" />
-            {{ fullEvent.isCompleted ? 'Marqué non fait' : 'Marqué comme fait' }}
+            {{ fullEvent.isCompleted ? 'Marquer non fait' : 'Marquer comme fait' }}
           </button>
 
           <button

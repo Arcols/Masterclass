@@ -60,6 +60,15 @@ const handleToggleComplete = (id: string, newValue: boolean) => {
   // On prévient le parent (HomeView) si besoin de synchronisation
   emit('toggle-complete', id, newValue);
 };
+
+// Permet au composant parent (HomeView) de forcer la mise à jour d'un statut
+const forceUpdateStatus = (id: string, newValue: boolean) => {
+  const task = localEvents.value.find(e => e.id === id);
+  if (task) task.isCompleted = newValue;
+};
+
+// On expose la fonction pour qu'elle soit accessible depuis l'extérieur
+defineExpose({ forceUpdateStatus });
 </script>
 
 <template>

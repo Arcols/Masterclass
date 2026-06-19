@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 import type { EventData } from '@/components/event/EventCard.vue'
 
+const events = ref<EventData[]>([])
+const isLoadingEvents = ref(false)
+
 export function usePlanningEvents() {
-  const events = ref<EventData[]>([])
-  const isLoadingEvents = ref(false)
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token')
@@ -37,7 +38,6 @@ export function usePlanningEvents() {
         location: d.eveLocation,
         group: d.group?.groName,
         subject: d.subject?.subName,
-
         isCompleted: d.completed,
         isFavorite: false // on verra plus tard comment gérer les favoris
       }))
@@ -49,9 +49,17 @@ export function usePlanningEvents() {
     }
   }
 
+  const updateEventCompletionStatus = (eventId: string, newStatus: boolean) => {
+    const target = events.value.find(e => e.id === eventId)
+    if (target) {
+      target.isCompleted = newStatus
+    }
+  }
+
   return {
     events,
     isLoadingEvents,
-    fetchWeekEvents
+    fetchWeekEvents,
+    updateEventCompletionStatus
   }
 }

@@ -82,9 +82,30 @@ public class EventController {
     }
 
     @GetMapping("/todolist")
-    public ResponseEntity<List<EventSummaryDTO>> getTodoList() {
+    public ResponseEntity<?> getTodoList(HttpServletRequest request) {
+        try {
+            // Extraction du token depuis le header "Authorization"
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token manquant ou mal formaté");
+            }
 
-        return ResponseEntity.ok(eventService.getTodoList());
+            String token = authHeader.substring(7);
+
+            // Validation du token
+            if (!jwtService.isTokenValid(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token invalide ou expiré");
+            }
+
+            // Récupération de l'ID utilisateur
+            String userId = jwtService.extractUserId(token);
+
+            // On passe le userId au service !
+            return ResponseEntity.ok(eventService.getTodoList(userId));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur : " + e.getMessage());
+        }
     }
 
     @PostMapping("/{eventId}/toggle-completion")

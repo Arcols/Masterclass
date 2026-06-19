@@ -149,16 +149,22 @@ const nextWeek = () => {
   currentDate.value = newDate
 }
 
-const updateStatus = (id: string, newValue: boolean) => {
-  const targetEvent = events.value.find((e) => e.id === id)
-  if (targetEvent) targetEvent.isCompleted = newValue
-}
-
 const emit = defineEmits<{
   (e: 'open-details', event: EventData): void;
   (e: 'request-add', payload: { date: string; startTime: string }): void;
   (e: 'toggle-sidebar'): void;
+  (e: 'toggle-complete', id: string, newValue: boolean): void;
 }>();
+
+// Modifie updateStatus pour qu'il prévienne HomeView
+const updateStatus = (id: string, newValue: boolean) => {
+  // On met à jour la liste globale du Planning
+  const targetEvent = events.value.find((e) => e.id === id)
+  if (targetEvent) targetEvent.isCompleted = newValue
+
+  // On fait remonter l'info au parent (HomeView)
+  emit('toggle-complete', id, newValue)
+}
 
 const props = defineProps<{
   isSidebarOpen?: boolean;

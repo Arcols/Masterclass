@@ -2,7 +2,6 @@ import type { EventData } from '@/components/event/EventCard.vue'
 
 const API_BASE_EVENTS = `http://localhost:8080/api/events`
 
-// Forme brute renvoyée par le back
 interface SubjectResponse {
   subId: string
   subName: string
@@ -25,6 +24,7 @@ interface EventSummaryResponse {
   eveSubmissionLink: string | null
   subject: SubjectResponse | null
   group: GroupResponse | null
+  completed: boolean
 }
 
 const TYPE_MAP: Record<EventSummaryResponse['eveType'], EventData['type']> = {
@@ -42,13 +42,13 @@ function mapToEventData(e: EventSummaryResponse): EventData {
     subject: e.subject?.subName ?? null,
     description: e.eveDescription,
     date: e.eveDate,
-    startTime: e.eveStarthour,
-    endTime: e.eveEndhour,
+    startTime: e.eveStarthour ? e.eveStarthour.substring(0, 5) : '00:00',
+    endTime: e.eveEndhour ? e.eveEndhour.substring(0, 5) : '01:00',
     submissionLink: e.eveSubmissionLink ?? undefined,
     location: e.eveLocation ?? undefined,
-    group: e.group?.groId ?? '',
-    isCompleted: false, // pas encore géré par le back, voir note plus bas
-    isFavorite: false, // idem
+    group: e.group?.groName,
+    isCompleted: e.completed,
+    isFavorite: false,
   }
 }
 
