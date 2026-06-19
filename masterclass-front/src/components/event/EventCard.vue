@@ -44,10 +44,6 @@ const isCompact = computed(() => props.layout === 'calendar' && props.compact ==
 const showSubject = computed(() => !!props.event.subject && !isCompact.value)
 const showFooter = computed(() => !isCompact.value)
 
-const isCompact = computed(() => props.layout === 'calendar' && props.compact === true)
-const showSubject = computed(() => !!props.event.subject && !isCompact.value)
-const showFooter = computed(() => !isCompact.value)
-
 const leftBarColor = computed(() => `var(--color-tag-${props.event.type}-border)`)
 
 // --- FONCTION POUR LE CLIC SUR LA CHECKBOX ---
