@@ -19,8 +19,8 @@ public class EventService {
     private final CommentRepository commentRepository;
     private final NoteRepository noteRepository;
     private final EventCompletionRepository eventCompletionRepository;
-    private final GroupRepository groupRepository;       // ⬅️ ajouté
-    private final SubjectRepository subjectRepository;  // ⬅️ ajouté
+    private final GroupRepository groupRepository;
+    private final SubjectRepository subjectRepository;
 
 
     public EventService(EventRepository eventRepository, UserRepository userRepository, CommentRepository commentRepository, NoteRepository noteRepository, EventCompletionRepository eventCompletionRepository, GroupRepository groupRepository, SubjectRepository subjectRepository) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, String> {
-    @Query("SELECT e FROM Event e WHERE e.eveType IN :types AND e.eveDate > :date ORDER BY e.eveDate ASC")
+    @Query("SELECT e FROM Event e WHERE e.eveType IN :types AND e.eveDate >= :date ORDER BY e.eveDate ASC")
     List<Event> findFutureByTypes(@Param("types") List<EventType> types, @Param("date") LocalDate date);
 
     @Query("SELECT e FROM Event e " +

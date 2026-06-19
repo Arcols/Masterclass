@@ -59,7 +59,7 @@ export interface UpdateUserPayload {
 }
 
 export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
-  const res = await fetch(`${API_BASE_USERS}/users/${id}`, {
+  const res = await fetch(`${API_BASE_USERS}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

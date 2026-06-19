@@ -1,6 +1,6 @@
 import type { EventData } from '@/components/event/EventCard.vue'
 
-const API_BASE_EVENTS = `${import.meta.env.VITE_API_BASE_URL}/api/event`
+const API_BASE_EVENTS = `http://localhost:8080/api/events`
 
 // Forme brute renvoyée par le back
 interface SubjectResponse {

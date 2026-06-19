@@ -1,17 +1,31 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { CheckCircleIcon, ChevronDownIcon } from '@heroicons/vue/24/outline';
 import EventCard, { type EventData } from '@/components/event/EventCard.vue';
-import mockEvents from '@/mocks/events.json';
+import { getTodoList } from '@/services/timelineService';
 import { useFilters } from '@/composables/useFilters';
 
 const emit = defineEmits<{
   (e: 'open-details', event: EventData): void;
+  (e: 'toggle-complete', id: string, newValue: boolean): void; // Ajouté pour synchroniser
 }>();
 
 const { selectedTypes, selectedGroups, showFavoritesOnly } = useFilters();
 
-const localEvents = ref<EventData[]>([...mockEvents] as EventData[]);
+// Remplacement du mock par un tableau vide au démarrage
+const localEvents = ref<EventData[]>([]);
+const isLoading = ref(true);
+
+// Chargement des données au montage du composant
+onMounted(async () => {
+  try {
+    localEvents.value = await getTodoList();
+  } catch (error) {
+    console.error("Erreur lors du chargement de la todo list :", error);
+  } finally {
+    isLoading.value = false;
+  }
+});
 
 const upcomingTasks = computed(() => {
   return localEvents.value
@@ -19,7 +33,6 @@ const upcomingTasks = computed(() => {
     .filter(e => e.type === 'devoir' || e.type === 'examen')
     // Règle 2 : application des filtres globaux de la session
     .filter(e => {
-      // Si un type est sélectionné (ex: "sport"), mais qu'on est dans la timeline "devoir", ça filtrera tout si ça ne correspond pas
       const isTypeMatched = selectedTypes.value.length === 0 || selectedTypes.value.includes(e.type);
       const isGroupMatched = selectedGroups.value.length === 0 || selectedGroups.value.includes(e.group);
       const isFavoriteMatched = !showFavoritesOnly.value || e.isFavorite;
@@ -43,6 +56,9 @@ const loadMore = () => {
 const handleToggleComplete = (id: string, newValue: boolean) => {
   const task = localEvents.value.find(e => e.id === id);
   if (task) task.isCompleted = newValue;
+
+  // On prévient le parent (HomeView) si besoin de synchronisation
+  emit('toggle-complete', id, newValue);
 };
 </script>
 
@@ -64,22 +80,28 @@ const handleToggleComplete = (id: string, newValue: boolean) => {
       </div>
 
       <div class="w-full flex flex-col gap-3">
-        <div v-for="task in displayedTasks" :key="task.id" class="min-h-[110px]">
-          <EventCard
-            :event="task"
-            layout="list"
-            @open-details="emit('open-details', $event)"
-            @toggle-complete="handleToggleComplete"
-          />
+        <div v-if="isLoading" class="flex flex-col gap-3 w-full">
+          <div v-for="i in itemsPerPage" :key="'skeleton-'+i" class="h-28 bg-gray-200 animate-pulse rounded-xl w-full border border-gray-100"></div>
         </div>
 
-        <div v-if="displayedTasks.length === 0" class="text-center text-gray-500 py-6 text-sm">
-          Aucun devoir ou examen à venir.
-        </div>
+        <template v-else>
+          <div v-for="task in displayedTasks" :key="task.id" class="min-h-[110px]">
+            <EventCard
+              :event="task"
+              layout="list"
+              @open-details="emit('open-details', $event)"
+              @toggle-complete="handleToggleComplete"
+            />
+          </div>
+
+          <div v-if="displayedTasks.length === 0" class="text-center text-gray-500 py-6 text-sm">
+            Aucun devoir ou examen à venir.
+          </div>
+        </template>
       </div>
 
       <button
-        v-if="visibleCount < upcomingTasks.length"
+        v-if="!isLoading && visibleCount < upcomingTasks.length"
         @click="loadMore"
         class="mt-6 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-[var(--color-primary)] text-white text-sm font-medium transition hover:opacity-90 shadow-sm cursor-pointer"
       >
