@@ -170,6 +170,8 @@ const props = defineProps<{
   isSidebarOpen?: boolean;
 }>();
 
+// On expose la fonction pour pouvoir forcer le rechargement depuis HomeView
+defineExpose({ refresh: loadWeekData })
 </script>
 
 <template>

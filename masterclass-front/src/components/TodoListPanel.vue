@@ -12,12 +12,12 @@ const emit = defineEmits<{
 
 const { selectedTypes, selectedGroups, showFavoritesOnly } = useFilters();
 
-// Remplacement du mock par un tableau vide au démarrage
 const localEvents = ref<EventData[]>([]);
 const isLoading = ref(true);
 
-// Chargement des données au montage du composant
-onMounted(async () => {
+// --- FONCTION DE CHARGEMENT ---
+const fetchData = async () => {
+  isLoading.value = true;
   try {
     localEvents.value = await getTodoList();
   } catch (error) {
@@ -25,6 +25,11 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+// Chargement des données au montage du composant
+onMounted(() => {
+  fetchData();
 });
 
 const upcomingTasks = computed(() => {
@@ -67,8 +72,8 @@ const forceUpdateStatus = (id: string, newValue: boolean) => {
   if (task) task.isCompleted = newValue;
 };
 
-// On expose la fonction pour qu'elle soit accessible depuis l'extérieur
-defineExpose({ forceUpdateStatus });
+// --- EXPOSITION POUR LE PARENT (HomeView) ---
+defineExpose({ forceUpdateStatus, refresh: fetchData });
 </script>
 
 <template>

@@ -23,8 +23,10 @@ onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
 })
 
+// REFS POUR ACCÉDER AUX ENFANTS
 const addEventRef = ref<InstanceType<typeof AddEventModal> | null>(null)
 const todoListRef = ref<InstanceType<typeof TodoListPanel> | null>(null)
+const planningBoardRef = ref<InstanceType<typeof PlanningBoard> | null>(null)
 
 const onAddEvent = makeOnAddEvent(addEventRef)
 const onRequestAdd = makeOnRequestAdd(addEventRef)
@@ -55,6 +57,13 @@ const handleEdit = (event: EventData) => {
   selectedEvent.value = null
   handleEditBase(event)
 }
+
+// DÉCLENCHÉE QUAND UN ÉVÉNEMENT EST CRÉÉ/MODIFIÉ
+const handleEventSaved = () => {
+  // On demande aux deux composants de refaire leur appel API "GET"
+  planningBoardRef.value?.refresh()
+  todoListRef.value?.refresh()
+}
 </script>
 
 <template>
@@ -72,6 +81,7 @@ const handleEdit = (event: EventData) => {
 
     <main class="flex-1 flex gap-4 md:p-2 lg:p-4 min-h-0 overflow-hidden">
       <PlanningBoard
+        ref="planningBoardRef"
         class="flex-1 min-w-0 min-h-0"
         :is-sidebar-open="isTodoListOpen"
         @toggle-sidebar="isTodoListOpen = !isTodoListOpen"
@@ -108,5 +118,5 @@ const handleEdit = (event: EventData) => {
     </button>
   </div>
 
-  <AddEventModal ref="addEventRef" />
+  <AddEventModal ref="addEventRef" @event-saved="handleEventSaved" />
 </template>
