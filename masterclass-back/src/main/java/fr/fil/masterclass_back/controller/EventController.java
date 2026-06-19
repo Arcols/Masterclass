@@ -130,4 +130,34 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur : " + e.getMessage());
         }
     }
+
+    @PostMapping
+    public ResponseEntity<?> createEvent(
+            @RequestBody CreateEventDTO request,
+            HttpServletRequest httpRequest
+    ) {
+        try {
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token manquant ou mal formaté");
+            }
+
+            String token = authHeader.substring(7);
+
+            if (!jwtService.isTokenValid(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token invalide ou expiré");
+            }
+
+            String userId = jwtService.extractUserId(token);
+
+            EventSummaryDTO created = eventService.createEvent(request, userId);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur serveur inattendue");
+        }
+    }
 }

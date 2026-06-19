@@ -4,6 +4,8 @@ import fr.fil.masterclass_back.dto.*;
 import fr.fil.masterclass_back.model.*;
 import fr.fil.masterclass_back.repository.*;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +19,19 @@ public class EventService {
     private final CommentRepository commentRepository;
     private final NoteRepository noteRepository;
     private final EventCompletionRepository eventCompletionRepository;
+    private final GroupRepository groupRepository;       // ⬅️ ajouté
+    private final SubjectRepository subjectRepository;  // ⬅️ ajouté
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository, CommentRepository commentRepository, NoteRepository noteRepository, EventCompletionRepository eventCompletionRepository) {
+
+    public EventService(EventRepository eventRepository, UserRepository userRepository, CommentRepository commentRepository, NoteRepository noteRepository, EventCompletionRepository eventCompletionRepository, GroupRepository groupRepository, SubjectRepository subjectRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.noteRepository = noteRepository;
         this.eventCompletionRepository = eventCompletionRepository;
+        this.groupRepository = groupRepository;
+        this.subjectRepository = subjectRepository;
+
     }
 
     public EventDetailDTO getEventDetails(String eventId, String currentUserId) {
@@ -168,5 +176,49 @@ public class EventService {
             eventCompletionRepository.save(completion);
             return true;
         }
+    }
+
+    public EventSummaryDTO createEvent(CreateEventDTO request, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        Group group = groupRepository.findById(request.getGroupId())
+                .orElseThrow(() -> new RuntimeException("Groupe introuvable"));
+
+        Subject subject = null;
+        if (request.getSubjectId() != null && !request.getSubjectId().isBlank()) {
+            subject = subjectRepository.findById(request.getSubjectId())
+                    .orElseThrow(() -> new RuntimeException("Matière introuvable"));
+        }
+
+        Event event = new Event();
+        event.setEveId(java.util.UUID.randomUUID().toString());
+        event.setEveType(request.getType());
+        event.setEveTitle(request.getTitle());
+        event.setEveDate(request.getDate());
+        event.setEveStarthour(request.getStartTime());
+        event.setEveEndhour(request.getEndTime());
+        event.setEveDescription(request.getDescription());
+        event.setEveLocation(request.getLocation());
+        event.setEveSubmissionLink(request.getSubmissionLink());
+        event.setUser(user);
+        event.setGroup(group);
+        event.setSubject(subject);
+
+        LocalTime startTime = request.getStartTime();
+        LocalTime endTime = request.getEndTime();
+
+        if (startTime == null && endTime != null) {
+            startTime = endTime.minusHours(1);
+        } else if (endTime == null && startTime != null) {
+            endTime = startTime.plusHours(1);
+        }
+
+        event.setEveStarthour(startTime);
+        event.setEveEndhour(endTime);
+
+        eventRepository.save(event);
+
+        return EventSummaryDTO.from(event);
     }
 }
