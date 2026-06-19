@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaRepository<Event, String> {
 
     List<Event> findByUser_UseIdAndEveDateBetween(String userId, LocalDate startDate, LocalDate endDate);
 }
