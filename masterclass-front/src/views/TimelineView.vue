@@ -171,7 +171,7 @@ const handleDelete = (id: string) => {
 
     <EventDetailModal
       v-if="selectedEvent"
-      :event="selectedEvent"
+      :event-id="selectedEvent.id"
       @close="selectedEvent = null"
       @toggle-complete="(id, val) => handleUpdateStatus(id, val)"
       @delete="handleDelete"

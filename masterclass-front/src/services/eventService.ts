@@ -1,37 +1,60 @@
-import type { EventPayload } from '@/types/events';
+import type { EventPayload } from '@/types/events'
 
-/**
- * Simulates saving an event to the backend.
- * In a real application, this would make an API call (e.g., using fetch or axios).
- * @param payload The event data to save.
- */
-export async function createEvent(payload: EventPayload): Promise<EventPayload> {
-  console.log('Saving event to the backend:', payload);
+const API_BASE_EVENTS = 'http://localhost:8080/api/events'
 
-  // Simulate a network delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-
-  // In a real app, the backend would return the saved object, possibly with an ID.
-  const savedEvent = {
-    ...payload,
-    id: payload.id ?? Date.now(), // Assign a new ID if it's a new event
-  };
-
-  console.log('Event saved successfully:', savedEvent);
-  return savedEvent;
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem('token')
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`
+  }
+  return headers
 }
 
-export async function updateEvent(id: number | string, payload: EventPayload): Promise<EventPayload> {
-  console.log(`Updating event with ID ${id} on the backend:`, payload);
-  // Simulate a network delay
-  await new Promise(resolve => setTimeout(resolve, 500));
+export async function createEvent(payload: EventPayload): Promise<void> {
+  const res = await fetch(API_BASE_EVENTS, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      type: payload.type.toUpperCase(), // "devoir" → "DEVOIR"
+      title: payload.title,
+      date: payload.date,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      description: payload.description ?? null,
+      location: payload.location ?? null,
+      submissionLink: payload.submissionLink ?? null,
+      subjectId: payload.subject ?? null, // ⬅️ subject → subjectId
+      groupId: payload.group ?? null, // ⬅️ group  → groupId
+    }),
+  })
 
-  // Return the updated event with the ID
-  const updatedEvent = {
-    ...payload,
-    id: id,
-  };
+  if (!res.ok) {
+    const errorText = await res.text()
+    throw new Error(errorText || `Erreur HTTP: ${res.status}`)
+  }
+}
 
-  console.log('Event updated successfully:', updatedEvent);
-  return updatedEvent;
+export async function updateEvent(
+  id: number | string,
+  payload: EventPayload,
+): Promise<EventPayload> {
+  // TODO: brancher le vrai endpoint quand il sera prêt
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  return { ...payload, id }
+}
+
+export async function toggleEventCompletion(eventId: string, userId: string): Promise<boolean> {
+  const res = await fetch(`${API_BASE_EVENTS}/${eventId}/toggle-completion`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ userId })
+  })
+
+  if (!res.ok) throw new Error(`Erreur HTTP: ${res.status}`)
+
+  const isCompleted: boolean = await res.json()
+  return isCompleted
 }

@@ -25,10 +25,10 @@ onMounted(async () => {
   await requireAuth() // redirige vers /login si token invalide
 
   const userId = getUserIdFromToken()
-
   if (!userId) {
     console.warn('Aucun utilisateur connecté')
   }
+
   try {
     const rawData = await getUserById(userId)
     if (rawData) {
@@ -47,12 +47,14 @@ onMounted(async () => {
   } catch (error) {
     console.warn('Erreur de récupération du profil :', error)
   }
+
+  userForm.value = { ...userProfile.value }
 })
 
 const startEditing = () => {
-  userForm.value = { ...userProfile.value }
-  isEditing.value = true
-}
+  userForm.value = { ...userProfile.value };
+  isEditing.value = true;
+};
 
 const cancelEditing = () => {
   isEditing.value = false
@@ -73,7 +75,6 @@ const saveProfile = async () => {
       useLastname: userForm.value.lastName,
       useMail: userForm.value.email,
       useDescription: userForm.value.description,
-      // Utilisation d'une valeur de repli (fallback) pour rassurer TypeScript
       groups: (userForm.value.groups || []).map((g) => ({ groId: g })),
     }
 
@@ -88,8 +89,8 @@ const saveProfile = async () => {
   }
 }
 
-const handlePasswordChange = (payload: { current: string; new: string }) => {
-  console.log('Demande de changement de mot de passe avec :', payload)
+const handlePasswordChange = (payload: { current: string, new: string }) => {
+  console.log("Demande de changement de mot de passe avec :", payload);
   // Ici, tu appelleras ton API plus tard.
   alert('Mot de passe mis à jour avec succès !')
   showPasswordModal.value = false

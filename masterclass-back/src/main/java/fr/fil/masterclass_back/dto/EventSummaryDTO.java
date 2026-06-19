@@ -22,6 +22,7 @@ public class EventSummaryDTO {
     private String eveSubmissionLink;
     private Subject subject;
     private Group group;
+    private boolean completed;
 
     public static EventSummaryDTO from(Event e) {
         EventSummaryDTO dto = new EventSummaryDTO();

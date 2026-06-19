@@ -50,20 +50,18 @@ export interface UpdateUserPayload {
   groups?: { groId: string }[]
 }
 
+export interface UpdateUserPayload {
+  useFirstname?: string
+  useLastname?: string
+  useMail?: string
+  useDescription?: string
+  groups?: { groId: string }[]
+}
+
 export async function updateUserById(id: string, payload: UpdateUserPayload): Promise<string> {
-  const token = localStorage.getItem('token')
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  }
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
-
   const res = await fetch(`${API_BASE_USERS}/${id}`, {
     method: 'PUT',
-    headers,
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
 

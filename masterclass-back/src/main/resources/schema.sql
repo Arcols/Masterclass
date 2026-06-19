@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `Event_Completion`;
 DROP TABLE IF EXISTS `User_Group`;
 DROP TABLE IF EXISTS `Comment`;
 DROP TABLE IF EXISTS `Note`;
@@ -76,3 +77,12 @@ CREATE TABLE IF NOT EXISTS User_Group(
                            FOREIGN KEY(USE_id) REFERENCES `User`(USE_id),
                            FOREIGN KEY(GRO_id) REFERENCES `Group`(GRO_id)
 );
+
+CREATE TABLE IF NOT EXISTS Event_Completion (
+                           id VARCHAR(50) PRIMARY KEY,
+                           USE_id VARCHAR(50) NOT NULL,
+                           EVE_id VARCHAR(50) NOT NULL,
+                           FOREIGN KEY(USE_id) REFERENCES `User`(USE_id),
+                           FOREIGN KEY(EVE_id) REFERENCES Event(EVE_id),
+                           UNIQUE(USE_id, EVE_id) -- Un étudiant ne peut valider un devoir qu'une seule fois
+    );

@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { ChevronLeftIcon, ChevronRightIcon, FunnelIcon } from '@heroicons/vue/24/outline'
 import PlanningColumn from './PlanningColumn.vue'
-import mockEvents from '@/mocks/events.json'
 import type { EventData } from '@/components/event/EventCard.vue'
 import FilterModal from '@/components/modals/FilterModal.vue'
 import { useFilters } from '@/composables/useFilters'
+import { useAuthToken } from '@/composables/useAuthToken'
+
+// ── IMPORT DU NOUVEAU COMPOSABLE ──
+import { usePlanningEvents } from '@/composables/usePlanningEvents'
 
 // ── CONFIGURATION DE LA GRILLE ──
 const START_HOUR = 7
@@ -16,28 +19,26 @@ const DESKTOP_ROW_HEIGHT = 80
 const blocksCount = END_HOUR - START_HOUR
 const hours = Array.from({ length: blocksCount + 1 }, (_, i) => START_HOUR + i)
 
-const events = ref<EventData[]>(mockEvents as EventData[])
 const rowHeight = ref(MOBILE_ROW_HEIGHT)
 
 const updateRowHeight = () => {
   rowHeight.value = window.innerWidth < 768 ? MOBILE_ROW_HEIGHT : DESKTOP_ROW_HEIGHT
 }
 
-// ── GESTION DES FILTRES ──
-// On récupère l'état global et persistant
-const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters()
+// ── APPEL API VIA LE COMPOSABLE ──
+const { events, isLoadingEvents, fetchWeekEvents } = usePlanningEvents()
 
+// ── GESTION DES FILTRES ──
+const { selectedTypes, selectedGroups, showFavoritesOnly, resetFilters } = useFilters()
 const isFilterModalOpen = ref(false)
 
-// Calcul du nombre de filtres actifs
 const activeFilterCount = computed(() => {
   return selectedTypes.value.length + selectedGroups.value.length + (showFavoritesOnly.value ? 1 : 0)
 })
 
-// Génère dynamiquement la liste de tous les groupes existants dans les données
 const availableGroups = computed(() => {
   const groups = events.value.map(e => e.group)
-  return [...new Set(groups)] // Enlève les doublons
+  return [...new Set(groups)]
 })
 
 // ── FILTRAGE DES DONNÉES ──
@@ -57,9 +58,21 @@ const currentDate = ref(new Date())
 const now = ref(new Date())
 let timer: ReturnType<typeof setInterval> | null = null
 
+const { getUserIdFromToken } = useAuthToken()
+
+const loadWeekData = async () => {
+  if (weekDays.value.length === 0) return
+  const startDate = weekDays.value[0].fullDateString
+  const endDate = weekDays.value[6].fullDateString
+  await fetchWeekEvents(startDate, endDate)
+}
+
 onMounted(() => {
   updateRowHeight()
   window.addEventListener('resize', updateRowHeight)
+
+  // Charge les données au lancement
+  loadWeekData()
 
   timer = setInterval(() => {
     now.value = new Date()
@@ -115,6 +128,11 @@ const weekDays = computed(() => {
   })
 })
 
+// ── ON SURVEILLE LA DATE : SI ON CHANGE DE SEMAINE, ON RECHARGE L'API ──
+watch(currentDate, () => {
+  loadWeekData()
+})
+
 const currentMonthYear = computed(() => {
   return currentDate.value.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
 })
@@ -131,39 +149,48 @@ const nextWeek = () => {
   currentDate.value = newDate
 }
 
-const updateStatus = (id: string, newValue: boolean) => {
-  const targetEvent = events.value.find((e) => e.id === id)
-  if (targetEvent) targetEvent.isCompleted = newValue
-}
-
 const emit = defineEmits<{
   (e: 'open-details', event: EventData): void;
   (e: 'request-add', payload: { date: string; startTime: string }): void;
   (e: 'toggle-sidebar'): void;
+  (e: 'toggle-complete', id: string, newValue: boolean): void;
 }>();
+
+// Modifie updateStatus pour qu'il prévienne HomeView
+const updateStatus = (id: string, newValue: boolean) => {
+  // On met à jour la liste globale du Planning
+  const targetEvent = events.value.find((e) => e.id === id)
+  if (targetEvent) targetEvent.isCompleted = newValue
+
+  // On fait remonter l'info au parent (HomeView)
+  emit('toggle-complete', id, newValue)
+}
 
 const props = defineProps<{
   isSidebarOpen?: boolean;
 }>();
 
+// On expose la fonction pour pouvoir forcer le rechargement depuis HomeView
+defineExpose({ refresh: loadWeekData })
 </script>
 
 <template>
   <div
-    class="flex flex-col h-full bg-white md:rounded-xl border border-gray-200 overflow-hidden shadow-sm"
+    class="flex flex-col h-full bg-white md:rounded-xl border border-gray-200 overflow-hidden shadow-sm relative"
   >
     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white z-50 shrink-0">
       <h2 class="text-lg font-bold text-[var(--color-black)] capitalize hidden sm:block">{{ currentMonthYear }}</h2>
 
-      <!-- Affichage simplifié sur mobile si besoin -->
       <h2 class="text-base font-bold text-[var(--color-black)] capitalize sm:hidden">
         {{ currentDate.toLocaleDateString('fr-FR', { month: 'short' }) }}
       </h2>
 
-      <!-- ZONE DES BOUTONS D'ACTION (Filtres + Navigation) -->
       <div class="flex items-center gap-2 sm:gap-4">
 
-        <!-- Bloc Filtres -->
+        <div v-if="isLoadingEvents" class="hidden sm:flex items-center gap-2 text-xs text-[var(--color-primary)] animate-pulse">
+          Chargement...
+        </div>
+
         <div class="flex items-center gap-1.5">
           <button
             @click="isFilterModalOpen = true"
@@ -172,7 +199,6 @@ const props = defineProps<{
             <FunnelIcon class="w-4 h-4" />
             <span class="hidden md:inline">Filtres</span>
 
-            <!-- Badge Notification -->
             <span
               v-if="activeFilterCount > 0"
               class="absolute -top-2 -right-2 flex items-center justify-center min-w-[20px] h-5 px-1 text-[11px] font-bold text-white bg-[var(--color-red)] rounded-full border-2 border-white shadow-sm"
@@ -181,14 +207,12 @@ const props = defineProps<{
             </span>
           </button>
 
-          <!-- Bouton Reset Rapide (Visible uniquement si des filtres sont actifs) -->
           <button
             v-if="activeFilterCount > 0"
             @click="resetFilters"
             class="flex items-center justify-center p-1.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] rounded-md hover:bg-[var(--color-primary)]/10 transition-colors cursor-pointer"
             title="Effacer les filtres"
           >
-            <!-- SVG personnalisé "Entonnoir Barré" -->
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
@@ -198,17 +222,18 @@ const props = defineProps<{
 
         <div class="w-px h-6 bg-gray-200 hidden sm:block"></div>
 
-        <!-- Bloc Navigation Semaines & Sidebar -->
         <div class="flex items-center gap-1">
           <button
             @click="prevWeek"
-            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600"
+            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600 disabled:opacity-50"
+            :disabled="isLoadingEvents"
           >
             <ChevronLeftIcon class="w-5 h-5" />
           </button>
           <button
             @click="nextWeek"
-            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600"
+            class="p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer text-gray-600 disabled:opacity-50"
+            :disabled="isLoadingEvents"
           >
             <ChevronRightIcon class="w-5 h-5" />
           </button>
@@ -220,9 +245,7 @@ const props = defineProps<{
             title="Afficher/Masquer la Timeline des devoirs"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="w-[20px] h-[20px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" id="Layout-Sidebar--Streamline-Tabler" height="24" width="24">
-              <desc>
-                Layout Sidebar Streamline Icon: https://streamlinehq.com
-              </desc>
+              <desc>Layout Sidebar</desc>
               <path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2H6a2 2 0 0 1 -2 -2z" stroke-width="2"></path>
               <path d="m9 4 0 16" stroke-width="2"></path>
             </svg>
@@ -231,7 +254,6 @@ const props = defineProps<{
       </div>
     </div>
 
-    <!-- Modale de filtres -->
     <FilterModal
       v-if="isFilterModalOpen"
       :selected-types="selectedTypes"
@@ -244,7 +266,7 @@ const props = defineProps<{
       @close="isFilterModalOpen = false"
     />
 
-    <div class="flex-1 overflow-auto relative flex flex-col">
+    <div class="flex-1 overflow-auto relative flex flex-col" :class="{'opacity-60 pointer-events-none transition-opacity': isLoadingEvents}">
       <div class="sticky top-0 z-40 flex border-b border-gray-200 bg-white shadow-sm shrink-0">
         <div
           class="w-12 md:w-16 shrink-0 sticky left-0 z-50 bg-white border-r border-gray-100"
