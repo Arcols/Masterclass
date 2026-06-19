@@ -118,12 +118,12 @@ VALUES
 
     ('C2',
      'Merci Damien ! Est-ce que quelqu''un sait si la calculatrice est autorisée ?',
-     '2026-06-22 18:30:00',
+     '2026-06-22 08:15:00',
      'E1','4a357732-ad63-4e78-9bd6-8af6333c41fc'),
 
     ('C3',
      'Bonjour à tous, oui la calculatrice type collège est autorisée.',
-     '2026-06-22 08:15:00',
+     '2026-06-22 18:30:00',
      'E1','4a357732-ad63-4e78-9bd6-8af6333c41fc'),
 
     ('C4',

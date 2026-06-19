@@ -181,22 +181,21 @@ const submitNewItem = async () => {
   if (!content || !currentUserId.value) return
 
   const isComment = activeTab.value === 'commentaires'
-  const simulatedEventId = "E2" // <-- Assure-toi de garder la même simulation qu'au chargement !
 
   try {
     let savedItem;
 
     // On appelle le backend via notre composable
     if (isComment) {
-      savedItem = await addComment(simulatedEventId, currentUserId.value, content)
+      savedItem = await addComment(props.eventId, currentUserId.value, content)
     } else {
-      savedItem = await addNote(simulatedEventId, currentUserId.value, content)
+      savedItem = await addNote(props.eventId, currentUserId.value, content)
     }
 
     // On formate le retour de l'API pour notre interface
     const formattedItem = {
       id: savedItem.id,
-      eventId: simulatedEventId,
+      eventId: props.eventId,
       author: isComment ? savedItem.authorName : 'Moi',
       datetime: formatBackendDate(savedItem.date),
       content: savedItem.content
