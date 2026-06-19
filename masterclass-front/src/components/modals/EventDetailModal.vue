@@ -17,10 +17,11 @@ import {
 } from '@heroicons/vue/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/vue/24/solid'
 import EventBadge from '../event/EventBadge.vue'
-import { useEventDetails } from '@/composables/useEventDetails'
 import CommentItem from '@/components/event/CommentItem.vue'
-import { useAuthToken } from '@/composables/useAuthToken'
 import type { EventData } from '@/components/event/EventCard.vue'
+import { useAuthToken } from '@/composables/useAuthToken'
+import { useEventDetails } from '@/composables/useEventDetails'
+import { toggleEventCompletion } from '@/services/eventService'
 
 const props = defineProps<{
   eventId: string
@@ -42,7 +43,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 // ── APPEL API ET DONNÉES RÉACTIVES ──
-const { fetchEventDetails, addComment, addNote, toggleEventCompletion, isLoading } = useEventDetails()
+const { fetchEventDetails, addComment, addNote, isLoading } = useEventDetails()
 const { getUserIdFromToken } = useAuthToken()
 
 const fullEvent = ref<any>(null)
@@ -108,17 +109,18 @@ onMounted(async () => {
 
 // FONCTION POUR GÉRER LE CLIC SUR LE BOUTON
 const handleToggleComplete = async () => {
-  if (!currentUserId.value) return
+  if (!currentUserId.value || !fullEvent.value) return
 
-  const newStatus = await toggleEventCompletion(props.eventId, currentUserId.value)
+  try {
+    const newStatus = await toggleEventCompletion(props.eventId, currentUserId.value)
 
-  if (newStatus !== null) {
-    // On met à jour l'interface locale de la modale
     fullEvent.value.isCompleted = newStatus
 
     // On prévient le composant Parent (PlanningBoard) pour qu'il mette à jour
     // la petite carte sans avoir besoin de recharger toute la page !
     emit('toggle-complete', props.eventId, newStatus)
+  } catch (error) {
+    console.error("Erreur toggle depuis la modale", error)
   }
 }
 
@@ -173,35 +175,38 @@ const switchTab = (tab: 'commentaires' | 'notes') => {
   newItemContent.value = ''
 }
 
-const currentEventComments = computed(() => localComments.value)
-const currentEventNotes = computed(() => localNotes.value)
+// TRI DU PLUS RÉCENT AU PLUS ANCIEN : On inverse simplement le tableau local !
+const currentEventComments = computed(() => [...localComments.value].reverse())
+const currentEventNotes = computed(() => [...localNotes.value].reverse())
 
 const submitNewItem = async () => {
   const content = newItemContent.value.trim()
   if (!content || !currentUserId.value) return
 
   const isComment = activeTab.value === 'commentaires'
+  const eventId = props.eventId
 
   try {
     let savedItem;
 
     // On appelle le backend via notre composable
     if (isComment) {
-      savedItem = await addComment(props.eventId, currentUserId.value, content)
+      savedItem = await addComment(eventId, currentUserId.value, content)
     } else {
-      savedItem = await addNote(props.eventId, currentUserId.value, content)
+      savedItem = await addNote(eventId, currentUserId.value, content)
     }
 
     // On formate le retour de l'API pour notre interface
     const formattedItem = {
       id: savedItem.id,
-      eventId: props.eventId,
+      eventId: eventId,
       author: isComment ? savedItem.authorName : 'Moi',
       datetime: formatBackendDate(savedItem.date),
       content: savedItem.content
     }
 
-    // On l'ajoute visuellement à la liste locale
+    // Le push ajoute à la fin, mais grâce au `.reverse()` dans le computed,
+    // il apparaîtra tout en haut visuellement !
     if (isComment) {
       localComments.value.push(formattedItem)
     } else {
